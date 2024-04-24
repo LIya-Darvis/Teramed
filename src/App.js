@@ -1,25 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import AuthorizationPage from './ui/pages/AuthorizationPage';
+import { DataProvider } from './components/DataProvider';
+import { GlobalSpace } from './components/GlobalSpace';
 
 function App() {
+  
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <DataProvider>
+          <GlobalSpace/>
+        </DataProvider>
       </header>
     </div>
   );
 }
 
 export default App;
+
+

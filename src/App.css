@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+  -webkit-user-select: none;
+  /* Для браузеров на базе WebKit (Chrome, Safari, etc.) */
+  -moz-user-select: none;
+  /* Для браузеров Firefox */
+  -ms-user-select: none;
+  /* Для Internet Explorer */
+  user-select: none;
+  /* Стандартное свойство для других браузеров */
 }
 
 .App-logo {
@@ -32,6 +40,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

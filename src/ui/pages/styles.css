@@ -1,0 +1,105 @@
+.authorization_back_frame {
+    height: 100vh;
+    width: 100vw;
+    background-color: #F2F5FF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.authorization_panel {
+    background-color: #FFFFFF;
+    display: flex;
+    border-radius: 12px;
+    box-shadow: 1px 4px 8px #DAE1F9;
+}
+
+.authorization_form {
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    border-radius: 15px;
+    padding: 55px 25px;
+}
+
+.authorization_label {
+    color: #5A81FA;
+    font-weight: 600;
+    font-size: 70;
+    margin: 10px 0px;
+    padding: 10px 20px;
+}
+
+.authorization_edit_group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    margin: 35px 5px;
+}
+
+.authorization_edit_text {
+    margin: 6px 15px;
+    padding: 10px 35px 10px 10px;
+    color: #355065;
+    border: solid #C0C0C0 1.8px;
+    font-size: 20px;
+    border-radius: 8px;
+    user-select: auto;
+}
+
+.authorization_edit_text::placeholder {
+    color: #C0C0C0;
+    font-size: 16px
+}
+
+.panel_btn {
+    margin: 5px 0px;
+    padding: 10px 128px;
+    max-width: 340px;
+    background-color: #5A81FA;
+    transition: background-color 1s ease-out 100ms;
+    font-size: 18px;
+    text-align: center;
+    color: #FFFFFF;
+    border: 0px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.panel_btn::hover {
+    background-color: #698cf5;
+}
+
+.error_text {
+    color: #646773;
+    font-size: 16px;
+    height: 24px;
+}
+
+.user_page_back_frame {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #F2F5FF;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.user_page_content_frame {
+    height: 100%;
+    width: 100%;
+    color: #355065;
+    overflow-y: scroll;
+    display: flex;
+    padding: 35px;
+}
+
+
+
+
+

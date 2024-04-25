@@ -8,6 +8,11 @@ import { getUsers } from '../../components/api.js';
 import { useData } from '../../components/DataProvider.jsx';
 import { User } from '../../components/classes.js';
 
+// игры с огнем
+import { db } from '../../firebase.js';
+import { collection, getDocs } from 'firebase/firestore';
+
+
 
 // http://localhost:3005/api/doctors
 
@@ -22,25 +27,38 @@ function AuthorizationPage() {
     const [errorText, setErrorText] = useState(' ');
     const { data, setData } = useData();
 
-    const [isVisible, setIsVisible] = useState(false);
+    // эксперименты с огнем
+    const [fireUsers, setFireUsers] = useState([]);
 
-    // Показываем элемент через 3 секунды
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setIsVisible(true);
-        }, 3000);
+        getFireUsers()
+    }, [])
 
-        return () => clearTimeout(timeoutId);
-    }, []);
+    function getFireUsers() {
+        const usersCollectionRef = collection(db, 'users');
+        getDocs(usersCollectionRef).
+            then(response => {
+                // console.log(response.docs)
+                const users = response.docs.map(doc => ({
+                    data: doc.data(),
+                    id: doc.id,
+                }))
+                setFireUsers(users)
+            })
+            .catch(error => console.log(error.message))
+
+    }
+
 
 
     async function autorization(login, password) {
         if (login.trim() === "" || password.trim() === "") {
             setErrorText("Введите данные");
-            // setLogin("");
-            // setPassword("");
         } else {
             try {
+                console.log(fireUsers);
+                // getFireUsers();
+
                 var users = await getUsers();
                 // если данные пользователей по апи успешно получены
                 if (users) {
@@ -53,17 +71,14 @@ function AuthorizationPage() {
 
                             setData({ isLogin: true, userData: authUser });
                             console.log("-> ", data)
-
                             setErrorText("");
                         }
                         else {
                             setErrorText("Неверный логин или пароль");
-                            setIsVisible(true)
                         }
                     }
                 } else {
                     setErrorText("Ошибка подключения к серверу");
-                    setIsVisible(true)
                 }
             } catch (error) {
                 console.log(error.message);

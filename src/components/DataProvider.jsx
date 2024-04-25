@@ -12,17 +12,17 @@ function DataProvider({ children }) {
     // var globalData = {}
 
     // Задаем стартовые пустые переменные
-    // var defaultUser = new User(0, 'null', 0, 'null', 0, 'null', 'null');
-    // var defaultLogin = false;
+    var defaultUser = new User(0, 'null', 0, 'null', 0, 'null', 'null');
+    var defaultLogin = false;
 
-    // const [data, setData] = useState({ isLogin: defaultLogin, userData: defaultUser });
+    const [data, setData] = useState({ isLogin: defaultLogin, userData: defaultUser });
 
-    const initialData = JSON.parse(localStorage.getItem('userData')) || { isLogin: false, userData: null };
-    const [data, setData] = useState(initialData);
+    // const initialData = JSON.parse(localStorage.getItem('userData')) || { isLogin: false, userData: null };
+    // const [data, setData] = useState(initialData);
 
-    useEffect(() => {
-        localStorage.setItem('userData', JSON.stringify(data));
-    }, [data]);
+    // useEffect(() => {
+    //     localStorage.setItem('userData', JSON.stringify(data));
+    // }, [data]);
     
 
     return (

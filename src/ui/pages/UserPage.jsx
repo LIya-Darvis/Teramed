@@ -1,60 +1,73 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useData } from '../../components/DataProvider';
 import { SideMenu } from '../elements/SideMenu';
 import { MenuButton } from '../elements/MenuButton';
 import UserAccountPanel from '../elements/UserAccountPanel';
 import { DoctorsContentPanel } from '../elements/DoctorsContentPanel';
-import GospitalizationContentPanel from '../elements/GospitalizationContentPanel';
+import GospitalizationsContentPanel from '../elements/GospitalizationsContentPanel';
 import { PatientsContentPanel } from '../elements/PatientsContentPanel';
 import { MenuPoint } from '../../components/classes';
 
+import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
 
-
-// const components = {
-//   "admin": [DoctorsContentPanel, GospitalizationContentPanel],
-//   "doctor": [PatientsContentPanel, GospitalizationContentPanel]
-// };
-
-const components = {
-  "admin": [{ doctorsPanel: { component: <DoctorsContentPanel />, title: "Сотрудники" } },
-  { gospitalizationPanel: { component: <GospitalizationContentPanel />, title: "Госпитализация" } }],
-  "doctor": [{ patientsPanel: { component: <PatientsContentPanel />, title: "Пациенты" } },
-  { gospitalizationPanel: { component: <GospitalizationContentPanel />, title: "Госпитализация" } }]
-};
+const components = [
+  { 'DoctorsContentPanel': { component: <DoctorsContentPanel />, title: "Сотрудники" } },
+  { 'GospitalizationsContentPanel': { component: <GospitalizationsContentPanel />, title: "Госпитализация" } },
+  { 'PatientsContentPanel': { component: <PatientsContentPanel />, title: "Пациенты" } },
+];
 
 export default function UserPage() {
 
-  // const [activePanel, setActivePanel] = useState('');
+  const { data, setData } = useData();
+  var user = data.userData.role;
+
   const [activePanel, setActivePanel] = useState(null);
+  const [accessiblePanels, setAccessiblePanels] = useState([]);
 
   const handlePanelChange = (panelName) => {
     setActivePanel(panelName);
     console.log(panelName);
   };
-  // const handlePanelChange = (panel) => {
-  //   setActivePanel(panel);
-  // };
 
-  const { data, setData } = useData();
-  var user = data.userData.role
-  const userComponents = components[user];
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const panels = await fetchAccessiblePanelsForRole(user);
+        setAccessiblePanels(panels);
+      } catch (error) {
+        console.error('Ошибка при получении доступных панелей:', error);
+      }
+    };
+
+    fetchData();
+  }, [])
+
 
   return (
     <>
-
       <div className='user_page_back_frame'>
         <SideMenu>
-          {userComponents.map((componentGroup, index) => (
-            Object.entries(componentGroup).map(([panelName, { component, title }]) => (
-              <MenuButton key={panelName} title={title} onClick={() => handlePanelChange(panelName)} />
-            ))
-          ))}
+
+          {accessiblePanels.map((panelName, index) => {
+            const { component, title } = components.find((item) => Object.keys(item)[0] === panelName)[panelName];
+            return (
+              <MenuButton key={index} title={title} onClick={() => handlePanelChange(panelName)} />
+            );
+          })}
+
         </SideMenu>
 
         <div className='user_page_content_frame'>
 
-          {activePanel && components[user].find(panel => panel[activePanel])?.[activePanel].component}
-          
+          {activePanel && components.map(item => {
+            const panelName = Object.keys(item)[0];
+            if (panelName === activePanel) {
+              return item[activePanel].component;
+            }
+            return null;
+          })}
+
         </div>
       </div>
     </>

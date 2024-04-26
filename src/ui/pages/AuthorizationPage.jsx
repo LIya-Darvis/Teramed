@@ -4,22 +4,13 @@ import './styles.css';
 import { motion, useAnimate, usePresence } from "framer-motion";
 import { useState, useContext, createContext, useEffect } from 'react';
 import React from 'react';
-import { getUsers } from '../../components/api.js';
 import { useData } from '../../components/DataProvider.jsx';
 import { User } from '../../components/classes.js';
 
-// игры с огнем
-import { db } from '../../firebase.js';
-import { collection, getDocs } from 'firebase/firestore';
 
-
-
-// http://localhost:3005/api/doctors
-
+import { getUsers } from '../../components/fire_api.js';
 
 // авторизация
-
-
 function AuthorizationPage() {
 
     const [login, setLogin] = useState('');
@@ -27,37 +18,12 @@ function AuthorizationPage() {
     const [errorText, setErrorText] = useState(' ');
     const { data, setData } = useData();
 
-    // эксперименты с огнем
-    const [fireUsers, setFireUsers] = useState([]);
-
-    useEffect(() => {
-        getFireUsers()
-    }, [])
-
-    function getFireUsers() {
-        const usersCollectionRef = collection(db, 'users');
-        getDocs(usersCollectionRef).
-            then(response => {
-                // console.log(response.docs)
-                const users = response.docs.map(doc => ({
-                    data: doc.data(),
-                    id: doc.id,
-                }))
-                setFireUsers(users)
-            })
-            .catch(error => console.log(error.message))
-
-    }
-
-
 
     async function autorization(login, password) {
         if (login.trim() === "" || password.trim() === "") {
             setErrorText("Введите данные");
         } else {
             try {
-                console.log(fireUsers);
-                // getFireUsers();
 
                 var users = await getUsers();
                 // если данные пользователей по апи успешно получены
@@ -65,9 +31,9 @@ function AuthorizationPage() {
                     console.log(users);
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
-                            console.log("найденная роль ", user.role, "; Пользователь ", user.userName);
-                            var authUser = new User(user.id, user.role, user.idUser, user.userName,
-                                user.userCode, user.login, user.password)
+                            console.log(' -> ', user.id, user.role.name, user.username, user.login, user.password);
+                            var authUser = new User(user.id, user.role.name, user.username, user.login, user.password)
+                            console.log(authUser);
 
                             setData({ isLogin: true, userData: authUser });
                             console.log("-> ", data)

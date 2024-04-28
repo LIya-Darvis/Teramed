@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useData } from '../../components/DataProvider';
 import { SideMenu } from '../elements/SideMenu';
 import { MenuButton } from '../elements/MenuButton';
-import UserAccountPanel from '../elements/UserAccountPanel';
 import { DoctorsContentPanel } from '../elements/DoctorsContentPanel';
 import GospitalizationsContentPanel from '../elements/GospitalizationsContentPanel';
 import { PatientsContentPanel } from '../elements/PatientsContentPanel';
-import { MenuPoint } from '../../components/classes';
 
 import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
+
 
 const components = [
   { 'DoctorsContentPanel': { component: <DoctorsContentPanel />, title: "Сотрудники" } },

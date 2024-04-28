@@ -12,7 +12,7 @@ function DataProvider({ children }) {
     // var globalData = {}
 
     // Задаем стартовые пустые переменные
-    var defaultUser = new User(0, 'null', 'null', 'null', 'null');
+    var defaultUser = new User(0, 'null', 'null', 'null', 'null', 'null');
     var defaultLogin = false;
 
     const [data, setData] = useState({ isLogin: defaultLogin, userData: defaultUser });

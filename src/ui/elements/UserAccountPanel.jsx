@@ -9,7 +9,9 @@ export default function UserAccountPanel() {
     return (
         <div className='user_account_panel'>
             <div className='user_avatar'>
-                <div className='user_photo' />
+                {/* <div className='user_photo' />
+                 */}
+                 <img src={data.userData.photo} alt="user" className='user_photo'/>
                 <div className='chat_button'/>
             </div>
 

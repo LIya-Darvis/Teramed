@@ -1,9 +1,9 @@
 import { db } from "../firebase";
 import { collection, getDocs, getDoc, doc, query, where } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 
 async function getUsers() {
-
     try {
         const usersCollectionRef = collection(db, 'Users');
         const usersSnapshot = await getDocs(usersCollectionRef);
@@ -17,10 +17,16 @@ async function getUsers() {
             const roleDoc = await getDoc(doc(db, 'Roles', roleId.id));
             const roleData = roleDoc.data();
 
+            const storage = getStorage();
+            const photoRef = ref(storage, userData.photo); 
+            var photoUrl = await getDownloadURL(photoRef);
+
+
             const userWithRole = {
                 id: userDoc.id,
                 ...userData,
                 role: roleData, // Добавляем данные о роли в объект пользователя
+                photo: photoUrl, // Добавляем фотографию пользователя
             };
             usersData.push(userWithRole);
         }

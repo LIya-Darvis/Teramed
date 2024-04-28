@@ -1,12 +1,13 @@
 
 
 class User {
-  constructor(id, role, userName, login, password) {
+  constructor(id, role, userName, login, password, photo) {
     this.id = id;
     this.role = role;
     this.userName = userName;
     this.login = login;
     this.password = password;
+    this.photo = photo;
   }
 }
 

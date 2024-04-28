@@ -31,9 +31,10 @@ function AuthorizationPage() {
                     console.log(users);
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
-                            console.log(' -> ', user.id, user.role.name, user.username, user.login, user.password);
-                            var authUser = new User(user.id, user.role.name, user.username, user.login, user.password)
-                            console.log(authUser);
+                            console.log(' -> ', user.id, user.role.name, user.username, 
+                                user.login, user.password, user.photo);
+                            var authUser = new User(user.id, user.role.name, user.username, 
+                                    user.login, user.password, user.photo)
 
                             setData({ isLogin: true, userData: authUser });
                             console.log("-> ", data)

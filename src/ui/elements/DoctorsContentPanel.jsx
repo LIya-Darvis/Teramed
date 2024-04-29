@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getDoctors } from "../../components/api";
+import { getDoctors } from '../../components/fire_api';
 import { EditButton, DeleteButton } from './TableButtons';
 import SearchPanel from './SearchPanel';
 import ContentLabel from './ContentLabel';
@@ -40,12 +40,15 @@ function DoctorsContentPanel() {
             try {
                 const doctors = await getDoctors();
                 setDoctorsData(doctors);
+                console.log(" => ", doctors)
             } catch (error) {
                 console.log(error.message);
             }
         }
         fetchData();
-    }, [doctorsData]);
+    }, []);
+
+    
 
 
     const handleEditDoctor = (doctorId) => {
@@ -56,58 +59,24 @@ function DoctorsContentPanel() {
         console.log("удаление врача: ", doctorId);
     };
 
-    useEffect(() => {
-        console.log('Значение value изменилось:', searchText);
-        if (searchText.trim() === '') {
-            // searchData = doctorsData;
-            setSearchData(doctorsData);
-        } else {
-            setSearchData(searchDoctors(doctorsData, searchText));
-            console.log(searchData);
-        }
-    }, [searchText]);
+    // useEffect(() => {
+    //     console.log('Значение value изменилось:', searchText);
+    //     if (searchText.trim() === '') {
+    //         // searchData = doctorsData;
+    //         setSearchData(doctorsData);
+    //     } else {
+    //         setSearchData(searchDoctors(doctorsData, searchText));
+    //         console.log(searchData);
+    //     }
+    // }, [searchText]);
+
+    
 
     return (
         <div className='content_panel'>
             <ContentLabel title="Сотрудники" />
             <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
 
-            {doctorsData != [] ? (
-
-                // если данные из апи получены и есть что показать по поиску
-                searchData.length > 0 ? 
-                
-                <div className='table_frame'>
-                <table className='data_table'>
-                    <thead>
-                        <tr>
-                            <th>Фамилия</th>
-                            <th>Имя</th>
-                            <th>Отчество</th>
-                            <th>Должность</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {searchData.map(doctor => (
-                            <tr key={doctor.id}>
-                                <td>{doctor.lastname}</td>
-                                <td>{doctor.name}</td>
-                                <td>{doctor.surname}</td>
-                                <td>{doctor.position}</td>
-                                <td>
-                                    <div className='table_buttons_frame'>
-                                        <EditButton onClick={() => handleEditDoctor(doctor.id)} />
-                                        <DeleteButton onClick={() => handleDeleteDoctor(doctor.id)} />
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            // если мы уже получили данные с апи     
-            : 
             <div className='table_frame'>
                 <table className='data_table'>
                     <thead>
@@ -119,13 +88,13 @@ function DoctorsContentPanel() {
                             <th>Действия</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                         {doctorsData.map(doctor => (
                             <tr key={doctor.id}>
                                 <td>{doctor.lastname}</td>
                                 <td>{doctor.name}</td>
                                 <td>{doctor.surname}</td>
-                                <td>{doctor.position}</td>
+                                <td>{doctor.position.name}</td>
                                 <td>
                                     <div className='table_buttons_frame'>
                                         <EditButton onClick={() => handleEditDoctor(doctor.id)} />
@@ -134,13 +103,10 @@ function DoctorsContentPanel() {
                                 </td>
                             </tr>
                         ))}
-                    </tbody>
+                    </tbody> */}
                 </table>
             </div>
             
-            ) : (
-                <div className="no_results">Ничего не найдено</div>
-            )}
 
         </div>
     )

@@ -88,7 +88,7 @@ function DoctorsContentPanel() {
                             <th>Действия</th>
                         </tr>
                     </thead>
-                    {/* <tbody>
+                    <tbody>
                         {doctorsData.map(doctor => (
                             <tr key={doctor.id}>
                                 <td>{doctor.lastname}</td>
@@ -103,7 +103,7 @@ function DoctorsContentPanel() {
                                 </td>
                             </tr>
                         ))}
-                    </tbody> */}
+                    </tbody>
                 </table>
             </div>
             

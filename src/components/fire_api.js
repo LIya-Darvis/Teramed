@@ -71,16 +71,16 @@ async function getDoctors() {
 
         
 
-        var doctorsData = [];
+        const doctorsData = [];
         for (const doctorsDoc of doctorsSnapshot.docs) {
-            doctorsData = doctorsDoc.data();
-            console.log(doctorsData)
-            const userId = doctorsData.id_user;
-            const positionId = doctorsData.id_position;
+            const doctorData = doctorsDoc.data();
+
+            const userId = doctorData.id_user;
+            const positionId = doctorData.id_position;
 
             // Получаем пользовательские данные врачей
             const userDoc = await getDoc(doc(db, 'Users', userId.id));
-            const userData = userDoc.data();
+            const userData = userDoc.data();     
 
             // Получаем пользовательские данные врачей
             const positionDoc = await getDoc(doc(db, 'Positions', positionId.id));
@@ -88,12 +88,16 @@ async function getDoctors() {
 
             const totalDoctorData = {
                 id: doctorsDoc.id,
-                ...doctorsData,
+                ...doctorData,
+                // lastname: doctorsData.lastname,
+                // name: doctorsData.name,
+                // surname: doctorsData.surname,
                 id_user: userData, // Добавляем данные о роли в объект пользователя
                 position: positionData, // Добавляем фотографию пользователя
             };
-            doctorsData.push(totalDoctorData);
             console.log("- врач ", totalDoctorData)
+            doctorsData.push(totalDoctorData);
+            console.log(doctorsData)
         }
         console.log("- все ", doctorsData)
         return doctorsData;

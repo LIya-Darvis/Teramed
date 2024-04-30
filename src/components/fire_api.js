@@ -13,7 +13,7 @@ async function getUsers() {
             const userData = userDoc.data();
             const roleId = userData.id_role;
 
-            // Получаем данные о ролях пользователей
+            // получаем данные о ролях пользователей
             const roleDoc = await getDoc(doc(db, 'Roles', roleId.id));
             const roleData = roleDoc.data();
 
@@ -24,8 +24,8 @@ async function getUsers() {
             const userWithRole = {
                 id: userDoc.id,
                 ...userData,
-                role: roleData, // Добавляем данные о роли в объект пользователя
-                photo: photoUrl, // Добавляем фотографию пользователя
+                role: roleData, // добавляем данные о роли в объект пользователя
+                photo: photoUrl, // добавляем фотографию пользователя
             };
             usersData.push(userWithRole);
         }
@@ -45,10 +45,10 @@ async function fetchAccessiblePanelsForRole(roleName) {
         }
         const roleId = rolesQuerySnapshot.docs[0].id;
 
-        // Получаем доступы для роли "admin" из коллекции Access_Rights
+        // получаем доступы для заданной роли 
         const accessRightsQuerySnapshot = await getDocs(query(collection(db, 'Access_Rights'), where('id_role', '==', doc(db, 'Roles', roleId))));
 
-        // Получаем названия панелей на основе id_panel каждой записи в Access_Rights
+        // получаем названия панелей на основе id_panel каждой записи в Access_Rights
         const panelNames = [];
         for (const docSnapshot of accessRightsQuerySnapshot.docs) {
             const accessRight = docSnapshot.data();
@@ -69,8 +69,6 @@ async function getDoctors() {
         const doctorsCollectionRef = collection(db, 'Doctors');
         const doctorsSnapshot = await getDocs(doctorsCollectionRef);
 
-        
-
         const doctorsData = [];
         for (const doctorsDoc of doctorsSnapshot.docs) {
             const doctorData = doctorsDoc.data();
@@ -78,22 +76,19 @@ async function getDoctors() {
             const userId = doctorData.id_user;
             const positionId = doctorData.id_position;
 
-            // Получаем пользовательские данные врачей
+            // получаем пользовательские данные врачей
             const userDoc = await getDoc(doc(db, 'Users', userId.id));
             const userData = userDoc.data();     
 
-            // Получаем пользовательские данные врачей
+            // получаем должности врачей
             const positionDoc = await getDoc(doc(db, 'Positions', positionId.id));
             const positionData = positionDoc.data();
 
             const totalDoctorData = {
                 id: doctorsDoc.id,
-                ...doctorData,
-                // lastname: doctorsData.lastname,
-                // name: doctorsData.name,
-                // surname: doctorsData.surname,
-                id_user: userData, // Добавляем данные о роли в объект пользователя
-                position: positionData, // Добавляем фотографию пользователя
+                ...doctorData,  // добавляем прочие данные с атрибутами по умолчанию
+                id_user: userData, // добавляем данные о роли в объект пользователя
+                position: positionData, // добавляем фотографию пользователя
             };
             console.log("- врач ", totalDoctorData)
             doctorsData.push(totalDoctorData);
@@ -106,9 +101,55 @@ async function getDoctors() {
     }
 }
 
+// для вывода данных пациентов
+async function getPatients() {
+    try {
+        const patientsCollectionRef = collection(db, 'Patients');
+        const patientsSnapshot = await getDocs(patientsCollectionRef);
 
+        const patientsData = [];
+        for (const patientsDoc of patientsSnapshot.docs) {
+            const patientData = patientsDoc.data();
 
-export { getUsers, fetchAccessiblePanelsForRole, getDoctors }
+            const userId = patientData.id_user;
+            const genderId = patientData.id_gender;
+
+            // получаем пользовательские данные пациентов
+            const userDoc = await getDoc(doc(db, 'Users', userId.id));
+            const userData = userDoc.data();     
+
+            // получаем пользовательские данные пациентов
+            const genderDoc = await getDoc(doc(db, 'Genders', genderId.id));
+            const genderData = genderDoc.data();
+
+            const storage = getStorage();
+            const photoRef = ref(storage, patientData.photo); 
+            var photoUrl = await getDownloadURL(photoRef);
+
+            const patientBirthday = patientData.birthday.toDate().getDate() + "." 
+                                    + (patientData.birthday.toDate().getMonth() + 1) + "." 
+                                    + patientData.birthday.toDate().getFullYear();
+
+            const totalPatientData = {
+                id: patientsDoc.id,
+                ...patientData,  // добавляем прочие данные с атрибутами по умолчанию
+                birthday: patientBirthday,
+                id_user: userData, // добавляем данные о роли в объект пользователя
+                gender: genderData, // добавляем фотографию пользователя
+                photo: photoUrl, // добавляем фото пациента
+            };
+            console.log("- пациент ", totalPatientData)
+            patientsData.push(totalPatientData);
+            console.log(patientsData)
+        }
+        console.log("- все ", patientsData)
+        return patientsData;
+    } catch (error) {
+        console.error('Error fetching patients:', error);
+    }
+}
+
+export { getUsers, fetchAccessiblePanelsForRole, getDoctors, getPatients }
 
 
 

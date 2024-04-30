@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { getDoctors } from '../../components/fire_api';
-import { EditButton, DeleteButton } from './TableButtons';
-import SearchPanel from './SearchPanel';
-import ContentLabel from './ContentLabel';
+import { EditButton, DeleteButton } from '../elements/TableButtons';
+import SearchPanel from '../elements/SearchPanel';
+import ContentLabel from '../elements/ContentLabel';
 
-function searchDoctors(data, searchValue) {
-    // Преобразуем строку поиска в нижний регистр для удобства сравнения
-    const search = searchValue.toLowerCase();
+// function searchDoctors(data, searchValue) {
+//     // Преобразуем строку поиска в нижний регистр для удобства сравнения
+//     const search = searchValue.toLowerCase();
 
-    // Фильтруем массив данных, оставляя только те элементы, которые соответствуют поисковому запросу
-    const filteredDoctors = data.filter(doctor => {
-        // Преобразуем значения свойств доктора в нижний регистр для удобства сравнения
-        const { lastname, name, surname, position } = doctor;
-        const lowercasedLastname = lastname.toLowerCase();
-        const lowercasedName = name.toLowerCase();
-        const lowercasedSurname = surname.toLowerCase();
-        const lowercasedPosition = position.toLowerCase();
+//     // Фильтруем массив данных, оставляя только те элементы, которые соответствуют поисковому запросу
+//     const filteredDoctors = data.filter(doctor => {
+//         // Преобразуем значения свойств доктора в нижний регистр для удобства сравнения
+//         const { lastname, name, surname, position } = doctor;
+//         const lowercasedLastname = lastname.toLowerCase();
+//         const lowercasedName = name.toLowerCase();
+//         const lowercasedSurname = surname.toLowerCase();
+//         const lowercasedPosition = position.toLowerCase();
 
-        // Проверяем, содержит ли хотя бы одно свойство доктора искомое значение
-        return (
-            lowercasedLastname.includes(search) ||
-            lowercasedName.includes(search) ||
-            lowercasedSurname.includes(search) ||
-            lowercasedPosition.includes(search)
-        );
-    });
+//         // Проверяем, содержит ли хотя бы одно свойство доктора искомое значение
+//         return (
+//             lowercasedLastname.includes(search) ||
+//             lowercasedName.includes(search) ||
+//             lowercasedSurname.includes(search) ||
+//             lowercasedPosition.includes(search)
+//         );
+//     });
 
-    return filteredDoctors;
-}
+//     return filteredDoctors;
+// }
 
 function DoctorsContentPanel() {
     const [doctorsData, setDoctorsData] = useState([]);
@@ -48,9 +48,6 @@ function DoctorsContentPanel() {
         fetchData();
     }, []);
 
-    
-
-
     const handleEditDoctor = (doctorId) => {
         console.log("редактирование врача: ", doctorId);
     };
@@ -69,8 +66,6 @@ function DoctorsContentPanel() {
     //         console.log(searchData);
     //     }
     // }, [searchText]);
-
-    
 
     return (
         <div className='content_panel'>

@@ -19,6 +19,15 @@ function DeleteButton(props) {
   )
 }
 
+function MedCardButton(props) {
+  return (
+    <div className='table_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>Мед карта</p>
+    </div>
+  )
+}
+
 function LogOutButton(props) {
   return (
     <div className='logout_button' onClick={props.onClick}>
@@ -28,4 +37,4 @@ function LogOutButton(props) {
   )
 }
 
-export { EditButton, DeleteButton, LogOutButton }
+export { EditButton, DeleteButton, MedCardButton, LogOutButton }

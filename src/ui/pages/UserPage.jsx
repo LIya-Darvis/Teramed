@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { useData } from '../../components/DataProvider';
 import { SideMenu } from '../elements/SideMenu';
 import { MenuButton } from '../elements/MenuButton';
-import { DoctorsContentPanel } from '../elements/DoctorsContentPanel';
-import GospitalizationsContentPanel from '../elements/GospitalizationsContentPanel';
-import { PatientsContentPanel } from '../elements/PatientsContentPanel';
+import { DoctorsContentPanel } from '../panels/DoctorsContentPanel';
+import GospitalizationsContentPanel from '../panels/GospitalizationsContentPanel';
+import { PatientsContentPanel } from '../panels/PatientsContentPanel';
+import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
+import UsersContentPanel from '../panels/UsersContentPanel';
 
 import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
 
@@ -13,6 +15,8 @@ const components = [
   { 'DoctorsContentPanel': { component: <DoctorsContentPanel />, title: "Сотрудники" } },
   { 'GospitalizationsContentPanel': { component: <GospitalizationsContentPanel />, title: "Госпитализация" } },
   { 'PatientsContentPanel': { component: <PatientsContentPanel />, title: "Пациенты" } },
+  { 'PatientLdmViewPanel': { component: <PatientLdmViewPanel />, title: "Моя мед карта" } },
+  { 'UsersContentPanel': { component: <UsersContentPanel />, title: "Пользователи" } },
 ];
 
 export default function UserPage() {

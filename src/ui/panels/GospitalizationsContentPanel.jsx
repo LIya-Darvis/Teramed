@@ -1,5 +1,5 @@
 import React from 'react';
-import ContentLabel from './ContentLabel';
+import ContentLabel from '../elements/ContentLabel';
 
 export default function GospitalizationContentPanel() {
 

@@ -1,7 +1,7 @@
 import { Children, useState } from 'react';
 import { useData } from '../../components/DataProvider';
 import './styles.css';
-import UserAccountPanel from './UserAccountPanel';
+import UserAccountPanel from '../panels/UserAccountPanel';
 import { LogOutButton } from './TableButtons';
 
 function SideMenu({ children }) {

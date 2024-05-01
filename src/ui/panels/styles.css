@@ -1,45 +1,4 @@
-.side_menu_panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    padding: 20px 30px;
-    background-color: #FFFFFF;
-    /* height: 100%; */
-    min-width: 200px;
-    box-shadow: 1px 4px 8px #DAE1F9;
-}
 
-.side_menu_app_name {
-    padding: 30px 0px;
-    color: #4B5672;
-}
-
-.side_buttons_panel {
-    margin: 1vh 0px;
-}
-
-.menu_btn_background {
-    background-color: #F2F5FF;
-    padding: 0px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    margin: 8px 0px;
-    padding: 0px 35px;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-.menu_btn_background p {
-    color: #4B5672;
-    padding: 0px 10px;
-    font-size: 16px;
-    font-weight: 600;
-}
 
 .user_account_panel {
     display: flex;
@@ -81,27 +40,14 @@
     background-color: hsl(224, 13%, 23%);
 } */
 
-.logout_button {
-    background-color: #4B5672;
-    color: #F2F5FF;
-    border-radius: 8px;
-    display: flex;
-    font-size: 18px;
-    justify-content: center;
-    align-items: center;
-    height: 24px;
-    width: 60px;
-    /* padding: 3px 5px; */
-    /* margin: 0px 3px; */
-}
-
 .content_panel {
     background-color: #F2F5FF;
     display: flex;
     flex-direction: column;
     align-items: left;
     /* flex-wrap: wrap; */
-    /* padding: 35px; */
+    padding-bottom: 65px;
+    
 }
 
 .table_buttons_frame {
@@ -145,36 +91,11 @@
     padding: 0px 10px;
 }
 
-.search_frame {
-    height: 40px;
+.card_list_frame {
     width: 100%;
-    border-radius: 15px;
-    margin: 30px 10px;
-    background-color: #FFF;
-    box-shadow: 1px 4px 8px #DAE1F9;
-}
-
-.seach_input {
-    height: 40px;
-    width: 80%;
-    border-radius: 15px;
-    margin: 30px 10px;
-    background-color: #FFF;
-    box-shadow: 1px 4px 8px #DAE1F9;
-    border-width: 0px;
-    font-size: 16px;
-    padding: 0px 15px;
-    text-align: left;
-}
-
-.seach_input:focus,
-.seach_input:hover {
-    outline: none;
-}
-
-.content_label {
-    color: #4B5672;
-    font-size: 24px;
-    text-align: left;
-    padding: 0px 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 35px 0px;
+    padding-bottom: 150px;
 }

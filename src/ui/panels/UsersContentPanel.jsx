@@ -1,8 +1,11 @@
 import React from 'react'
+import ContentLabel from '../elements/ContentLabel';
 
 function UsersContentPanel() {
   return (
-    <div>UsersContentPanel</div>
+    <div>
+      <ContentLabel title="Пользователи" />
+    </div>
   )
 }
 

@@ -101,7 +101,34 @@
     flex-direction: column;
     align-items: left;
     /* flex-wrap: wrap; */
-    /* padding: 35px; */
+    padding-bottom: 85px;
+    /* overflow-y: scroll; */
+    /* scrollbar-width: 0; */
+}
+
+.modal_background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #4b567287;
+    /* opacity: 0.3; */
+}
+
+.modal_frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 20px 30px;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    /* box-shadow: 1px 4px 8px #DAE1F9; */
 }
 
 .table_buttons_frame {
@@ -119,30 +146,6 @@
     height: 34px;
     padding: 0px 12px;
     margin: 0px 3px;
-}
-
-.table_frame {
-    background-color: #FFF;
-    margin: 10px;
-    padding: 15px;
-    box-shadow: 1px 4px 8px #DAE1F9;
-    border-radius: 12px;
-}
-
-.data_table {
-    text-align: left;
-    font-size: 14px;
-}
-
-.data_table th {
-    text-align: center;
-    height: 30px;
-}
-
-.data_table td {
-    text-align: left;
-    height: 30px;
-    padding: 0px 10px;
 }
 
 .search_frame {
@@ -178,3 +181,32 @@
     text-align: left;
     padding: 0px 50px;
 }
+
+.ldm_card_frame {
+    margin: 8px 15px;
+    padding: 10px 5px;
+    background-color: #FFF;
+    box-shadow: 1px 4px 8px #DAE1F9;
+    border-radius: 8px;
+    border-width: 0px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+}
+
+.ldm_main_info_col {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 160px;
+}
+
+.ldm_main_info_col p {
+    padding: 0px;
+    margin: 4px 2px;
+}
+
+

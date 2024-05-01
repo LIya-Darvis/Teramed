@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, getDoc, doc, query, where } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, addDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // для авторизации
@@ -18,7 +18,7 @@ async function getUsers() {
             const roleData = roleDoc.data();
 
             const storage = getStorage();
-            const photoRef = ref(storage, userData.photo); 
+            const photoRef = ref(storage, userData.photo);
             var photoUrl = await getDownloadURL(photoRef);
 
             const userWithRole = {
@@ -40,7 +40,7 @@ async function fetchAccessiblePanelsForRole(roleName) {
     try {
         const rolesQuerySnapshot = await getDocs(query(collection(db, 'Roles'), where('name', '==', roleName)));
         if (rolesQuerySnapshot.empty) {
-            console.log('Роль с именем ', roleName,' не найдена');
+            console.log('Роль с именем ', roleName, ' не найдена');
             return;
         }
         const roleId = rolesQuerySnapshot.docs[0].id;
@@ -78,7 +78,7 @@ async function getDoctors() {
 
             // получаем пользовательские данные врачей
             const userDoc = await getDoc(doc(db, 'Users', userId.id));
-            const userData = userDoc.data();     
+            const userData = userDoc.data();
 
             // получаем должности врачей
             const positionDoc = await getDoc(doc(db, 'Positions', positionId.id));
@@ -116,19 +116,19 @@ async function getPatients() {
 
             // получаем пользовательские данные пациентов
             const userDoc = await getDoc(doc(db, 'Users', userId.id));
-            const userData = userDoc.data();     
+            const userData = userDoc.data();
 
             // получаем пользовательские данные пациентов
             const genderDoc = await getDoc(doc(db, 'Genders', genderId.id));
             const genderData = genderDoc.data();
 
             const storage = getStorage();
-            const photoRef = ref(storage, patientData.photo); 
+            const photoRef = ref(storage, patientData.photo);
             var photoUrl = await getDownloadURL(photoRef);
 
-            const patientBirthday = patientData.birthday.toDate().getDate() + "." 
-                                    + (patientData.birthday.toDate().getMonth() + 1) + "." 
-                                    + patientData.birthday.toDate().getFullYear();
+            const patientBirthday = patientData.birthday.toDate().getDate() + "."
+                + (patientData.birthday.toDate().getMonth() + 1) + "."
+                + patientData.birthday.toDate().getFullYear();
 
             const totalPatientData = {
                 id: patientsDoc.id,
@@ -149,7 +149,57 @@ async function getPatients() {
     }
 }
 
-export { getUsers, fetchAccessiblePanelsForRole, getDoctors, getPatients }
+// для получения всез лдм
+async function getLdms() {
+    try {
+        
+        const ldmsCollectionRef = collection(db, 'Ldms');
+        const ldmsSnapshot = await getDocs(ldmsCollectionRef);
+
+        const ldmsData = [];
+        for (const ldmDoc of ldmsSnapshot.docs) {
+            const ldmData = ldmDoc.data();
+            const positionId = ldmData.id_position;
+
+            // получаем данные о ролях пользователей
+            const positionDoc = await getDoc(doc(db, 'Positions', positionId.id));
+            const positionData = positionDoc.data();
+
+            const totalLdmData = {
+                id: ldmDoc.id,
+                ...ldmData,
+                position: positionData, // добавляем данные о должности специалиста
+            };
+            ldmsData.push(totalLdmData);
+        }
+        return ldmsData;
+    } catch (error) {
+        console.error('Error fetching ldms:', error);
+    }
+}
+
+// для добавления новой записи на прием
+async function uploadDataToAppointment(idPatient, idDoctorLocation, idLdm, ldmDatetime) {
+    try {
+        // Добавляем новый документ в коллекцию Ldms
+        await addDoc(collection(db, 'Appointments'), {
+            id_patient: idPatient,
+            id_doctor_location: idDoctorLocation,
+            id_ldm: idLdm,
+            ldm_datetime: ldmDatetime,
+        });
+        console.log('Данные успешно загружены в коллекцию Appointments');
+    } catch (error) {
+        console.error('Ошибка при загрузке данных в коллекцию Appointments:', error);
+    }
+}
+
+
+
+
+
+export { getUsers, fetchAccessiblePanelsForRole, getDoctors, 
+        getPatients, uploadDataToAppointment, getLdms }
 
 
 

@@ -95,8 +95,10 @@
     width: 100%;
     color: #355065;
     overflow-y: scroll;
+    scrollbar-width: none;
     display: flex;
     padding: 35px;
+    box-shadow: inset 0px -10px 10px -10px rgba(0,0,0,0.5);
 }
 
 

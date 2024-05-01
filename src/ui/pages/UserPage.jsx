@@ -7,6 +7,7 @@ import GospitalizationsContentPanel from '../panels/GospitalizationsContentPanel
 import { PatientsContentPanel } from '../panels/PatientsContentPanel';
 import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
 import UsersContentPanel from '../panels/UsersContentPanel';
+import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
 
 import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
 
@@ -17,6 +18,7 @@ const components = [
   { 'PatientsContentPanel': { component: <PatientsContentPanel />, title: "Пациенты" } },
   { 'PatientLdmViewPanel': { component: <PatientLdmViewPanel />, title: "Моя мед карта" } },
   { 'UsersContentPanel': { component: <UsersContentPanel />, title: "Пользователи" } },
+  { 'PatientAppointmentMakePanel': { component: <PatientAppointmentMakePanel />, title: "Запись на прием" } },
 ];
 
 export default function UserPage() {

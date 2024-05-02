@@ -50,21 +50,20 @@ export default function UserPage() {
 
 
   return (
-    <>
+    <div>
       <div className='user_page_back_frame'>
+        {/* панель бокового меню навигации */}
         <SideMenu>
-
           {accessiblePanels.map((panelName, index) => {
             const { component, title } = components.find((item) => Object.keys(item)[0] === panelName)[panelName];
             return (
               <MenuButton key={index} title={title} onClick={() => handlePanelChange(panelName)} />
             );
           })}
-
         </SideMenu>
 
+        {/* контейнер для отображения функциональных панелей */}
         <div className='user_page_content_frame'>
-
           {activePanel && components.map(item => {
             const panelName = Object.keys(item)[0];
             if (panelName === activePanel) {
@@ -72,9 +71,10 @@ export default function UserPage() {
             }
             return null;
           })}
-
         </div>
       </div>
-    </>
+    </div>
   )
 }
+
+

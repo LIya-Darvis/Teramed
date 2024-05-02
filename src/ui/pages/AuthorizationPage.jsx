@@ -12,21 +12,18 @@ import { getUsers } from '../../components/fire_api.js';
 
 // авторизация
 function AuthorizationPage() {
-
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [errorText, setErrorText] = useState(' ');
     const { data, setData } = useData();
-
 
     async function autorization(login, password) {
         if (login.trim() === "" || password.trim() === "") {
             setErrorText("Введите данные");
         } else {
             try {
-
                 var users = await getUsers();
-                // если данные пользователей по апи успешно получены
+                // если данные пользователей получены успешно
                 if (users) {
                     console.log(users);
                     for (var user of users) {
@@ -35,7 +32,6 @@ function AuthorizationPage() {
                                 user.login, user.password, user.photo);
                             var authUser = new User(user.id, user.role.name, user.username, 
                                     user.login, user.password, user.photo)
-
                             setData({ isLogin: true, userData: authUser });
                             console.log("-> ", data)
                             setErrorText("");
@@ -51,8 +47,6 @@ function AuthorizationPage() {
                 console.log(error.message);
             }
         }
-
-
     }
 
 

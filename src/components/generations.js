@@ -21,7 +21,7 @@ function getAppointmentTimePeriods() {
             return a.minutes - b.minutes;
         }
     });
-
+ 
     return timePeriods;
 }
 

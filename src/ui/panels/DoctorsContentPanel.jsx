@@ -71,7 +71,6 @@ function DoctorsContentPanel() {
         <div className='content_panel'>
             <ContentLabel title="Сотрудники" />
             <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
-
             <div className='table_frame'>
                 <table className='data_table'>
                     <thead>
@@ -101,8 +100,6 @@ function DoctorsContentPanel() {
                     </tbody>
                 </table>
             </div>
-            
-
         </div>
     )
 }

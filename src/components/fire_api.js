@@ -40,13 +40,14 @@ async function fetchAccessiblePanelsForRole(roleName) {
     try {
         const rolesQuerySnapshot = await getDocs(query(collection(db, 'Roles'), where('name', '==', roleName)));
         if (rolesQuerySnapshot.empty) {
-            console.log('Роль с именем ', roleName, ' не найдена');
+            console.log('Роль ', roleName, ' не найдена');
             return;
         }
         const roleId = rolesQuerySnapshot.docs[0].id;
 
         // получаем доступы для заданной роли 
-        const accessRightsQuerySnapshot = await getDocs(query(collection(db, 'Access_Rights'), where('id_role', '==', doc(db, 'Roles', roleId))));
+        const accessRightsQuerySnapshot = await getDocs(query(collection(db, 'Access_Rights'), 
+            where('id_role', '==', doc(db, 'Roles', roleId))));
 
         // получаем названия панелей на основе id_panel каждой записи в Access_Rights
         const panelNames = [];
@@ -59,7 +60,7 @@ async function fetchAccessiblePanelsForRole(roleName) {
 
         return panelNames
     } catch (error) {
-        console.error('Ошибка при получении доступных панелей:', error);
+        console.error('Ошибка при получении доступных панелей: ', error);
     }
 };
 
@@ -79,7 +80,7 @@ async function getDoctors() {
             // получаем пользовательские данные врачей
             const userDoc = await getDoc(doc(db, 'Users', userId.id));
             const userData = userDoc.data();
-
+            
             // получаем должности врачей
             const positionDoc = await getDoc(doc(db, 'Positions', positionId.id));
             const positionData = positionDoc.data();
@@ -87,14 +88,11 @@ async function getDoctors() {
             const totalDoctorData = {
                 id: doctorsDoc.id,
                 ...doctorData,  // добавляем прочие данные с атрибутами по умолчанию
-                id_user: userData, // добавляем данные о роли в объект пользователя
-                position: positionData, // добавляем фотографию пользователя
+                id_user: userData, // добавляем данные о роли пользователя
+                position: positionData, // добавляем должность специалиста
             };
-            console.log("- врач ", totalDoctorData)
             doctorsData.push(totalDoctorData);
-            console.log(doctorsData)
         }
-        console.log("- все ", doctorsData)
         return doctorsData;
     } catch (error) {
         console.error('Error fetching doctors:', error);

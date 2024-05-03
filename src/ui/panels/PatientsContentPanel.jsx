@@ -7,7 +7,7 @@ import ContentLabel from '../elements/ContentLabel';
 
 
 
-function PatientsContentPanel() {
+export default function PatientsContentPanel() {
 
     const [patientsData, setPatientsData] = useState([]);
     const [searchData, setSearchData] = useState([]);
@@ -72,5 +72,3 @@ function PatientsContentPanel() {
 
 
 }
-
-export {PatientsContentPanel}

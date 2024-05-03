@@ -209,4 +209,20 @@
     margin: 4px 2px;
 }
 
+.time_card_frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    width: 90px;
+    margin: 3px 2px;
+    background-color: #F2F5FF;
+    border-radius: 3px;
+    color: #4B5672;
+    font-size: 13px;
+}
+
+.time_card_frame:hover {
+    box-shadow: 1px 4px 8px #DAE1F9;
+}
 

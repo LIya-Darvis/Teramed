@@ -29,7 +29,7 @@ import ContentLabel from '../elements/ContentLabel';
 //     return filteredDoctors;
 // }
 
-function DoctorsContentPanel() {
+export default function DoctorsContentPanel() {
     const [doctorsData, setDoctorsData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [searchText, setSearchText] = useState('');
@@ -104,4 +104,3 @@ function DoctorsContentPanel() {
     )
 }
 
-export { DoctorsContentPanel }

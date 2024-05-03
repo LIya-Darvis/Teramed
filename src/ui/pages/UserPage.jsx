@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useData } from '../../components/DataProvider';
 import { SideMenu } from '../elements/SideMenu';
 import { MenuButton } from '../elements/MenuButton';
-import { DoctorsContentPanel } from '../panels/DoctorsContentPanel';
+import DoctorsContentPanel from '../panels/DoctorsContentPanel';
 import GospitalizationsContentPanel from '../panels/GospitalizationsContentPanel';
-import { PatientsContentPanel } from '../panels/PatientsContentPanel';
+import PatientsContentPanel from '../panels/PatientsContentPanel';
 import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
 import UsersContentPanel from '../panels/UsersContentPanel';
 import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
+import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
 
 import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
 
@@ -18,7 +19,8 @@ const components = [
   { 'PatientsContentPanel': { component: <PatientsContentPanel />, title: "Пациенты" } },
   { 'PatientLdmViewPanel': { component: <PatientLdmViewPanel />, title: "Моя мед карта" } },
   { 'UsersContentPanel': { component: <UsersContentPanel />, title: "Пользователи" } },
-  { 'PatientAppointmentMakePanel': { component: <PatientAppointmentMakePanel />, title: "Запись на прием" } },
+  { 'PatientAppointmentMakePanel': { component: <PatientAppointmentMakePanel />, title: "Записаться на прием" } },
+  { 'PatientAppointmentViewPanel': { component: <PatientAppointmentViewPanel />, title: "Назначенные приемы" } },
 ];
 
 export default function UserPage() {

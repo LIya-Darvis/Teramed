@@ -1,7 +1,7 @@
 import { db } from "../firebase";
 import { collection, getDocs, getDoc, doc, query, where, addDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { formatDate } from "./formations";
+import { formatDate, formatTime } from "./formations";
 
 // для авторизации
 export async function getUsers() {
@@ -89,7 +89,7 @@ export async function getDoctors() {
             const totalDoctorData = {
                 id: doctorsDoc.id,
                 ...doctorData,  // добавляем прочие данные с атрибутами по умолчанию
-                id_user: userData, // добавляем данные о роли пользователя
+                id_user: userData, // добавляем пользовательские данные
                 position: positionData, // добавляем должность специалиста
             };
             doctorsData.push(totalDoctorData);
@@ -217,6 +217,7 @@ export async function findDoctorByPositionId(positionId) {
     }
 }
 
+// получаем расположение специалистов и кабинетов
 export async function getDoctorLocationsByPositionId(positionId) {
     try {
         const doctors = await findDoctorByPositionId(positionId);
@@ -262,8 +263,85 @@ export async function uploadDataToAppointment(idPatient, idDoctorLocation, idLdm
     }
 }
 
+// для получения записей приема для определенного пациента (по id пользователя)
+export async function getPatientAppointmentsByUserId(userId) {
+    try {
+        const patients = await findPatientByUserId(userId);
+        console.log("id пациента ", patients[0].id)
 
+        const appointmentsCollectionRef = collection(db, 'Appointments');
+        const q = query(appointmentsCollectionRef, where('id_patient', '==', doc(db, 'Patients', patients[0].id)));
+        const appointmentsSnapshot = await getDocs(q);
 
+        // console.log(appointmentsSnapshot.docs)
+
+        const appointmentsData = [];
+        for (const appointmentDoc of appointmentsSnapshot.docs) {
+            const appointmentData = appointmentDoc.data();
+
+            const doctorLocationId = appointmentData.id_doctor_location;
+            const doctorLocationDoc = await getDoc(doc(db, 'Doctor_Locations', doctorLocationId.id));
+            const doctorLocationData = doctorLocationDoc.data();
+
+            const idCabinet = doctorLocationData.id_cabinet;
+            const cabinetDoc = await getDoc(doc(db, 'Cabinets', idCabinet.id));
+            const cabinetData = cabinetDoc.data();
+
+            const idDoctor = doctorLocationData.id_doctor;
+            const doctorDoc = await getDoc(doc(db, 'Doctors', idDoctor.id));
+            const doctorData = doctorDoc.data();
+
+            const idLdm = appointmentData.id_ldm;
+            const ldmDoc = await getDoc(doc(db, 'Ldms', idLdm.id));
+            const ldmData = ldmDoc.data();
+
+            const idPatient = appointmentData.id_patient;
+            const patientDoc = await getDoc(doc(db, 'Patients', idPatient.id));
+            const patientData = patientDoc.data();
+
+            console.log(appointmentData.ldm_datetime)
+
+            const ldmDate = formatDate(appointmentData.ldm_datetime.toDate());
+            const ldmTime = formatTime(appointmentData.ldm_datetime.toDate());
+
+            const appointment = {
+                id: appointmentDoc.id,
+                patient: patientData.lastname,
+                doctor: doctorData.lastname,
+                cabinet: cabinetData.num,
+                ldm_name: ldmData.name,
+                ldm_date: ldmDate,
+                ldm_time: ldmTime,
+            };
+            appointmentsData.push(appointment);
+        }
+
+        return appointmentsData;
+    } catch (error) {
+        console.error('Ошибка при получении записей Appointments пациента:', error);
+        return [];
+    }
+}
+
+export async function updateDoctorData(doctorId, lastname, name, surname, id) {
+    try {
+        const newData = {
+            lastname: lastname,
+            name: "Новое имя",
+            id_position: "/Positions/новый_id",
+        };
+
+        // Получаем ссылку на документ в коллекции Doctors
+        const doctorRef = doc(db, 'Doctors', doctorId);
+
+        // Обновляем данные в документе
+        await updateDoc(doctorRef, newData);
+
+        console.log('Данные успешно обновлены для доктора с ID:', doctorId);
+    } catch (error) {
+        console.error('Ошибка при обновлении данных для доктора:', error);
+    }
+}
 
 
 

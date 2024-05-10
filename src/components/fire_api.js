@@ -1,9 +1,9 @@
 import { db } from "../firebase";
-import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { formatUsername, formatDate, formatTime } from "./formations";
 
-// для авторизации
+// для получения списка пользователей (в основном для авторизации)
 export async function getUsers() {
     try {
         const usersCollectionRef = collection(db, 'Users');
@@ -97,6 +97,28 @@ export async function getDoctors() {
         return doctorsData;
     } catch (error) {
         console.error('Error fetching doctors:', error);
+    }
+}
+
+// для получения всех должностей врачей
+export async function getPositions() {
+    try {
+        const positionsCollectionRef = collection(db, 'Positions');
+        const positionsSnapshot = await getDocs(positionsCollectionRef);
+
+        const positionsData = [];
+        for (const positionDoc of positionsSnapshot.docs) {
+            const positionData = positionDoc.data();
+
+            const totalPositionData = {
+                id: positionDoc.id,
+                name: positionData.name,
+            };
+            positionsData.push(totalPositionData);
+        }
+        return positionsData;
+    } catch (error) {
+        console.error('Error fetching positions:', error);
     }
 }
 
@@ -324,15 +346,16 @@ export async function getPatientAppointmentsByUserId(userId) {
 }
 
 // для добавления нового врача
-export async function uploadDoctorData(lastname, name, surname, idPosition, login, password) {
+export async function uploadDoctorData(lastname, name, surname, idPosition, isAvailable, login, password) {
     try {
         // создаем ссылки на другие объекты
         const positionRef = doc(db, 'Positions', idPosition);
-        const roleRef = doc(db, 'Roles', 2);
-        const doctorPhoto = "users_avatar/doctor.png";
+        const roleRef = doc(db, 'Roles', '2');
+        const doctorPhoto = 'users_avatar/doctor.png';
         const username = formatUsername(lastname, name, surname);
+        var newUserId = null;
 
-        // Добавляем новый документ в коллекцию пользователей
+        // добавляем новый документ в коллекцию пользователей
         await addDoc(collection(db, 'Users'), {
             id_role: roleRef,
             username: username,
@@ -341,19 +364,40 @@ export async function uploadDoctorData(lastname, name, surname, idPosition, logi
             photo: doctorPhoto,
         });
 
-        // Добавляем новый документ в коллекцию врачей
+        var users = await getUsers();
+
+        if (users) {
+            console.log(users);
+            for (var user of users) {
+                if (user.login === login && user.password === password && 
+                    user.role.id === '2' && user.username === username) {
+                    newUserId = user.id;
+                } else {
+                    console.log("Новый пользователь не найден")
+                }
+            }
+        } else {
+            console.log("Ошибка подключения к серверу");
+        }
+
+        const userRef = doc(db, 'Users', newUserId);
+
+        // добавляем новый документ в коллекцию врачей
         await addDoc(collection(db, 'Doctors'), {
-            id_patient: patientRef,
-            id_doctor_location: doctorLocationRef,
-            id_ldm: ldmRef,
-            ldm_datetime: ldmDatetime,
+            lastname: lastname,
+            name: name,
+            surname: surname,
+            id_position: positionRef,
+            id_user: userRef,
+            id_available: isAvailable,
         });
-        console.log('Данные успешно загружены в коллекцию Appointments');
+        console.log('Данные успешно загружены в коллекцию Doctors');
     } catch (error) {
-        console.error('Ошибка при загрузке данных в коллекцию Appointments:', error);
+        console.error('Ошибка при загрузке данных в коллекцию Doctors:', error);
     }
 }
 
+// для обновления записи в коллекции врачей
 export async function updateDoctorData(doctorId, lastname, name, surname, idPosition, isAvailable) {
     try {
         const newData = {
@@ -362,19 +406,29 @@ export async function updateDoctorData(doctorId, lastname, name, surname, idPosi
             surname: surname,
             id_position: idPosition,
             is_available: isAvailable,
+            is_archived: false,
         };
 
-        // Получаем ссылку на документ в коллекции Doctors
         const doctorRef = doc(db, 'Doctors', doctorId);
-
-        // Обновляем данные в документе
         await updateDoc(doctorRef, newData);
 
-        console.log('Данные успешно обновлены для доктора с ID:', doctorId);
+        console.log('Данные успешно обновлены для врача с Id:', doctorId);
     } catch (error) {
-        console.error('Ошибка при обновлении данных для доктора:', error);
+        console.error('Ошибка при обновлении данных для врача:', error);
     }
 }
+
+// для архивации записи врача (полное удаление приведет к некорректным связям в других таблицах)
+export async function deleteDoctor(doctorId) {
+    try {
+      const doctorRef = doc(db, "Doctors", doctorId);
+      await updateDoc(doctorRef);
+      
+      console.log("Доктор успешно удален(архивирован)");
+    } catch (error) {
+      console.error("Ошибка при удалении(архивации) врача:", error);
+    }
+  }
 
 
 

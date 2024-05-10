@@ -40,6 +40,24 @@ export function LogOutButton(props) {
 export function AddButton(props) {
   return (
     <div className='add_button' onClick={props.onClick}>
+      {/* <img src="../../assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
+    </div>
+  )
+}
+
+export function CloseButton(props) {
+  return (
+    <div className='close_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
+    </div>
+  )
+}
+
+export function ConfirmButton(props) {
+  return (
+    <div className='confirm_button' onClick={props.onClick}>
       {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
       <p>{props.title}</p>
     </div>

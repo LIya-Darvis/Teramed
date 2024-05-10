@@ -1,13 +1,10 @@
-// const styles = require('./styles.css');
-import './styles.css';
 // import { css } from "@emotion/react";
 import { motion, useAnimate, usePresence } from "framer-motion";
 import { useState, useContext, createContext, useEffect } from 'react';
 import React from 'react';
 import { useData } from '../../components/DataProvider.jsx';
 import { User } from '../../components/classes.js';
-
-
+import './styles.css';
 import { getUsers } from '../../components/fire_api.js';
 
 // авторизация

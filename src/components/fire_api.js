@@ -356,31 +356,13 @@ export async function uploadDoctorData(lastname, name, surname, idPosition, isAv
         var newUserId = null;
 
         // добавляем новый документ в коллекцию пользователей
-        await addDoc(collection(db, 'Users'), {
+        const userRef = await addDoc(collection(db, 'Users'), {
             id_role: roleRef,
             username: username,
             login: login,
             password: password,
             photo: doctorPhoto,
         });
-
-        var users = await getUsers();
-
-        if (users) {
-            console.log(users);
-            for (var user of users) {
-                if (user.login === login && user.password === password && 
-                    user.role.id === '2' && user.username === username) {
-                    newUserId = user.id;
-                } else {
-                    console.log("Новый пользователь не найден")
-                }
-            }
-        } else {
-            console.log("Ошибка подключения к серверу");
-        }
-
-        const userRef = doc(db, 'Users', newUserId);
 
         // добавляем новый документ в коллекцию врачей
         await addDoc(collection(db, 'Doctors'), {
@@ -406,7 +388,6 @@ export async function updateDoctorData(doctorId, lastname, name, surname, idPosi
             surname: surname,
             id_position: idPosition,
             is_available: isAvailable,
-            is_archived: false,
         };
 
         const doctorRef = doc(db, 'Doctors', doctorId);
@@ -419,16 +400,20 @@ export async function updateDoctorData(doctorId, lastname, name, surname, idPosi
 }
 
 // для архивации записи врача (полное удаление приведет к некорректным связям в других таблицах)
-export async function deleteDoctor(doctorId) {
+export async function deleteDoctorData(doctorId) {
     try {
-      const doctorRef = doc(db, "Doctors", doctorId);
-      await updateDoc(doctorRef);
-      
-      console.log("Доктор успешно удален(архивирован)");
+        const newData = {
+            is_archived: true,
+        };
+
+        const doctorRef = doc(db, "Doctors", doctorId);
+        await updateDoc(doctorRef, newData);
+
+        console.log("Доктор успешно удален(архивирован)");
     } catch (error) {
-      console.error("Ошибка при удалении(архивации) врача:", error);
+        console.error("Ошибка при удалении(архивации) врача:", error);
     }
-  }
+}
 
 
 

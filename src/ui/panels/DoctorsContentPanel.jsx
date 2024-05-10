@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getDoctors, getPositions, uploadDoctorData } from '../../components/fire_api';
+import { getDoctors, getPositions, uploadDoctorData, updateDoctorData, deleteDoctorData } from '../../components/fire_api';
 import { EditButton, DeleteButton, AddButton, ConfirmButton, CloseButton } from '../elements/Buttons';
 import SearchPanel from '../elements/SearchPanel';
 import DropdownList from '../elements/DropdownList';
@@ -132,13 +132,14 @@ export default function DoctorsContentPanel() {
     };
 
     // подтверждение редактирования врача
-    const handleEditConfirm = async () => {
+    const handleEditConfirm = async (doctorId) => {
         console.log(lastname, name, surname, selectedPositionId);
         clearData();
     };
 
     // подтверждение удаления врача
     const handleDeleteConfirm = async () => {
+        deleteDoctorData(doctorId);
         clearData();
     };
 

@@ -46,6 +46,10 @@ function PatientAppointmentMakePanel() {
         setIsModalOpen(true);
     };
 
+    const handleCloseClick = () => {
+        setIsModalOpen(false);
+    };
+
     // выбор времени лдм
     const handleTimeCardClick = (time) => {
         setSelectedTime(time);
@@ -88,6 +92,7 @@ function PatientAppointmentMakePanel() {
             </div>
             {isModalOpen && (
                 <ModalPanel >
+                    <button onClick={handleCloseClick}>Закрыть</button>
                     <h3>{selectedLdm.name}</h3>
                     {appointmentTime.map((time) => (
                         <TimeCard hour={time.hours} minute={time.minutes}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getPatients } from "../../components/fire_api";
-import { MedCardButton } from '../elements/TableButtons';
+import { MedCardButton } from '../elements/Buttons';
 import SearchPanel from '../elements/SearchPanel';
 import ContentLabel from '../elements/ContentLabel';
 

@@ -1,3 +1,9 @@
+export function formatUsername(lastname, name, surname) {
+    const username = lastname + " " + name[0] + "." + surname[0]+ ".";
+    // изменяем входной формат на day.month.year
+    return username;
+}
+
 export function formatDate(date) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     // изменяем входной формат на day.month.year
@@ -13,5 +19,4 @@ export function formatTime(time) {
     // изменяем входной формат на hours:minutes
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     return formattedTime;
-
 }

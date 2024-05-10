@@ -30,6 +30,13 @@
     background-color: hsl(222, 11%, 55%);
 }
 
+.func_frame {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
 /* .chat_button {
     position: absolute;
     bottom: 0;

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getDoctors } from '../../components/fire_api';
-import { EditButton, DeleteButton } from '../elements/TableButtons';
+import { EditButton, DeleteButton, AddButton } from '../elements/Buttons';
 import SearchPanel from '../elements/SearchPanel';
 import ContentLabel from '../elements/ContentLabel';
+import ModalPanel from '../elements/ModalPanel';
+import "./styles.css"
 
 // function searchDoctors(data, searchValue) {
 //     // Преобразуем строку поиска в нижний регистр для удобства сравнения
@@ -33,6 +35,10 @@ export default function DoctorsContentPanel() {
     const [doctorsData, setDoctorsData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [doctorId, setDoctorId] = useState(null);
 
     // ассинхронно получаем данные врачей из апи
     useEffect(() => {
@@ -48,12 +54,46 @@ export default function DoctorsContentPanel() {
         fetchData();
     }, []);
 
+    const handleCloseClick = () => {
+        setIsAddModalOpen(false);
+        setIsEditModalOpen(false);
+        setIsDeleteModalOpen(false);
+        setDoctorId(null);
+    };
+
+    const handleAddDoctor = () => {
+        setIsAddModalOpen(true);
+        console.log("добавление врача");
+    };
+
     const handleEditDoctor = (doctorId) => {
+        setIsEditModalOpen(true);
+        setDoctorId(doctorId);
         console.log("редактирование врача: ", doctorId);
     };
 
     const handleDeleteDoctor = (doctorId) => {
+        setIsDeleteModalOpen(true);
+        setDoctorId(doctorId);
         console.log("удаление врача: ", doctorId);
+    };
+
+    // подтверждение добавления врача
+    const handleAddConfirm = async () => {
+        setIsAddModalOpen(false);
+        setDoctorId(null);
+    };
+
+    // подтверждение редактирования врача
+    const handleEditConfirm = async () => {
+        setIsEditModalOpen(false);
+        setDoctorId(null);
+    };
+
+    // подтверждение удаления врача
+    const handleDeleteConfirm = async () => {
+        setIsDeleteModalOpen(false);
+        setDoctorId(null);
     };
 
     // useEffect(() => {
@@ -70,7 +110,11 @@ export default function DoctorsContentPanel() {
     return (
         <div className='content_panel'>
             <ContentLabel title="Сотрудники" />
-            <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
+            <div className='func_frame'>
+                <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
+                <AddButton title="Добавить сотрудника" onClick={() => handleAddDoctor()}/>
+            </div>
+
             <div className='table_frame'>
                 <table className='data_table'>
                     <thead>
@@ -100,6 +144,28 @@ export default function DoctorsContentPanel() {
                     </tbody>
                 </table>
             </div>
+
+            {isAddModalOpen && (
+                <ModalPanel >
+                    <button onClick={handleCloseClick}>Закрыть</button>
+                    <h3>Добавление врача</h3>
+                    <button onClick={handleAddConfirm}>Подтвердить</button>
+                </ModalPanel>
+            )}
+            {isEditModalOpen && (
+                <ModalPanel >
+                    <button onClick={handleCloseClick}>Закрыть</button>
+                    <h3>Редактирование врача {doctorId}</h3>
+                    <button onClick={handleEditConfirm}>Подтвердить</button>
+                </ModalPanel>
+            )}
+            {isDeleteModalOpen && (
+                <ModalPanel >
+                    <button onClick={handleCloseClick}>Закрыть</button>
+                    <h3>Удаление врача {doctorId}</h3>
+                    <button onClick={handleDeleteConfirm}>Подтвердить</button>
+                </ModalPanel>
+            )}
         </div>
     )
 }

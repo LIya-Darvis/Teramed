@@ -2,11 +2,15 @@ import { Children, useState } from 'react';
 import { useData } from '../../components/DataProvider';
 import './styles.css';
 import UserAccountPanel from '../panels/UserAccountPanel';
-import { LogOutButton } from './TableButtons';
+import { LogOutButton } from './Buttons';
 
 function SideMenu({ children }) {
+    const { data, setData } = useData();    
 
-    
+    const handleLogOutClick = () => {
+        
+        setData({ isLogin: false, userData: null })
+    };
 
     return (
         <div className='side_menu_panel'>
@@ -15,7 +19,7 @@ function SideMenu({ children }) {
             <div className='side_buttons_panel'>
                 {children}
             </div>
-            <LogOutButton/>
+            <LogOutButton onClick={() => handleLogOutClick()}/>
         </div>
     )
 }

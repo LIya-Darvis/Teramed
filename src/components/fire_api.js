@@ -1,7 +1,7 @@
 import { db } from "../firebase";
-import { collection, getDocs, getDoc, doc, query, where, addDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { formatDate, formatTime } from "./formations";
+import { formatUsername, formatDate, formatTime } from "./formations";
 
 // для авторизации
 export async function getUsers() {
@@ -323,12 +323,45 @@ export async function getPatientAppointmentsByUserId(userId) {
     }
 }
 
-export async function updateDoctorData(doctorId, lastname, name, surname, id) {
+// для добавления нового врача
+export async function uploadDoctorData(lastname, name, surname, idPosition, login, password) {
+    try {
+        // создаем ссылки на другие объекты
+        const positionRef = doc(db, 'Positions', idPosition);
+        const roleRef = doc(db, 'Roles', 2);
+        const doctorPhoto = "users_avatar/doctor.png";
+        const username = formatUsername(lastname, name, surname);
+
+        // Добавляем новый документ в коллекцию пользователей
+        await addDoc(collection(db, 'Users'), {
+            id_role: roleRef,
+            username: username,
+            login: login,
+            password: password,
+            photo: doctorPhoto,
+        });
+
+        // Добавляем новый документ в коллекцию врачей
+        await addDoc(collection(db, 'Doctors'), {
+            id_patient: patientRef,
+            id_doctor_location: doctorLocationRef,
+            id_ldm: ldmRef,
+            ldm_datetime: ldmDatetime,
+        });
+        console.log('Данные успешно загружены в коллекцию Appointments');
+    } catch (error) {
+        console.error('Ошибка при загрузке данных в коллекцию Appointments:', error);
+    }
+}
+
+export async function updateDoctorData(doctorId, lastname, name, surname, idPosition, isAvailable) {
     try {
         const newData = {
             lastname: lastname,
-            name: "Новое имя",
-            id_position: "/Positions/новый_id",
+            name: name,
+            surname: surname,
+            id_position: idPosition,
+            is_available: isAvailable,
         };
 
         // Получаем ссылку на документ в коллекции Doctors

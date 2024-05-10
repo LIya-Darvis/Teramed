@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getUsers } from '../../components/fire_api';
-import { EditButton, DeleteButton } from '../elements/TableButtons';
+import { EditButton, DeleteButton } from '../elements/Buttons';
 import SearchPanel from '../elements/SearchPanel';
 import ContentLabel from '../elements/ContentLabel';
 

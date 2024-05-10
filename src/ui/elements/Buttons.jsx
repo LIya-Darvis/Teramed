@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 
-function EditButton(props) {
+export function EditButton(props) {
   return (
     <div className='table_button' onClick={props.onClick}>
       {/* <img src="../../assets/icons/edit.svg" alt="edit"/> */}
@@ -10,7 +10,7 @@ function EditButton(props) {
   )
 }
 
-function DeleteButton(props) {
+export function DeleteButton(props) {
   return (
     <div className='table_button' onClick={props.onClick}>
       {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
@@ -19,7 +19,7 @@ function DeleteButton(props) {
   )
 }
 
-function MedCardButton(props) {
+export function MedCardButton(props) {
   return (
     <div className='table_button' onClick={props.onClick}>
       {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
@@ -28,7 +28,7 @@ function MedCardButton(props) {
   )
 }
 
-function LogOutButton(props) {
+export function LogOutButton(props) {
   return (
     <div className='logout_button' onClick={props.onClick}>
       {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
@@ -37,4 +37,12 @@ function LogOutButton(props) {
   )
 }
 
-export { EditButton, DeleteButton, MedCardButton, LogOutButton }
+export function AddButton(props) {
+  return (
+    <div className='add_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
+    </div>
+  )
+}
+

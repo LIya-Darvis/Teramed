@@ -49,7 +49,7 @@ export default function DoctorsContentPanel() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [doctorId, setDoctorId] = useState(null);
-    const [selectedPositionId, setSelectedPositionId] = useState(null);
+    const [selectedPositionId, setSelectedPositionId] = useState('');
 
     // ассинхронно получаем данные врачей из апи
     useEffect(() => {
@@ -92,13 +92,10 @@ export default function DoctorsContentPanel() {
         setIsDeleteModalOpen(false);
     };
 
-    const handlePositionSelect = (positionId) => {
-        setSelectedPositionId(positionId);
-    };
-
-    const handleCheckBoxChange = (newValue) => {
+    const handleCheckBoxChange = (event) => {
+        const newValue = event.target.checked;
         setIsAvailable(newValue);
-      };
+    };
 
     // закрытие модального окна
     const handleCloseClick = () => {
@@ -113,8 +110,14 @@ export default function DoctorsContentPanel() {
 
     // открытие окна для редактирования врача
     const handleEditDoctor = (doctorId) => {
-        setIsEditModalOpen(true);
         setDoctorId(doctorId);
+        const doctor = doctorsData.find(doctor => doctor.id === doctorId);
+        setSelectedPositionId(doctor.id_position.id);
+        setIsAvailable(doctor.is_available);
+        setLastname(doctor.lastname);
+        setName(doctor.name);
+        setSurname(doctor.surname);
+        setIsEditModalOpen(true);
         console.log("редактирование врача: ", doctorId);
     };
 
@@ -132,8 +135,9 @@ export default function DoctorsContentPanel() {
     };
 
     // подтверждение редактирования врача
-    const handleEditConfirm = async (doctorId) => {
-        console.log(lastname, name, surname, selectedPositionId);
+    const handleEditConfirm = async () => {
+        // console.log(lastname, name, surname, typeof(selectedPositionId), isAvailable);
+        updateDoctorData(doctorId, lastname, name, surname, selectedPositionId, isAvailable);
         clearData();
     };
 
@@ -170,6 +174,8 @@ export default function DoctorsContentPanel() {
                             <th>Имя</th>
                             <th>Отчество</th>
                             <th>Должность</th>
+                            <th>Доступен для записи</th>
+                            <th>Архивирован</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
@@ -180,6 +186,8 @@ export default function DoctorsContentPanel() {
                                 <td>{doctor.name}</td>
                                 <td>{doctor.surname}</td>
                                 <td>{doctor.position.name}</td>
+                                <td>{doctor.is_available ? 'Да' : 'Нет'}</td>
+                                <td>{doctor.is_archived ? 'Да' : 'Нет'}</td>
                                 <td>
                                     <div className='table_buttons_frame'>
                                         <EditButton onClick={() => handleEditDoctor(doctor.id)} />
@@ -194,35 +202,36 @@ export default function DoctorsContentPanel() {
 
             {isAddModalOpen && (
                 <ModalPanel >
-                    <CloseButton title="Х" onClick={() => handleCloseClick()}/>
+                    <CloseButton title="Х" onClick={() => handleCloseClick()} />
                     <h3>Добавление врача</h3>
-                    <ModalEditText placeholder={"Фамилия"} value={lastname} onChange={e => setLastname(e.target.value)}/>
-                    <ModalEditText placeholder={"Имя"} value={name} onChange={e => setName(e.target.value)}/>
-                    <ModalEditText placeholder={"Отчество"} value={surname} onChange={e => setSurname(e.target.value)}/>
-                    <ModalEditText placeholder={"Логин"} value={login} onChange={e => setLogin(e.target.value)}/>
-                    <ModalEditText placeholder={"Пароль"} value={password} onChange={e => setPassword(e.target.value)}/>
-                    <DropdownList elements={positionsData} onSelect={handlePositionSelect}/>
-                    <ModalCheckBox title={"Доступен для записи"} value={isAvailable} onChange={handleCheckBoxChange}/>
-                    <ConfirmButton title="Подтвердить" onClick={() => handleAddConfirm()}/>
+                    <ModalEditText placeholder={"Фамилия"} value={lastname} onChange={e => setLastname(e.target.value)} />
+                    <ModalEditText placeholder={"Имя"} value={name} onChange={e => setName(e.target.value)} />
+                    <ModalEditText placeholder={"Отчество"} value={surname} onChange={e => setSurname(e.target.value)} />
+                    <ModalEditText placeholder={"Логин"} value={login} onChange={e => setLogin(e.target.value)} />
+                    <ModalEditText placeholder={"Пароль"} value={password} onChange={e => setPassword(e.target.value)} />
+                    <DropdownList data={positionsData} defaultSelectedId={selectedPositionId} onSelect={setSelectedPositionId} />
+                    <ModalCheckBox title={"Доступен для записи"} value={isAvailable} onChange={handleCheckBoxChange} />
+                    <ConfirmButton title="Подтвердить" onClick={() => handleAddConfirm()} />
                 </ModalPanel>
             )}
             {isEditModalOpen && (
                 <ModalPanel >
-                    <CloseButton title="Х" onClick={() => handleCloseClick()}/>
-                    <h3>Редактирование врача {doctorId}</h3>
-                    <ModalEditText placeholder={"Фамилия"} value={lastname} onChange={e => setLastname(e.target.value)}/>
-                    <ModalEditText placeholder={"Имя"} value={name} onChange={e => setName(e.target.value)}/>
-                    <ModalEditText placeholder={"Отчество"} value={surname} onChange={e => setSurname(e.target.value)}/>
-                    <DropdownList elements={positionsData} onSelect={handlePositionSelect}/>
-                    <ConfirmButton title="Подтвердить" onClick={() => handleEditConfirm()}/>
+                    <CloseButton title="Х" onClick={() => handleCloseClick()} />
+                    <h3>Редактирование врача</h3>
+                    <ModalEditText placeholder={"Фамилия"} value={lastname} onChange={e => setLastname(e.target.value)} />
+                    <ModalEditText placeholder={"Имя"} value={name} onChange={e => setName(e.target.value)} />
+                    <ModalEditText placeholder={"Отчество"} value={surname} onChange={e => setSurname(e.target.value)} />
+                    <DropdownList data={positionsData} defaultSelectedId={selectedPositionId} onSelect={setSelectedPositionId} />
+                    <ModalCheckBox title={"Доступен для записи"} value={isAvailable} onChange={handleCheckBoxChange} />
+                    <ConfirmButton title="Подтвердить" onClick={() => handleEditConfirm()} />
                 </ModalPanel>
             )}
             {isDeleteModalOpen && (
                 <ModalPanel >
-                    <CloseButton title="Х" onClick={() => handleCloseClick()}/>
+                    <CloseButton title="Х" onClick={() => handleCloseClick()} />
                     <h3>Удаление врача</h3>
                     <p>Вы действительно хотите удалить эту запись?</p>
-                    <ConfirmButton title="Подтвердить" onClick={() => handleDeleteConfirm()}/>
+                    <ConfirmButton title="Подтвердить" onClick={() => handleDeleteConfirm()} />
                 </ModalPanel>
             )}
         </div>

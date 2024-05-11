@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useData } from '../../components/DataProvider';
 import ContentLabel from '../elements/ContentLabel'
-import ComboBoxList from '../elements/ComboBoxList';
+import { ConfirmButton, CloseButton } from '../elements/Buttons';
 import { getLdms, findPatientByUserId, getDoctorLocationsByPositionId, 
     uploadDataToAppointment } from '../../components/fire_api';
 import LdmCard from '../elements/LdmCard';
@@ -92,14 +92,14 @@ function PatientAppointmentMakePanel() {
             </div>
             {isModalOpen && (
                 <ModalPanel >
-                    <button onClick={handleCloseClick}>Закрыть</button>
+                    <CloseButton title="Х" onClick={handleCloseClick}/>
                     <h3>{selectedLdm.name}</h3>
                     {appointmentTime.map((time) => (
                         <TimeCard hour={time.hours} minute={time.minutes}
                             onClick={() => handleTimeCardClick(time)} />
                     ))}
 
-                    <button onClick={handleConfirm}>Подтвердить</button>
+                    <ConfirmButton title={"Подтвердить"} onClick={handleConfirm}/>
                 </ModalPanel>
             )}
         </div>

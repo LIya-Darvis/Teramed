@@ -58,7 +58,6 @@ export async function fetchAccessiblePanelsForRole(roleName) {
             const panelName = panelDoc.data().name;
             panelNames.push(panelName);
         }
-
         return panelNames
     } catch (error) {
         console.error('Ошибка при получении доступных панелей: ', error);
@@ -91,6 +90,7 @@ export async function getDoctors() {
                 ...doctorData,  // добавляем прочие данные с атрибутами по умолчанию
                 id_user: userData, // добавляем пользовательские данные
                 position: positionData, // добавляем должность специалиста
+                is_archived: doctorData.is_archived,
             };
             doctorsData.push(totalDoctorData);
         }
@@ -382,11 +382,13 @@ export async function uploadDoctorData(lastname, name, surname, idPosition, isAv
 // для обновления записи в коллекции врачей
 export async function updateDoctorData(doctorId, lastname, name, surname, idPosition, isAvailable) {
     try {
+        const positionRef = doc(db, 'Positions', idPosition);
+
         const newData = {
             lastname: lastname,
             name: name,
             surname: surname,
-            id_position: idPosition,
+            id_position: positionRef,
             is_available: isAvailable,
         };
 

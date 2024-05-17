@@ -5,9 +5,10 @@ import SearchPanel from '../elements/SearchPanel';
 import DropdownList from '../elements/DropdownList';
 import ContentLabel from '../elements/ContentLabel';
 import ModalPanel from '../elements/ModalPanel';
-import "./styles.css"
 import ModalEditText from '../elements/ModalEditText';
 import ModalCheckBox from '../elements/ModalCheckBox';
+import "./styles.css";
+
 
 // function searchDoctors(data, searchValue) {
 //     // Преобразуем строку поиска в нижний регистр для удобства сравнения
@@ -37,17 +38,24 @@ import ModalCheckBox from '../elements/ModalCheckBox';
 export default function DoctorsContentPanel() {
     const [doctorsData, setDoctorsData] = useState([]);
     const [positionsData, setPositionsData] = useState([]);
+
+    // для поиска
     const [searchData, setSearchData] = useState([]);
     const [searchText, setSearchText] = useState('');
+
+    // для модальных окон
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    // для данных врача
     const [lastname, setLastname] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [isAvailable, setIsAvailable] = useState(false);
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
     const [doctorId, setDoctorId] = useState(null);
     const [selectedPositionId, setSelectedPositionId] = useState('');
 

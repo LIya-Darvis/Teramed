@@ -19,11 +19,20 @@ export function DeleteButton(props) {
   )
 }
 
-export function MedCardButton(props) {
+export function SickHistoryViewButton(props) {
   return (
     <div className='table_button' onClick={props.onClick}>
       {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
-      <p>Мед карта</p>
+      <p>{props.title}</p>
+    </div>
+  )
+}
+
+export function AnalysViewButton(props) {
+  return (
+    <div className='table_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
     </div>
   )
 }

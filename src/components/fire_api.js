@@ -221,7 +221,7 @@ export async function findPatientByUserId(userId) {
 // для получения специалиста по id должности
 export async function findDoctorByPositionId(positionId) {
     try {
-        console.log(positionId)
+        // console.log(positionId)
         const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId)));
         const doctorsSnapshot = await getDocs(doctorsQuery);
         const doctors = [];
@@ -417,6 +417,81 @@ export async function deleteDoctorData(doctorId) {
     }
 }
 
+// для получения истории болезней определенного пациента
+export async function getPatientSickHistoryById(patientId) {
+    try {
+
+        const sickHistoriesQuery = query(collection(db, 'Sick_Histories'), where('id_patient', '==', doc(db, 'Patients', patientId)));
+        const sickHistoriesSnapshot = await getDocs(sickHistoriesQuery);
+
+        console.log(sickHistoriesSnapshot.docs)
+        const sickHistories = [];
+
+        for (const eachDoc of sickHistoriesSnapshot.docs) {
+            const sickHistoryData = eachDoc.data();
+
+            const idDoctor = sickHistoryData.id_doctor;
+            const doctorDoc = await getDoc(doc(db, 'Doctors', idDoctor.id));
+            const doctorData = doctorDoc.data();
+
+            const idDiagnos = sickHistoryData.id_diagnos;
+            const diagnosDoc = await getDoc(doc(db, 'Diagnoses', idDiagnos.id));
+            const diagnosData = diagnosDoc.data();
+
+            const diagnosDate = formatDate(sickHistoryData.diagnos_date.toDate());
+
+            sickHistories.push({
+                id: eachDoc.id,
+                doctor: doctorData,
+                diagnos: diagnosData.name,
+                diagnosDate: diagnosDate,
+                ...sickHistoryData
+            });
+        };
+        return sickHistories;
+    } catch (error) {
+        console.error('Ошибка при получении записей Sick_Histories:', error);
+        return [];
+    }
+}
+
+// для получения всех анализов определенного пациента
+export async function getPatientAnalysesById(patientId) {
+    try {
+
+        const analysesQuery = query(collection(db, 'Analyses'), where('id_patient', '==', doc(db, 'Patients', patientId)));
+        const analysesSnapshot = await getDocs(analysesQuery);
+
+        console.log(analysesSnapshot.docs)
+        const analyses = [];
+
+        for (const eachDoc of analysesSnapshot.docs) {
+            const analysData = eachDoc.data();
+
+            const idDoctor = analysData.id_doctor;
+            const doctorDoc = await getDoc(doc(db, 'Doctors', idDoctor.id));
+            const doctorData = doctorDoc.data();
+
+            const idAnalysType = analysData.id_analys_type;
+            const analysTypeDoc = await getDoc(doc(db, 'Analys_Types', idAnalysType.id));
+            const analysTypeData = analysTypeDoc.data();
+
+            const analysDate = formatDate(analysData.analys_date.toDate());
+
+            analyses.push({
+                id: eachDoc.id,
+                doctor: doctorData,
+                analysType: analysTypeData,
+                analysDate: analysDate,
+                ...analysData
+            });
+        };
+        return analyses;
+    } catch (error) {
+        console.error('Ошибка при получении записей Analyses:', error);
+        return [];
+    }
+}
 
 
 

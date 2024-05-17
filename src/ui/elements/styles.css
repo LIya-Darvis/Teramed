@@ -324,3 +324,34 @@
     margin: 5px 10px;
 }
 
+
+.sick_history_card_frame {
+    margin: 8px 15px;
+    padding: 10px 5px;
+    background-color: #FFF;
+    box-shadow: 1px 4px 8px #DAE1F9;
+    border-radius: 8px;
+    border-width: 2px;
+    /* border-color: #4B5672; */
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    width: 275px;
+}
+
+.ldm_main_info_col {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+}
+
+.ldm_main_info_col p {
+    padding: 0px;
+    margin: 4px 2px;
+}
+
+
+

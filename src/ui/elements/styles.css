@@ -8,9 +8,8 @@
     left: 0;
     padding: 20px 30px;
     background-color: #FFFFFF;
-    /* height: 100%; */
     min-width: 200px;
-    box-shadow: 1px 4px 8px #DAE1F9;
+    /* border-right: 2px solid #9E9E9E; */
 }
 
 .side_menu_app_name {
@@ -23,15 +22,19 @@
 }
 
 .menu_btn_background {
-    background-color: #F2F5FF;
-    padding: 0px 12px;
+    background-color: #FFF;
     display: flex;
     align-items: center;
     justify-content: left;
     margin: 8px 0px;
     padding: 0px 35px;
-    border-radius: 20px;
+    border-radius: 7px;
+    border: 2px solid #ECEFF1;
     cursor: pointer;
+}
+
+.menu_btn_background:hover {
+    border: 2px solid #9E9E9E;
 }
 
 .menu_btn_background p {

@@ -1,7 +1,7 @@
 .authorization_back_frame {
     height: 100vh;
     width: 100vw;
-    background-color: #F2F5FF;
+    background-color: #FFF;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +11,6 @@
     background-color: #FFFFFF;
     display: flex;
     border-radius: 12px;
-    box-shadow: 1px 4px 8px #DAE1F9;
 }
 
 .authorization_form {
@@ -25,7 +24,7 @@
 }
 
 .authorization_label {
-    color: #5A81FA;
+    color: #007BFF;
     font-weight: 600;
     font-size: 70;
     margin: 10px 0px;
@@ -43,7 +42,7 @@
 .authorization_edit_text {
     margin: 6px 15px;
     padding: 10px 35px 10px 10px;
-    color: #355065;
+    color: #343A40;
     border: solid #C0C0C0 1.8px;
     font-size: 20px;
     border-radius: 8px;
@@ -59,7 +58,7 @@
     margin: 5px 0px;
     padding: 10px 128px;
     max-width: 340px;
-    background-color: #5A81FA;
+    background-color: #007BFF;
     transition: background-color 1s ease-out 100ms;
     font-size: 18px;
     text-align: center;
@@ -74,8 +73,8 @@
 }
 
 .error_text {
-    color: #646773;
-    font-size: 16px;
+    color: #343A40;
+    font-size: 18px;
     height: 24px;
 }
 
@@ -98,7 +97,7 @@
     scrollbar-width: none;
     display: flex;
     padding: 35px;
-    box-shadow: inset 0px -10px 10px -10px rgba(0,0,0,0.5);
+    /* box-shadow: inset 0px -10px 10px -10px rgba(0,0,0,0.5); */
 }
 
 

@@ -13,37 +13,19 @@ import { getAppointmentTimePeriods } from '../../components/generations';
 
 
 function PatientAppointmentMakePanel() {
-
     const { data, setData } = useData();
 
-    const [availableLdms, setAvailableLdms] = useState([]);
-    const [selectedLdm, setSelectedLdm] = useState(null);
+    
+
     const [selectedTime, setSelectedTime] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [appointmentTime, setAppointmentTime] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const ldmsData = await getLdms();
-                // Фильтруем записи, получая только записи, 
-                // доступные для записи самостоятельно пациентом
-                const filteredLdms = ldmsData.filter((ldm) => ldm.is_available === true);
-                setAvailableLdms(filteredLdms);
-            } catch (error) {
-                console.error('Error fetching ldms:', error);
-            }
-        };
-        fetchData();
-    }, []);
 
-    // выбор лдм
-    const handleLdmCardClick = (ldm) => {
-        setSelectedLdm(ldm);
-        const availablePeriods = getAppointmentTimePeriods();
-        setAppointmentTime(availablePeriods);
-        setIsModalOpen(true);
+    // выбор специалиста
+    const handleDoctorConfirm = async () => {
+        
     };
 
     const handleCloseClick = () => {
@@ -73,7 +55,6 @@ function PatientAppointmentMakePanel() {
             setIsModalOpen(false);
             setAppointmentTime([]);
             setSelectedTime(null);
-            setSelectedLdm(null);
         } else {
             console.log("Пользователь или должность специалиста не найдена")
         }
@@ -82,14 +63,41 @@ function PatientAppointmentMakePanel() {
     return (
         <div className='content_panel'>
             <ContentLabel title="Записаться на прием" />
-            <div className='card_list_frame'>
-                {availableLdms.map((ldm) => (
-                    <div key={ldm.id}>
-                        <LdmCard name={ldm.name} description={ldm.description}
-                            price={ldm.price} onClick={() => handleLdmCardClick(ldm)} />
-                    </div>
-                ))}
+            
+            <div className='table_frame'>
+                <table className='data_table'>
+                    <thead>
+                        <tr>
+                            <th>Фамилия</th>
+                            <th>Имя</th>
+                            <th>Отчество</th>
+                            <th>Должность</th>
+                            <th>Доступен для записи</th>
+                            <th>Архивирован</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {doctorsData.map(doctor => (
+                            <tr key={doctor.id}>
+                                <td>{doctor.lastname}</td>
+                                <td>{doctor.name}</td>
+                                <td>{doctor.surname}</td>
+                                <td>{doctor.position.name}</td>
+                                <td>{doctor.is_available ? 'Да' : 'Нет'}</td>
+                                <td>{doctor.is_archived ? 'Да' : 'Нет'}</td>
+                                <td>
+                                    <div className='table_buttons_frame'>
+                                        <ConfirmButton onClick={() => handleEditDoctor(doctor.id)} />
+                                        <DeleteButton onClick={() => handleDeleteDoctor(doctor.id)} />
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
+
             {isModalOpen && (
                 <ModalPanel >
                     <CloseButton title="Х" onClick={handleCloseClick}/>

@@ -1,7 +1,7 @@
 import { db } from "../firebase";
 import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { formatUsername, formatDate, formatTime } from "./formations";
+import { formatUsername, formatDate, formatTime, formatAges, calculateAges } from "./formations";
 
 // для получения списка пользователей (в основном для авторизации)
 export async function getUsers() {
@@ -150,19 +150,21 @@ export async function getPatients() {
             // форматирование даты
             const patientBirthday = formatDate(patientData.birthday.toDate());
 
+            const age = formatAges(calculateAges(patientData.birthday.toDate()))
+
             const totalPatientData = {
                 id: patientsDoc.id,
                 ...patientData,  // добавляем прочие данные с атрибутами по умолчанию
                 birthday: patientBirthday,
+                age: age,
+                med_date: formatDate(patientData.med_date.toDate()),
+                polis_final_date: formatDate(patientData.polis_final_date.toDate()),
                 id_user: userData, // добавляем данные о роли в объект пользователя
                 gender: genderData, // добавляем фотографию пользователя
                 photo: photoUrl, // добавляем фото пациента
             };
-            console.log("- пациент ", totalPatientData)
             patientsData.push(totalPatientData);
-            console.log(patientsData)
         }
-        console.log("- все ", patientsData)
         return patientsData;
     } catch (error) {
         console.error('Error fetching patients:', error);

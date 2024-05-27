@@ -9,6 +9,7 @@ import ModalCheckBox from '../elements/ModalCheckBox';
 import "./styles.css";
 import SickHistoryViewCard from '../elements/SickHistoryViewCard';
 import AnalysViewCard from '../elements/AnalysViewCard';
+import PatientInfoCard from '../elements/PatientInfoCard';
 
 
 export default function PatientsContentPanel() {
@@ -102,7 +103,15 @@ export default function PatientsContentPanel() {
             <ContentLabel title="Пациенты" />
             <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
 
-            <div className='table_frame'>
+            <div className='patient_cards_frame'>
+                {patientsData.map((patient, index) => (
+                    <PatientInfoCard key={index} patient={patient} />
+                ))}
+            </div>
+
+
+
+            {/* <div className='table_frame'>
                 <table className='data_table'>
                     <thead>
                         <tr>
@@ -132,23 +141,24 @@ export default function PatientsContentPanel() {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div> */}
 
-            {isSickHistoryModalOpen && (
+            {/* {isSickHistoryModalOpen && (
                 <ModalPanel >
                     <CloseButton title="Х" onClick={() => handleCloseClick()} />
                     <h3>Диагнозы</h3>
                     <ConfirmButton title="Установить диагноз" />
-                    {/* <div className='card_list_frame'> */}
                     {patientDiagnoses.map((diagnos) => (
                         <SickHistoryViewCard key={diagnos.id} diagnos={diagnos.diagnos} symptoms={diagnos.symptoms}
                             doctor={diagnos.doctor.lastname} recomendations={diagnos.recomendations}
                             diagnosDate={diagnos.diagnosDate} onClick={() => handleDiagnosClick()} />
                     ))}
-                    {/* </div> */}
 
                 </ModalPanel>
             )}
+            */}
+
+            {/* 
             {isAnalysModalOpen && (
                 <ModalPanel >
                     <CloseButton title="Х" onClick={() => handleCloseClick()} />
@@ -165,9 +175,9 @@ export default function PatientsContentPanel() {
                     </div>
 
                 </ModalPanel>
-            )}
+            )} */}
 
-        </div>
+        </div >
     )
 
 

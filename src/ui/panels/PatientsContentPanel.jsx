@@ -10,6 +10,7 @@ import "./styles.css";
 import SickHistoryViewCard from '../elements/SickHistoryViewCard';
 import AnalysViewCard from '../elements/AnalysViewCard';
 import PatientInfoCard from '../elements/PatientInfoCard';
+import { generateSchedule } from '../../components/generations';
 
 
 export default function PatientsContentPanel() {
@@ -102,6 +103,7 @@ export default function PatientsContentPanel() {
         <div className='content_panel'>
             <ContentLabel title="Пациенты" />
             <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
+            
 
             <div className='patient_cards_frame'>
                 {patientsData.map((patient, index) => (

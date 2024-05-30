@@ -1,68 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import ContentLabel from '../elements/ContentLabel';
-import { generateSchedule, getAvailableSlots } from '../../components/generations';
-import { events, doctors, existingAppointments, workingHours } from '../../components/data';
+import {
+    getLdms, getDoctorLocationsByPositionId,
+    findDoctorByPositionId, getAppointments
+} from '../../components/fire_api';
+import { generateTimeSlots } from '../../components/generations';
+
 
 export default function GospitalizationContentPanel() {
 
-    const [selectedEvent, setSelectedEvent] = useState('');
-    const [selectedDoctor, setSelectedDoctor] = useState('');
-    const [availableSlots, setAvailableSlots] = useState([]);
-    const [selectedSlot, setSelectedSlot] = useState('');
-    const [schedule, setSchedule] = useState(() => generateSchedule(doctors, events, existingAppointments));
+    const [events, setEvents] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [doctors, setDoctors] = useState([]);
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [doctorLocations, setDoctorLocations] = useState([]);
+    const [appointments, setAppointments] = useState([]);
+    const [timeSlots, setTimeSlots] = useState([]);
 
-    const handleEventChange = (event) => {
-        setSelectedEvent(event.target.value);
-        setSelectedDoctor('');
-        setAvailableSlots([]);
-        setSelectedSlot('');
-    };
-
-    const handleDoctorChange = (event) => {
-        const doctorId = event.target.value;
-        setSelectedDoctor(doctorId);
-        const duration = events.find(e => e.name === selectedEvent).duration;
-        const doctor = doctors.find(d => d.id === parseInt(doctorId));
-
-        const newSlots = getAvailableSlots(doctor.room, duration, existingAppointments, workingHours);
-        setAvailableSlots(newSlots);
-    };
-
-    const handleSlotChange = (event) => {
-        setSelectedSlot(event.target.value);
-    };
-
-    const handleAddAppointment = () => {
-        const duration = events.find(e => e.name === selectedEvent).duration;
-        const doctor = doctors.find(d => d.id === parseInt(selectedDoctor));
-        const newAppointment = {
-            doctorId: doctor.id,
-            room: doctor.room,
-            event: selectedEvent,
-            start: selectedSlot,
-            end: formatTime(parseTime(selectedSlot) + duration)
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const eventsData = await getLdms();
+                setEvents(eventsData);
+            } catch (error) {
+                console.error("Ошибка при получении мероприятий: ", error);
+            }
         };
 
-        existingAppointments.push(newAppointment);
-        const newSchedule = generateSchedule(doctors, events, existingAppointments);
-        setSchedule(newSchedule);
+        fetchEvents();
+    }, []);
+
+
+    const handleEventChange = async (event) => {
+        const selectedEventId = event.target.value;
+        const eventData = events.find(e => e.id === selectedEventId);
+        setSelectedEvent(eventData);
+
+        if (eventData) {
+            try {
+                const doctorsData = await findDoctorByPositionId(eventData.id_position);
+                setDoctors(doctorsData);
+                setSelectedDoctor(null); // Сброс выбранного врача при смене мероприятия
+                setDoctorLocations([]); // Сброс местоположений врачей при смене мероприятия
+                setAppointments([]); // Сброс направлений при смене мероприятия
+                setTimeSlots([]);
+            } catch (error) {
+                console.error("Ошибка при получении врачей: ", error);
+            }
+        }
     };
 
-    // вспомогательные функции парсинга и форматирования времени
-    const parseTime = timeStr => {
-        const [hours, minutes] = timeStr.split(':').map(Number);
-        return hours * 60 + minutes;
-    };
-    const formatTime = minutes => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-    };
+    const handleDoctorChange = async (event) => {
+        const selectedDoctorId = event.target.value;
+        const doctorData = doctors.find(d => d.id === selectedDoctorId);
+        setSelectedDoctor(doctorData);
 
+        if (doctorData) {
+            try {
+                const doctorLocationsData = await getDoctorLocationsByPositionId(doctorData.id_position);
+                setDoctorLocations(doctorLocationsData);
+
+                const allAppointments = await getAppointments();
+                const filteredAppointments = allAppointments.filter(appointment =>
+                    doctorLocationsData.some(location => location.id === appointment.id_doctor_location.id) &&
+                    new Date(appointment.datetime) >= new Date() &&
+                    new Date(appointment.datetime) <= new Date(new Date().setDate(new Date().getDate() + 7))
+                );
+                setAppointments(filteredAppointments);
+
+                const slots = generateTimeSlots(filteredAppointments, selectedEvent.time);
+                setTimeSlots(slots);
+            } catch (error) {
+                console.error("Ошибка при получении местоположений врачей или направлений: ", error);
+            }
+        }
+    };
 
     const sch_generate = () => {
-        console.log(schedule);
-        console.log(existingAppointments);
+        if (selectedEvent) {
+            console.log("Выбранное мероприятие:", selectedEvent);
+        } else {
+            console.log("Мероприятие не выбрано");
+        }
+
+        if (selectedDoctor) {
+            console.log("Выбранный врач:", selectedDoctor);
+            console.log("Местоположения врача:", doctorLocations);
+        } else {
+            console.log("Врач не выбран");
+        }
+
+        console.log("Отфильтрованные направления:", appointments);
+        console.log("Сгенерированные окна времени приема:", timeSlots);
     };
 
     return (
@@ -72,45 +101,38 @@ export default function GospitalizationContentPanel() {
             <button onClick={() => sch_generate()}> расписание</button>
 
             <div>
-                <label>Мероприятие: </label>
-                <select value={selectedEvent} onChange={handleEventChange}>
+                <select onChange={handleEventChange}>
                     <option value="">Выберите мероприятие</option>
                     {events.map(event => (
-                        <option key={event.name} value={event.name}>
+                        <option key={event.id} value={event.id}>
                             {event.name}
                         </option>
                     ))}
                 </select>
-            </div>
-            {selectedEvent && (
-                <div>
-                    <label>Врач: </label>
-                    <select value={selectedDoctor} onChange={handleDoctorChange}>
+                {selectedEvent && (
+                    <select onChange={handleDoctorChange}>
                         <option value="">Выберите врача</option>
-                        {doctors.filter(doctor => !doctor.available && doctor.specialties.includes(selectedEvent)).map(doctor => (
+                        {doctors.map(doctor => (
                             <option key={doctor.id} value={doctor.id}>
-                                {doctor.name}
+                                {`${doctor.lastname} ${doctor.name} ${doctor.surname}`}
                             </option>
                         ))}
                     </select>
-                </div>
-            )}
-            {selectedDoctor && (
-                <div>
-                    <label>Временное окно: </label>
-                    <select value={selectedSlot} onChange={handleSlotChange}>
-                        <option value="">Выберите временное окно</option>
-                        {availableSlots.map(slot => (
-                            <option key={slot} value={slot}>
-                                {slot}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            )}
-            {selectedSlot && (
-                <button onClick={handleAddAppointment}>Добавить направление</button>
-            )}
+                )}
+                {timeSlots.map((daySlot, index) => (
+                    <div key={index}>
+                        <h3>{daySlot.date.toDateString()}</h3>
+                        <div>
+                            {daySlot.slots.map((slot, idx) => (
+                                <button key={idx}>{`${slot.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${slot.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</button>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+
+
         </div>
     )
 }

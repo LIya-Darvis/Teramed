@@ -190,6 +190,7 @@ export async function getLdms() {
                 id: ldmDoc.id,
                 ...ldmData,
                 id_position: positionId,
+                time: ldmData.time,
                 position: positionData, // добавляем данные о должности специалиста
             };
             ldmsData.push(totalLdmData);
@@ -224,7 +225,7 @@ export async function findPatientByUserId(userId) {
 export async function findDoctorByPositionId(positionId) {
     try {
         // console.log(positionId)
-        const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId)));
+        const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId.id)));
         const doctorsSnapshot = await getDocs(doctorsQuery);
         const doctors = [];
         doctorsSnapshot.forEach((doc) => {
@@ -265,6 +266,44 @@ export async function getDoctorLocationsByPositionId(positionId) {
         return [];
     }
 }
+
+export async function getAppointments() {
+    try {
+        const appointmentsCollectionRef = collection(db, 'Appointments');
+        const appointmentsSnapshot = await getDocs(appointmentsCollectionRef);
+        const appointmentsData = [];
+
+        for (const appointmentDoc of appointmentsSnapshot.docs) {
+            const appointmentData = appointmentDoc.data();
+            const doctorLocationDoc = await getDoc(appointmentData.id_doctor_location);
+            const doctorLocationData = doctorLocationDoc.data();
+            const doctorDoc = await getDoc(doctorLocationData.id_doctor);
+            const doctorData = doctorDoc.data();
+            const cabinetDoc = await getDoc(doctorLocationData.id_cabinet);
+            const cabinetData = cabinetDoc.data();
+            const ldmDoc = await getDoc(appointmentData.id_ldm);
+            const ldmData = ldmDoc.data();
+            
+            const appointmentDate = appointmentData.ldm_datetime.toDate();
+
+            appointmentsData.push({
+                id: appointmentDoc.id,
+                doctor: doctorData,
+                room: cabinetData,
+                datetime: appointmentDate,
+                event: ldmData,
+                ...appointmentData
+            });
+        }
+
+        return appointmentsData;
+    } catch (error) {
+        console.error('Error fetching appointments:', error);
+        return [];
+    }
+}
+
+
 
 // для добавления новой записи на прием
 export async function uploadDataToAppointment(idPatient, idDoctorLocation, idLdm, ldmDatetime) {

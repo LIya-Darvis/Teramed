@@ -30,96 +30,54 @@ export function getAppointmentTimePeriods() {
 
 
 
-export const generateSchedule = (doctors, events, existingAppointments) => {
-    const schedule = {};
-    const timeSlots = {};
+export const generateTimeSlots = (appointments, eventDuration) => {
+    console.log(appointments)
+    console.log(eventDuration)
 
-    doctors.forEach(doctor => {
-        if (!timeSlots[doctor.room]) {
-            timeSlots[doctor.room] = [];
-        }
-    });
+    const timeSlots = [];
+    const today = new Date();
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() + 7);
 
-    existingAppointments.forEach(appointment => {
-        const start = parseTime(appointment.start);
-        const end = parseTime(appointment.end);
-        timeSlots[appointment.room].push({ start, end });
-    });
+    for (let day = new Date(today); day <= endOfWeek; day.setDate(day.getDate() + 1)) {
+        const daySlots = [];
+        const startOfDay = new Date(day);
+        startOfDay.setHours(8, 0, 0, 0); // 8:00 AM
 
-    const getNextAvailableSlot = (room, duration) => {
-        const startTime = parseTime(workingHours.start);
-        const endTime = parseTime(workingHours.end);
+        const endOfDay = new Date(day);
+        endOfDay.setHours(20, 0, 0, 0); // 8:00 PM
 
-        for (let time = startTime; time <= endTime - duration; time += 15) {
-            if (!timeSlots[room].some(slot => (time >= slot.start && time < slot.end) || (time + duration > slot.start && time + duration <= slot.end))) {
-                return time;
+        for (let slotStart = new Date(startOfDay); slotStart < endOfDay; slotStart.setMinutes(slotStart.getMinutes() + eventDuration)) {
+            const slotEnd = new Date(slotStart);
+            slotEnd.setMinutes(slotStart.getMinutes() + eventDuration);
+
+            // Проверка, чтобы прием не выходил за границы рабочего дня
+            if (slotEnd > endOfDay) {
+                break;
             }
-        }
 
-        return null;
-    };
-
-    doctors.forEach(doctor => {
-        schedule[doctor.name] = [];
-        let duration = doctor.available ? 15 : null;
-
-        if (!doctor.available) {
-            const doctorAppointments = events.filter(app => app.doctorId === doctor.id);
-            doctorAppointments.forEach(app => {
-                duration = app.duration;
-                let nextSlot = getNextAvailableSlot(doctor.room, duration);
-
-                while (nextSlot !== null) {
-                    schedule[doctor.name].push({
-                        event: app.name,
-                        start: formatTime(nextSlot),
-                        end: formatTime(nextSlot + duration)
-                    });
-                    timeSlots[doctor.room].push({ start: nextSlot, end: nextSlot + duration });
-                    nextSlot = getNextAvailableSlot(doctor.room, duration);
-                }
+            const isSlotAvailable = !appointments.some(appointment => {
+                const appointmentStart = new Date(appointment.datetime);
+                const appointmentEnd = new Date(appointmentStart);
+                appointmentEnd.setMinutes(appointmentStart.getMinutes() + eventDuration);
+                return (slotStart < appointmentEnd && slotEnd > appointmentStart);
             });
-        } else {
-            let nextSlot = getNextAvailableSlot(doctor.room, duration);
-            while (nextSlot !== null) {
-                schedule[doctor.name].push({
-                    event: "Standard Appointment",
-                    start: formatTime(nextSlot),
-                    end: formatTime(nextSlot + duration)
+
+            if (isSlotAvailable) {
+                daySlots.push({
+                    start: new Date(slotStart),
+                    end: new Date(slotEnd)
                 });
-                timeSlots[doctor.room].push({ start: nextSlot, end: nextSlot + duration });
-                nextSlot = getNextAvailableSlot(doctor.room, duration);
             }
         }
-    });
 
-    return schedule;
-};
-
-const parseTime = timeStr => {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
-};
-
-const formatTime = minutes => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-};
-
-export const getAvailableSlots = (room, duration, existingAppointments, workingHours) => {
-    const startTime = parseTime(workingHours.start); // начало рабочего дня
-    const endTime = parseTime(workingHours.end); // конец рабочего дня
-    const availableSlots = [];
-
-    for (let time = startTime; time <= endTime - duration; time += 15) {
-        if (!existingAppointments.some(appt => appt.room === room && (
-            (time >= parseTime(appt.start) && time < parseTime(appt.end)) ||
-            (time + duration > parseTime(appt.start) && time + duration <= parseTime(appt.end))
-        ))) {
-            availableSlots.push(formatTime(time));
-        }
+        timeSlots.push({
+            date: new Date(day),
+            slots: daySlots
+        });
     }
 
-    return availableSlots;
+    return timeSlots;
 };
+
+

@@ -30,31 +30,31 @@ export function getAppointmentTimePeriods() {
 
 
 
-export const generateTimeSlots = (appointments, eventDuration) => {
-    console.log(appointments)
-    console.log(eventDuration)
-
+export const generateTimeSlots = (appointments, eventDuration, workHours, workDays) => {
     const timeSlots = [];
     const today = new Date();
     const endOfWeek = new Date(today);
     endOfWeek.setDate(today.getDate() + 7);
 
+    const workDaysSet = new Set(workDays);
+
     for (let day = new Date(today); day <= endOfWeek; day.setDate(day.getDate() + 1)) {
+        const currentDay = day.toLocaleString('en-us', { weekday: 'long' });
+
+        if (!workDaysSet.has(currentDay)) continue;
+
         const daySlots = [];
         const startOfDay = new Date(day);
-        startOfDay.setHours(8, 0, 0, 0); // 8:00 AM
+        startOfDay.setHours(workHours.startHour, workHours.startMinute, 0, 0);
 
         const endOfDay = new Date(day);
-        endOfDay.setHours(20, 0, 0, 0); // 8:00 PM
+        endOfDay.setHours(workHours.endHour, workHours.endMinute, 0, 0);
 
         for (let slotStart = new Date(startOfDay); slotStart < endOfDay; slotStart.setMinutes(slotStart.getMinutes() + eventDuration)) {
             const slotEnd = new Date(slotStart);
             slotEnd.setMinutes(slotStart.getMinutes() + eventDuration);
 
-            // Проверка, чтобы прием не выходил за границы рабочего дня
-            if (slotEnd > endOfDay) {
-                break;
-            }
+            if (slotEnd > endOfDay) break;
 
             const isSlotAvailable = !appointments.some(appointment => {
                 const appointmentStart = new Date(appointment.datetime);
@@ -71,13 +71,13 @@ export const generateTimeSlots = (appointments, eventDuration) => {
             }
         }
 
-        timeSlots.push({
-            date: new Date(day),
-            slots: daySlots
-        });
+        if (daySlots.length > 0) {
+            timeSlots.push({
+                date: new Date(day),
+                slots: daySlots
+            });
+        }
     }
 
     return timeSlots;
 };
-
-

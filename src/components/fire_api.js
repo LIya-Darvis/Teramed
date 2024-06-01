@@ -171,6 +171,25 @@ export async function getPatients() {
     }
 }
 
+// для выгрузки всех типов лдм
+export async function getLdmTypes() {
+    try {
+        const ldmTypesCollectionRef = collection(db, 'Ldm_Types');
+        const ldmTypesSnapshot = await getDocs(ldmTypesCollectionRef);
+        const ldmTypesData = [];
+        ldmTypesSnapshot.forEach(doc => {
+            ldmTypesData.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        return ldmTypesData;
+    } catch (error) {
+        console.error('Ошибка при получении типов ЛДМ:', error);
+        return [];
+    }
+}
+
 // для получения всех лдм
 export async function getLdms() {
     try {
@@ -181,10 +200,17 @@ export async function getLdms() {
         for (const ldmDoc of ldmsSnapshot.docs) {
             const ldmData = ldmDoc.data();
             const positionId = ldmData.id_position;
+            const ldmTypeId = ldmData.id_ldm_type;
 
-            // получаем данные о ролях пользователей
+            // получаем данные о специальности врачей
             const positionDoc = await getDoc(doc(db, 'Positions', positionId.id));
             const positionData = positionDoc.data();
+
+            // получаем данные о типам лдм
+            const ldmTypeDoc = await getDoc(doc(db, 'Ldm_Types', ldmTypeId.id));
+            const ldmTypeData = ldmTypeDoc.data();
+
+            // console.log(ldmTypeData.name)
 
             const totalLdmData = {
                 id: ldmDoc.id,
@@ -192,9 +218,12 @@ export async function getLdms() {
                 id_position: positionId,
                 time: ldmData.time,
                 position: positionData, // добавляем данные о должности специалиста
+                ldm_type: ldmTypeData, // добавляем данные о типе лдм
             };
             ldmsData.push(totalLdmData);
         }
+
+        // console.log(ldmsData);
         return ldmsData;
     } catch (error) {
         console.error('Error fetching ldms:', error);

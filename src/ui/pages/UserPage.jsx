@@ -11,6 +11,7 @@ import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
 import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
 
 import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
+import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';
 
 
 const components = [
@@ -21,6 +22,7 @@ const components = [
   { 'UsersContentPanel': { component: <UsersContentPanel />, title: "Пользователи" } },
   { 'PatientAppointmentMakePanel': { component: <PatientAppointmentMakePanel />, title: "Записаться на прием" } },
   { 'PatientAppointmentViewPanel': { component: <PatientAppointmentViewPanel />, title: "Назначенные приемы" } },
+  { 'DoctorsAppointmentsPanel': { component: <DoctorsAppointmentsPanel />, title: "Назначенные приемы" } },
 ];
 
 export default function UserPage() {

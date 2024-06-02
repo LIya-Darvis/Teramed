@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './styles.css';
 
 function ModalCheckBox({ title, value, onChange }) {
-
     return (
         <div className='modal_checkbox_frame'>
             <p>{title}</p>
@@ -12,5 +11,4 @@ function ModalCheckBox({ title, value, onChange }) {
         </div>
     )
 }
-
 export default ModalCheckBox

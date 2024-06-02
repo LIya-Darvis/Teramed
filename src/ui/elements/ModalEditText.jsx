@@ -7,5 +7,4 @@ function ModalEditText({placeholder, value, onChange}) {
         value={value} onChange={onChange} />
   )
 }
-
 export default ModalEditText

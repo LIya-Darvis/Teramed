@@ -138,6 +138,8 @@
     border-radius: 10px;
     min-height: 80vh;
     min-width: 80vw;
+    max-height: 80vh;
+    max-width: 80vw;
     /* box-shadow: 1px 4px 8px #DAE1F9; */
 }
 
@@ -185,6 +187,21 @@
 .top_panel_button {
     background-color: #4B5672;
     color: #F2F5FF;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: fit-content;
+    padding: 5px 12px;
+    margin: 0px 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.top_panel_dop_button {
+    background-color: #F2F5FF;
+    color: #4B5672;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -309,7 +326,7 @@
 .modal_edit_text {
     margin: 5px 35px;
     padding: 8px 10px 8px 10px;
-    width: 90%;
+    /* width: 90%; */
     color: #355065;
     border: solid #C0C0C0 1.4px;
     font-size: 14px;
@@ -320,7 +337,7 @@
 .modal_dropdown_select {
     margin: 5px 15px;
     padding: 8px 10px 8px 10px;
-    width: 97%;
+    width: 60%;
     color: #355065;
     border: solid #C0C0C0 1.4px;
     font-size: 14px;
@@ -331,7 +348,7 @@
 .modal_dropdown_option {
     margin: 5px 10px;
     padding: 8px 10px 8px 10px;
-    width: 100%;
+    width: 60%;
     color: #355065;
     background-color: #FFF;
     /* border: solid #C0C0C0 1.4px; */

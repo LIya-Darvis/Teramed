@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import arrowIcon from '../../assets/icons/chevron-down-svgrepo-com.svg';
 
-function PatientInfoCard({ patient }) {
+function PatientInfoCard({ patient, position, onClickSickHistory, onClickAnalises, onClickGospitalization }) {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -16,6 +16,32 @@ function PatientInfoCard({ patient }) {
                 <h4>{patient.lastname} {patient.name} {patient.surname}</h4>
                 <p>Дата рождения: {patient.birthday} ({patient.age})</p>
                 <p>Пол: {patient.gender.name}</p>
+                <button
+                    style={styles.buttonStyles}
+                    onClick={() => onClickSickHistory(patient)}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHoverStyles.backgroundColor}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = styles.buttonStyles.backgroundColor}
+                >
+                    История болезни
+                </button>
+                <button
+                    style={styles.buttonStyles}
+                    onClick={() => onClickAnalises(patient)}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHoverStyles.backgroundColor}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = styles.buttonStyles.backgroundColor}
+                >
+                    Анализы
+                </button>
+                {position === 'Терапевт' && (
+                    <button
+                        style={styles.buttonStyles}
+                        onClick={() => onClickGospitalization(patient)}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHoverStyles.backgroundColor}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = styles.buttonStyles.backgroundColor}
+                    >
+                        Госпитализация
+                    </button>
+                )}
             </div>
             <button onClick={toggleExpand} style={styles.button}>
                 <motion.img
@@ -54,11 +80,13 @@ const styles = {
         backgroundColor: '#ffffff',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        padding: '20px',
+        padding: '-20px -10px',
         maxWidth: '400px',
         width: '100%',
-        marginBottom: '20px',
-        fontSize: '18px',
+        height: 'fit-content',
+        margin: '20px 15px',
+        // marginBottom: '20px',
+        fontSize: '16px',
     },
     header: {
         marginBottom: '20px',
@@ -79,6 +107,19 @@ const styles = {
         marginTop: '20px',
         borderTop: '1px solid #e0e0e0',
         paddingTop: '10px',
+    },
+    buttonStyles: {
+        backgroundColor: '#4B5672',
+        color: '#fff',
+        border: 'none',
+        padding: '8px 16px',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        margin: '6px 10px'
+    },
+    buttonHoverStyles: {
+        backgroundColor: '#4B5672'
     },
 };
 

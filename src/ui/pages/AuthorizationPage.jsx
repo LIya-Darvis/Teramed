@@ -22,15 +22,11 @@ function AuthorizationPage() {
                 var users = await getUsers();
                 // если данные пользователей получены успешно
                 if (users) {
-                    console.log(users);
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
-                            console.log(' -> ', user.id, user.role.name, user.username,
-                                user.login, user.password, user.photo);
                             var authUser = new User(user.id, user.role.name, user.username,
                                 user.login, user.password, user.photo)
                             setData({ isLogin: true, userData: authUser });
-                            console.log("-> ", data)
                             setErrorText("");
                         }
                         else {

@@ -4,10 +4,12 @@ import { useData } from '../../components/DataProvider';
 import { getDoctorByUserId, getFilteredAppointmentsByDoctorId, getPatientAnalysesById, getPatientById, getPatientSickHistoryById, getPatients } from '../../components/fire_api';
 import AppointmentCard from '../elements/AppointmentCard';
 import ModalPanel from '../elements/ModalPanel';
-import { AddButton, CloseButton, TopPanelButton } from '../elements/Buttons';
+import { AddButton, CloseButton, TopPanelButton, TopPanelDopButton } from '../elements/Buttons';
 import './styles.css';
-import SickHistoryViewCard from '../elements/SickHistoryViewCard';
-import AnalysViewCard from '../elements/AnalysViewCard';
+import PatientAppointmentsTable from '../elements/PatientAppointmentsTable';
+import PatientAnalysesTable from '../elements/PatientAnalysesTable';
+import PatientSickHystoriesTable from '../elements/PatientSickHistoriesTable';
+import AddAppointmentReferralPanel from '../elements/AddAppointmentReferralPanel';
 
 
 function DoctorsAppointmentsPanel() {
@@ -39,7 +41,6 @@ function DoctorsAppointmentsPanel() {
 
   const fetchPatientInfo = async () => {
     try {
-      console.log(selectedAppointment)
       const data = await getPatientById(selectedAppointment.id_patient.id);
       setPatientId(selectedAppointment.id_patient.id);
       setPatientInfo(data);
@@ -72,51 +73,55 @@ function DoctorsAppointmentsPanel() {
       case 'patientInfo':
         if (!patientInfo) fetchPatientInfo();
         return patientInfo ? (
-          <div>
+          <div style={containerStyle} className="custom_scrollbar">
             <h2>Информация о пациенте</h2>
             <p>{`ФИО: ${patientInfo.lastname} ${patientInfo.name} ${patientInfo.surname}`}</p>
             <p>{`Дата рождения: ${patientInfo.birthday} (${patientInfo.age})`}</p>
             <p>{`Пол: ${patientInfo.gender.name}`}</p>
+            <PatientAppointmentsTable patientId={selectedAppointment.id_patient.id} />
           </div>
         ) : <p>Загрузка...</p>;
       case 'sickHistory':
         if (!sickHistory) fetchSickHistory();
         return sickHistory ? (
           <div>
-            <h2>Информация о диагнозах</h2>
-            {sickHistory.length > 0 ? (
-              sickHistory.map((diagnos) => (
-                <SickHistoryViewCard key={diagnos.id} diagnos={diagnos.diagnos} symptoms={diagnos.symptoms}
-                  doctor={diagnos.doctor} recomendations={diagnos.recomendations}
-                  diagnosDate={diagnos.diagnosDate} onClick={() => console.log('Card clicked')} />
-              ))
-            ) : (
-              <p>История болезни отсутствует.</p>
-            )}
-
+            <div style={containerStyle} className="custom_scrollbar">
+              <PatientSickHystoriesTable patientId={selectedAppointment.id_patient.id} />
+            </div>
           </div>
         ) : <p>Загрузка...</p>;
       case 'analyses':
         if (!analyses) fetchAnalyses();
         return analyses ? (
           <div>
-            <h2>Информация об анализах</h2>
-            {analyses.length > 0 ? (
-              analyses.map((analysis) => (
-                <AnalysViewCard key={analysis.id}
-                  analysName={analysis.analysType.name} value={analysis.value}
-                  analysUnit={analysis.analysType.unit} doctor={analysis.doctor}
-                  analysDate={analysis.analysDate} comment={analysis.comment}
-                  onClick={() => console.log('Card clicked')} />
-              ))
-            ) : (
-              <p>История анализов отсутствует.</p>
-            )}
+            <div style={containerStyle} className="custom_scrollbar">
+              <PatientAnalysesTable patientId={selectedAppointment.id_patient.id} />
+            </div>
           </div>
         ) : <p>Загрузка...</p>;
+      case 'makeAppointmentRefferal':
+        return (
+          <div>
+            <AddAppointmentReferralPanel
+              id_patient={selectedAppointment.id_patient.id}
+              id_referral_maker={doctorsData.id}
+              onSubmit={handleFormSubmit} />
+          </div>
+        )
+      case 'makeGospitalizationRefferal':
+        return (
+          <div>
+            хыхы
+          </div>
+        )
       default:
         return null;
     }
+  };
+
+  const handleFormSubmit = async (formData) => {
+    // Здесь можно обработать данные формы или выполнить другие действия после успешного добавления
+    console.log('Form submitted with data:', formData);
   };
 
   const handleOpenModal = (appointment) => {
@@ -154,6 +159,14 @@ function DoctorsAppointmentsPanel() {
             <TopPanelButton onClick={() => setActiveTab('patientInfo')} title="Пациент" />
             <TopPanelButton onClick={() => setActiveTab('sickHistory')} title="История болезни" />
             <TopPanelButton onClick={() => setActiveTab('analyses')} title="Анализы" />
+            <TopPanelDopButton onClick={() => setActiveTab('makeAppointmentRefferal')} title="Направление на прием" />
+
+            {doctorsData?.position?.name === "Терапевт" && (
+              <TopPanelDopButton
+                onClick={() => setActiveTab('makeGospitalizationRefferal')}
+                title="Направление на госпитализацию"
+              />
+            )}
           </div>
 
           <div>
@@ -170,3 +183,10 @@ function DoctorsAppointmentsPanel() {
 }
 
 export default DoctorsAppointmentsPanel
+
+const containerStyle = {
+  maxHeight: '65vh',
+  overflowY: 'scroll',
+  padding: '0px 15px',
+};
+

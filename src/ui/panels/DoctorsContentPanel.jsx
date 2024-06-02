@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getDoctors, getPositions, uploadDoctorData, updateDoctorData, deleteDoctorData } from '../../components/fire_api';
 import { EditButton, DeleteButton, AddButton, ConfirmButton, CloseButton } from '../elements/Buttons';
 import SearchPanel from '../elements/SearchPanel';
-import DropdownList from '../elements/DropdownList';
+// import DropdownList from '../elements/DropdownList';
 import ContentLabel from '../elements/ContentLabel';
 import ModalPanel from '../elements/ModalPanel';
 import ModalEditText from '../elements/ModalEditText';
@@ -171,7 +171,7 @@ export default function DoctorsContentPanel() {
             <ContentLabel title="Сотрудники" />
             <div className='func_frame'>
                 <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
-                <AddButton title="Добавить сотрудника" onClick={() => handleAddDoctor()} />
+                {/* <AddButton title="Добавить сотрудника" onClick={() => handleAddDoctor()} /> */}
             </div>
 
             <div className='table_frame'>
@@ -208,7 +208,7 @@ export default function DoctorsContentPanel() {
                 </table>
             </div>
 
-            {isAddModalOpen && (
+            {/* {isAddModalOpen && (
                 <ModalPanel >
                     <CloseButton title="Х" onClick={() => handleCloseClick()} />
                     <h3>Добавление врача</h3>
@@ -241,7 +241,7 @@ export default function DoctorsContentPanel() {
                     <p>Вы действительно хотите удалить эту запись?</p>
                     <ConfirmButton title="Подтвердить" onClick={() => handleDeleteConfirm()} />
                 </ModalPanel>
-            )}
+            )} */}
         </div>
     )
 }

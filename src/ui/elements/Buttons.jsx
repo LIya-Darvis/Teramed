@@ -82,3 +82,12 @@ export function TopPanelButton(props) {
   )
 }
 
+export function TopPanelDopButton(props) {
+  return (
+    <div className='top_panel_dop_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
+    </div>
+  )
+}
+

@@ -1,7 +1,8 @@
 import { db } from "../firebase";
-import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { formatUsername, formatDate, formatTime, formatAges, calculateAges } from "./formations";
+import { string } from "prop-types";
 
 // для получения списка пользователей (в основном для авторизации)
 export async function getUsers() {
@@ -35,6 +36,25 @@ export async function getUsers() {
         console.error('Error fetching users:', error);
     }
 }
+
+// добавление пользователя
+export const addUser = async ({ roleId, login, password, photo, username }) => {
+    console.log(roleId);
+    console.log(doc(db, 'Roles', roleId.toString()))
+    try {
+        const userRef = await addDoc(collection(db, 'Users'), {
+            id_role: doc(db, 'Roles', roleId.toString()),
+            login,
+            password,
+            photo,
+            username,
+        });
+        return userRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
+};
 
 // для отображения панелей по доступу пользователя
 export async function fetchAccessiblePanelsForRole(roleName) {
@@ -100,6 +120,27 @@ export async function getDoctors() {
     }
 }
 
+// добавление врача
+export const addDoctor = async ({ positionId, userId, isArchived, isAvailable, lastname, name, surname }) => {
+    try {
+        const doctor = {
+            id_position: doc(db, 'Positions', positionId),
+            id_user: doc(db, 'Users', userId),
+            is_archived: isArchived,
+            id_available: isAvailable,
+            lastname: lastname,
+            name: name,
+            surname: surname,
+        };
+        const docRef = await addDoc(collection(db, "Doctors"), doctor);
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
+};
+
 // для получения всех должностей врачей
 export async function getPositions() {
     try {
@@ -119,6 +160,28 @@ export async function getPositions() {
         return positionsData;
     } catch (error) {
         console.error('Error fetching positions:', error);
+    }
+}
+
+// для получения пола
+export async function getGenders() {
+    try {
+        const gendersCollectionRef = collection(db, 'Genders');
+        const gendersSnapshot = await getDocs(gendersCollectionRef);
+
+        const gendersData = [];
+        for (const genderDoc of gendersSnapshot.docs) {
+            const genderData = genderDoc.data();
+
+            const totalGendersData = {
+                id: genderDoc.id,
+                name: genderData.name,
+            };
+            gendersData.push(totalGendersData);
+        }
+        return gendersData;
+    } catch (error) {
+        console.error('Error fetching genders:', error);
     }
 }
 
@@ -171,6 +234,40 @@ export async function getPatients() {
     }
 }
 
+// добавление пациента
+export const addPatient = async ({
+    address, birthday, email, genderId, userId, isArchived, lastname,
+    medDate, name, passportNum, passportSeries, phone, photo, polisFinalDate, polisNum, surname
+}) => {
+    try {
+        const patient = {
+            address: address,
+            birthday: new Date(birthday),
+            email: email,
+            id_gender: doc(db, 'Genders', genderId),
+            id_user: doc(db, 'Users', userId),
+            is_archived: false,
+            lastname: lastname,
+            med_date: new Date(medDate),
+            name: name,
+            passport_num: passportNum,
+            passport_series: passportSeries,
+            phone: phone,
+            photo: 'patients_photo/49fbsk4.jfif',
+            polis_final_date: new Date(polisFinalDate),
+            polis_num: polisNum,
+            surname: surname,
+        };
+        const docRef = await addDoc(collection(db, "Patients"), patient);
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
+};
+
+// получение пациента по id
 export async function getPatientById(patientId) {
     try {
         // Получаем данные всех пациентов
@@ -189,6 +286,42 @@ export async function getPatientById(patientId) {
         return null;
     }
 }
+
+// получение типов анализов
+export const getAnalysTypes = async () => {
+    try {
+        const analysTypesCollectionRef = collection(db, 'Analys_Types');
+        const analysTypesSnapshot = await getDocs(analysTypesCollectionRef);
+        const analysTypesData = analysTypesSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        return analysTypesData;
+    } catch (error) {
+        console.error('Error fetching analysis types:', error);
+        throw error;
+    }
+};
+
+// добавление анализа пациента
+export const addAnalysis = async ({ comment, analysTypeId, doctorId, patientId, value }) => {
+    try {
+        const analysis = {
+            analys_date: Timestamp.fromDate(new Date()), // Текущая дата
+            comment: comment,
+            id_analys_type: doc(db, 'Analys_Types', analysTypeId), // Преобразование в ссылку
+            id_doctor: doc(db, 'Doctors', doctorId), // Преобразование в ссылку
+            id_patient: doc(db, 'Patients', patientId), // Преобразование в ссылку
+            value: value
+        };
+        const docRef = await addDoc(collection(db, "Analyses"), analysis);
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
+};
 
 // для выгрузки всех типов лдм
 export async function getLdmTypes() {
@@ -315,6 +448,7 @@ export async function getDoctorLocationsByPositionId(positionId) {
     }
 }
 
+// получить все записи о приемах
 export async function getAppointments() {
     try {
         const appointmentsCollectionRef = collection(db, 'Appointments');
@@ -383,7 +517,6 @@ export async function uploadDataToAppointment(idPatient, idDoctorLocation, idLdm
 export async function getPatientAppointmentsByUserId(userId) {
     try {
         const patients = await findPatientByUserId(userId);
-        console.log("id пациента ", patients[0].id)
 
         const appointmentsCollectionRef = collection(db, 'Appointments');
         const q = query(appointmentsCollectionRef, where('id_patient', '==', doc(db, 'Patients', patients[0].id)));
@@ -495,6 +628,38 @@ export async function getFilteredAppointmentsByDoctorId(doctorId) {
                 appointmentDate >= today &&
                 appointmentDate <= oneWeekAhead;
         });
+
+        // Преобразование данных в нужный формат
+        const formattedAppointments = filteredAppointments.map(appointment => ({
+            id: appointment.id,
+            doctor: appointment.doctor,
+            room: appointment.room,
+            datetime: appointment.datetime,
+            event: appointment.event,
+            patient: appointment.patient,
+            id_patient: appointment.id_patient
+        }));
+
+        return formattedAppointments;
+    } catch (error) {
+        console.error('Error filtering appointments:', error);
+        return [];
+    }
+}
+
+// для фильтрации лдм для каждого пациента
+export async function getFilteredAppointmentsByPatientId(patientId) {
+    console.log(patientId)
+    try {
+        // Получение всех назначений
+        const allAppointments = await getAppointments();
+
+        // Фильтрация назначений по id врача и дате
+        const filteredAppointments = allAppointments.filter(appointment => {
+            return appointment.id_patient.id === patientId;
+        });
+
+        console.log(filteredAppointments)
 
         // Преобразование данных в нужный формат
         const formattedAppointments = filteredAppointments.map(appointment => ({
@@ -662,6 +827,48 @@ export async function getPatientAnalysesById(patientId) {
         return [];
     }
 }
+
+export async function addAppointmentReferral(idDoctorLocation, idLdm, idPatient, idReferralMaker) {
+    try {
+        // Создаем ссылки на документы
+        const doctorLocationRef = doc(db, 'Doctor_Locations', idDoctorLocation);
+        const ldmRef = doc(db, 'Ldms', idLdm);
+        const patientRef = doc(db, 'Patients', idPatient);
+        const referralMakerRef = doc(db, 'Doctors', idReferralMaker);
+
+        // Создаем новый документ в коллекции Appointments
+        await addDoc(collection(db, 'Appointment_Referrals'), {
+            id_doctor_location: doctorLocationRef,
+            id_ldm: ldmRef,
+            id_patient: patientRef,
+            id_referral_maker: referralMakerRef,
+            is_confirmed: false
+        });
+
+        console.log('Referral successfully added!');
+    } catch (error) {
+        console.error('Error adding referral: ', error);
+    }
+}
+
+export const addGospitalizationReferral = async ({ patientId, statusId, terapevtId, reason, startDate }) => {
+    try {
+        const gospitalizationReferral = {
+            creation_date: Timestamp.fromDate(new Date()), // Текущая дата
+            id_patient: doc(db, 'Patients', patientId), // Преобразование в ссылку
+            id_status: doc(db, 'Referral_Statuses', statusId), // Преобразование в ссылку
+            id_terapevt: doc(db, 'Doctors', terapevtId), // Преобразование в ссылку
+            reason: reason,
+            start_date: Timestamp.fromDate(new Date(startDate)), // Преобразование startDate в Timestamp
+        };
+        const docRef = await addDoc(collection(db, "Gospitalization_Referrals"), gospitalizationReferral);
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
+};
 
 
 

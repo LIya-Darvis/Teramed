@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPatients, getPatientSickHistoryById, getPatientAnalysesById } from "../../components/fire_api";
+import { getPatients, getPatientSickHistoryById, getPatientAnalysesById, getDoctorByUserId } from "../../components/fire_api";
 import { SickHistoryViewButton, AnalysViewButton, ConfirmButton, CloseButton } from '../elements/Buttons';
 import SearchPanel from '../elements/SearchPanel';
 import ContentLabel from '../elements/ContentLabel';
@@ -11,6 +11,12 @@ import SickHistoryViewCard from '../elements/SickHistoryViewCard';
 import AnalysViewCard from '../elements/AnalysViewCard';
 import PatientInfoCard from '../elements/PatientInfoCard';
 import { generateSchedule } from '../../components/generations';
+import { useData } from '../../components/DataProvider';
+import PatientSickHystoriesTable from '../elements/PatientSickHistoriesTable';
+import PatientAnalysesTable from '../elements/PatientAnalysesTable';
+import { AddAnalysisForm } from '../elements/AddAnalysisForm';
+import PatientAppointmentsTable from '../elements/PatientAppointmentsTable';
+import AddGospitalizationForm from '../elements/AddGospitalizationForm';
 
 
 export default function PatientsContentPanel() {
@@ -23,6 +29,7 @@ export default function PatientsContentPanel() {
     // для модальных окон
     const [isSickHistoryModalOpen, setIsSickHistoryModalOpen] = useState(false);
     const [isAnalysModalOpen, setIsAnalysModalOpen] = useState(false);
+    const [isGospitalizationModalOpen, setIsGospitalizationModalOpen] = useState(false);
 
     // для данных пациента
     const [lastname, setLastname] = useState('');
@@ -33,6 +40,13 @@ export default function PatientsContentPanel() {
     const [patientId, setPatientId] = useState(null);
     const [patientDiagnoses, setPatientDiagnoses] = useState([]);
     const [patientAnalyses, setPatientAnalyses] = useState([]);
+    const [patientAppointments, setPatientAppointments] = useState([]);
+
+    const { data, setData } = useData();
+    const [doctorsData, setDoctorsData] = useState([]);
+
+    const [showAddAnalysisForm, setShowAddAnalysisForm] = useState(false);
+    const [showAddGospitalizationsForm, setShowAddGospitalizationsForm] = useState(false);
 
     // ассинхронно получаем данные пациентов из апи
     useEffect(() => {
@@ -40,6 +54,19 @@ export default function PatientsContentPanel() {
             try {
                 const patients = await getPatients();
                 setPatientsData(patients);
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const doctors = await getDoctorByUserId(data.userData.id);
+                setDoctorsData(doctors);
+                console.log(doctors.position.name);
             } catch (error) {
                 console.log(error.message);
             }
@@ -58,14 +85,13 @@ export default function PatientsContentPanel() {
         setIsAnalysModalOpen(false);
         setPatientDiagnoses([]);
         setPatientAnalyses([]);
+        setIsGospitalizationModalOpen(false);
     };
 
-    const handlePatientDiagnoses = async (idPatient) => {
+    const handlePatientDiagnoses = async (patient) => {
         try {
-            setPatientId(idPatient);
-
-            const patientSickHistory = await getPatientSickHistoryById(idPatient);
-            console.log(patientSickHistory);
+            setPatientId(patient.id);
+            const patientSickHistory = await getPatientSickHistoryById(patient.id);
             setPatientDiagnoses(patientSickHistory);
             setIsSickHistoryModalOpen(true);
         } catch (error) {
@@ -73,12 +99,10 @@ export default function PatientsContentPanel() {
         }
     };
 
-    const handlePatientAnalyses = async (idPatient) => {
+    const handlePatientAnalyses = async (patient) => {
         try {
-            setPatientId(idPatient);
-
-            const patientAnalys = await getPatientAnalysesById(idPatient);
-            console.log(patientAnalys);
+            setPatientId(patient.id);
+            const patientAnalys = await getPatientAnalysesById(patient.id);
             setPatientAnalyses(patientAnalys);
             setIsAnalysModalOpen(true);
         } catch (error) {
@@ -86,32 +110,49 @@ export default function PatientsContentPanel() {
         }
     };
 
+    const handlePatientGospitalization = async (patient) => {
+        try {
+            setPatientId(patient.id);
+            setIsGospitalizationModalOpen(true);
+        } catch (error) {
+            console.error('Ошибка при обработке госпитализации пациента:', error);
+        }
+    };
+
+    const handleAddAnalysisClick = () => {
+        setShowAddAnalysisForm(true);
+    };
+
+    const handleAddGospitalizationClick = () => {
+
+    };
+
+    const handleBackClick = () => {
+        setShowAddAnalysisForm(false);
+    };
+
     // закрытие модального окна
     const handleCloseClick = () => {
         clearData();
     };
 
-    const handleDiagnosClick = () => {
-        console.log(patientId)
-    };
-
-    const handleAnalysClick = () => {
-        console.log(patientId)
-    };
-
     return (
         <div className='content_panel'>
             <ContentLabel title="Пациенты" />
-            <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
-            
+            <div className='func_frame'>
+                <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
+            </div>
 
             <div className='patient_cards_frame'>
                 {patientsData.map((patient, index) => (
-                    <PatientInfoCard key={index} patient={patient} />
+                    <PatientInfoCard key={index} patient={patient}
+                        position={doctorsData.position.name}
+                        onClickSickHistory={handlePatientDiagnoses}
+                        onClickAnalises={handlePatientAnalyses}
+                        onClickGospitalization={handlePatientGospitalization}
+                    />
                 ))}
             </div>
-
-
 
             {/* <div className='table_frame'>
                 <table className='data_table'>
@@ -145,43 +186,70 @@ export default function PatientsContentPanel() {
                 </table>
             </div> */}
 
-            {/* {isSickHistoryModalOpen && (
+            {isSickHistoryModalOpen && (
                 <ModalPanel >
                     <CloseButton title="Х" onClick={() => handleCloseClick()} />
-                    <h3>Диагнозы</h3>
                     <ConfirmButton title="Установить диагноз" />
-                    {patientDiagnoses.map((diagnos) => (
-                        <SickHistoryViewCard key={diagnos.id} diagnos={diagnos.diagnos} symptoms={diagnos.symptoms}
-                            doctor={diagnos.doctor.lastname} recomendations={diagnos.recomendations}
-                            diagnosDate={diagnos.diagnosDate} onClick={() => handleDiagnosClick()} />
-                    ))}
-
+                    {patientDiagnoses ? (
+                        <div>
+                            <div style={containerStyle} className="custom_scrollbar">
+                                <PatientSickHystoriesTable patientId={patientId} />
+                            </div>
+                        </div>
+                    ) : <p>Загрузка...</p>}
                 </ModalPanel>
             )}
-            */}
 
-            {/* 
             {isAnalysModalOpen && (
                 <ModalPanel >
                     <CloseButton title="Х" onClick={() => handleCloseClick()} />
-                    <h3>Анализы</h3>
-
-                    <ConfirmButton title="Добавить результаты анализа" />
-                    <div className='card_list_frame'>
-                        {patientAnalyses.map((analys) => (
-                            <AnalysViewCard key={analys.id} analysName={analys.analysType.name} value={analys.value}
-                                analysUnit={analys.analysType.unit} doctor={analys.doctor.lastname}
-                                analysDate={analys.analysDate} comment={analys.comment} 
-                                onClick={() => handleAnalysClick()} />
-                        ))}
-                    </div>
+                    {doctorsData.position.name === 'Лаборант' && (
+                        <ConfirmButton title="Добавить результаты анализа" onClick={handleAddAnalysisClick} />)}
+                    {!showAddAnalysisForm ? (
+                        patientAnalyses ? (
+                            <div>
+                                <div style={containerStyle} className="custom_scrollbar">
+                                    <PatientAnalysesTable patientId={patientId} />
+                                </div>
+                            </div>
+                        ) : (
+                            <p>Загрузка...</p>
+                        )
+                    ) : (
+                        <div>
+                            <AddAnalysisForm doctorId={doctorsData.id} patientId={patientId} />
+                            <button onClick={handleBackClick}>Назад</button>
+                        </div>
+                    )}
 
                 </ModalPanel>
-            )} */}
+            )}
+
+            {isGospitalizationModalOpen && (
+                <ModalPanel >
+                    <CloseButton title="Х" onClick={() => handleCloseClick()} />
+                    {doctorsData.position.name === 'Терапевт' && (
+                        <AddGospitalizationForm patientId={patientId} terapevtId={doctorsData.id} />
+
+                        // <ConfirmButton title="Добавить направление на госпитализацию" onClick={handleAddGospitalizationClick} />)
+
+                    )}
+
+
+
+
+                </ModalPanel>
+            )}
 
         </div >
     )
+};
+
+const containerStyle = {
+    maxHeight: '65vh',
+    minHeight: '50vh',
+    overflowY: 'scroll',
+    padding: '0px 15px',
+};
 
 
-
-}

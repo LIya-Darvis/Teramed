@@ -107,4 +107,14 @@
     padding-bottom: 150px;
 }
 
+.buttons_panel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 15px 0px;
+}
+
 

@@ -8,7 +8,7 @@ function PatientAppointmentViewPanel() {
   const { data, setData } = useData();
   const [patientAppointmentsData, setPatientAppointmentsData] = useState([]);
 
-  // ассинхронно получаем данные записей приема пациента из апи
+  // ассинхронно получаем данные записей приема пациента
   useEffect(() => {
     async function fetchData() {
       try {

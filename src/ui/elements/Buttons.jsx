@@ -73,3 +73,12 @@ export function ConfirmButton(props) {
   )
 }
 
+export function TopPanelButton(props) {
+  return (
+    <div className='top_panel_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
+    </div>
+  )
+}
+

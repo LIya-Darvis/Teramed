@@ -10,6 +10,7 @@ import PatientAppointmentsTable from '../elements/PatientAppointmentsTable';
 import PatientAnalysesTable from '../elements/PatientAnalysesTable';
 import PatientSickHystoriesTable from '../elements/PatientSickHistoriesTable';
 import AddAppointmentReferralPanel from '../elements/AddAppointmentReferralPanel';
+import AddGospitalizationForm from '../elements/AddGospitalizationForm';
 
 
 function DoctorsAppointmentsPanel() {
@@ -128,7 +129,7 @@ function DoctorsAppointmentsPanel() {
       case 'makeGospitalizationRefferal':
         return (
           <div>
-            хыхы
+            <AddGospitalizationForm patientId={selectedAppointment.id_patient.id} terapevtId={doctorsData.id}/>
           </div>
         )
       case 'complaints':

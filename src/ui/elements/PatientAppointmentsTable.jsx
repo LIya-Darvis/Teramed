@@ -4,6 +4,8 @@ import { getFilteredAppointmentsByPatientId } from "../../components/fire_api";
 function PatientAppointmentsTable({ patientId }) {
     const [appointments, setAppointments] = useState([]);
 
+    console.log(patientId)
+
     useEffect(() => {
         async function fetchAppointments() {
             const data = await getFilteredAppointmentsByPatientId(patientId);
@@ -15,7 +17,7 @@ function PatientAppointmentsTable({ patientId }) {
     }, [patientId]);
 
     const tableStyle = {
-        width: '100%',
+        width: '90%',
         borderCollapse: 'collapse',
         margin: '16px 0',
         fontSize: '16px',
@@ -34,7 +36,7 @@ function PatientAppointmentsTable({ patientId }) {
 
     return (
         <div>
-            <h2>Назначения пациента</h2>
+            <h5>Назначения пациента</h5>
             <table style={tableStyle}>
                 <thead>
                     <tr>

@@ -15,7 +15,7 @@ function PatientSickHystoriesTable({ patientId }) {
     }, [patientId]);
 
     const tableStyle = {
-        width: '100%',
+        width: '90%',
         borderCollapse: 'collapse',
         margin: '16px 0',
         fontSize: '16px',
@@ -34,7 +34,7 @@ function PatientSickHystoriesTable({ patientId }) {
 
     return (
         <div>
-            <h2>Диагнозы пациента</h2>
+            <h5>Диагнозы пациента</h5>
             <table style={tableStyle}>
                 <thead>
                     <tr>
@@ -60,7 +60,7 @@ function PatientSickHystoriesTable({ patientId }) {
                         ))
                     ) : (
                         <tr>
-                            <td style={thTdStyle} colSpan="6">Нет анализов для данного пациента.</td>
+                            <td style={thTdStyle} colSpan="6">Нет истории болезни данного пациента.</td>
                         </tr>
                     )}
                 </tbody>

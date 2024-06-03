@@ -1,8 +1,13 @@
 import React from 'react'
+import ContentLabel from '../elements/ContentLabel'
 
 function PatientAppointmentReferralsViewPanel() {
   return (
-    <div>Мои направления к врачам</div>
+    <div>
+      <ContentLabel title="Мои направления на прием" />
+
+      
+    </div>
   )
 }
 

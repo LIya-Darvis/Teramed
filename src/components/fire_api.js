@@ -384,6 +384,7 @@ export async function getLdms() {
 
 // для получения пациента по id пользователя
 export async function findPatientByUserId(userId) {
+    console.log(userId)
     try {
         const patientsQuery = query(collection(db, 'Patients'), where('id_user', '==', doc(db, 'Users', userId)));
         const patientsSnapshot = await getDocs(patientsQuery);

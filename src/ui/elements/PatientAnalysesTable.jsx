@@ -15,7 +15,7 @@ function PatientAnalysesTable({ patientId }) {
     }, [patientId]);
 
     const tableStyle = {
-        width: '100%',
+        width: '90%',
         borderCollapse: 'collapse',
         margin: '16px 0',
         fontSize: '16px',
@@ -34,7 +34,7 @@ function PatientAnalysesTable({ patientId }) {
 
     return (
         <div>
-            <h2>Анализы пациента</h2>
+            <h5>Анализы пациента</h5>
             <table style={tableStyle}>
                 <thead>
                     <tr>

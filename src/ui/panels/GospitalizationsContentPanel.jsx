@@ -82,7 +82,7 @@ export default function GospitalizationContentPanel() {
 
         if (eventData) {
             try {
-                const doctorsData = await findDoctorByPositionId(eventData.id_position);
+                const doctorsData = await getDoctorLocationsByPositionId(eventData.id_position);
                 setDoctors(doctorsData);
                 setSelectedDoctor(null);
                 setDoctorLocations([]);

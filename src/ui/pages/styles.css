@@ -96,9 +96,12 @@
     overflow-y: scroll;
     scrollbar-width: none;
     display: flex;
-    padding: 35px;
+    padding: 25px 25px -250px 25px;
+    margin-left: 50px;
     /* box-shadow: inset 0px -10px 10px -10px rgba(0,0,0,0.5); */
 }
+
+
 
 
 

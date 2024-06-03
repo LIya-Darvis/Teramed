@@ -9,9 +9,11 @@ import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
 import UsersContentPanel from '../panels/UsersContentPanel';
 import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
 import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
+import './styles.css';
 
 import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
 import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';
+import PatientAppointmentReferralsViewPanel from '../panels/PatientAppointmentReferralsViewPanel';
 
 
 const components = [
@@ -21,8 +23,9 @@ const components = [
   { 'PatientLdmViewPanel': { component: <PatientLdmViewPanel />, title: "Моя мед карта" } },
   { 'UsersContentPanel': { component: <UsersContentPanel />, title: "Пользователи" } },
   { 'PatientAppointmentMakePanel': { component: <PatientAppointmentMakePanel />, title: "Записаться на прием" } },
-  { 'PatientAppointmentViewPanel': { component: <PatientAppointmentViewPanel />, title: "Назначенные приемы" } },
+  { 'PatientAppointmentViewPanel': { component: <PatientAppointmentViewPanel />, title: "Мои назначенные приемы" } },
   { 'DoctorsAppointmentsPanel': { component: <DoctorsAppointmentsPanel />, title: "Назначенные приемы" } },
+  { 'PatientAppointmentReferralsViewPanel': { component: <PatientAppointmentReferralsViewPanel />, title: "Мои направления на прием" } },
 ];
 
 export default function UserPage() {

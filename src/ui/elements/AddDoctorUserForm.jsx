@@ -46,7 +46,7 @@ const AddDoctorUserForm = ({ onSubmit }) => {
                 <ModalEditText placeholder="Логин" value={login} onChange={(e) => setLogin(e.target.value)} />
                 <ModalEditText placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <ModalEditText placeholder="Имя пользователя" value={username} onChange={(e) => setUsername(e.target.value)} />
-                <button type="submit">Добавить учетную запись </button>
+                <button style={form_button} type="submit">Добавить учетную запись </button>
             </form>
         </div>
 
@@ -66,3 +66,11 @@ const containerStyle = {
     // overflowY: 'scroll',
     padding: '0px 15px',
 };
+
+const form_button = {
+    margin: '20px 0px',
+    padding: '10px',
+    backgroundColor: '#4B5672',
+    color: '#fff',
+    borderRadius: '4px'
+}

@@ -58,7 +58,15 @@ export function AddAnalysisForm({ doctorId, patientId }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <button type="submit">Добавить анализ</button>
+      <button style={form_button} type="submit">Добавить анализ</button>
     </form>
   );
+}
+
+const form_button = {
+  margin: '20px 0px',
+  padding: '10px',
+  backgroundColor: '#4B5672',
+  color: '#fff',
+  borderRadius: '4px'
 }

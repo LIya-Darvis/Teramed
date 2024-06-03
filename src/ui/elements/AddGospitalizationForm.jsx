@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
-import { addGospitalizationReferral } from '../../components/fire_api';
+import React, { useEffect, useState } from 'react';
+import { addGospitalizationReferral, getReferralStatuses } from '../../components/fire_api';
+import ModalEditText from './ModalEditText';
+import { DropdownList } from './DropdownLists';
+import DatePickerComponent from './DatePickerComponent';
 
 function AddGospitalizationForm({ patientId, terapevtId }) {
-    const [statusId, setStatusId] = useState('');
+    const [statusId, setStatusId] = useState(1);
     const [reason, setReason] = useState('');
     const [startDate, setStartDate] = useState('');
+
+    const [statuses, setStatuses] = useState([]);
+
+    useEffect(() => {
+        const fetchStatuses = async () => {
+            try {
+                const fetchedStatuses = await getReferralStatuses();
+                setStatuses(fetchedStatuses);
+            } catch (error) {
+                console.error('Error fetching statuses:', error);
+            }
+        };
+
+        fetchStatuses();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,27 +45,41 @@ function AddGospitalizationForm({ patientId, terapevtId }) {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="ID статуса"
+        <form onSubmit={handleSubmit} style={gosp_form}>
+            {/* <DropdownList
+                options={statuses}
                 value={statusId}
                 onChange={(e) => setStatusId(e.target.value)}
-            />
-            <textarea
+                placeholder="Выберите статус"
+            /> */}
+            <ModalEditText
                 placeholder="Причина"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
             />
-            <input
-                type="date"
-                placeholder="Дата начала"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+            <p>Выберите дату начала госпитализации</p>
+            <DatePickerComponent
+                selectedDate={startDate}
+                onChange={(date) => setStartDate(date)}
             />
-            <button type="submit">Добавить направление на госпитализацию</button>
+            <button style={form_button} type="submit">Добавить направление на госпитализацию</button>
         </form>
     );
 }
 
 export default AddGospitalizationForm;
+
+const gosp_form = {
+    display: 'flex',
+    flexDirection: 'column'
+}
+
+const form_button = {
+    margin: '20px 0px',
+    padding: '10px',
+    backgroundColor: '#4B5672',
+    color: '#fff',
+    borderRadius: '4px'
+}
+
+

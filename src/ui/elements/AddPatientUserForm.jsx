@@ -74,7 +74,7 @@ const AddPatientUserForm = ({ onSubmit }) => {
             <ModalEditText placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
             <ModalEditText placeholder="Имя пользователя" value={username} onChange={(e) => setUsername(e.target.value)} />
 
-            <button type="submit">Добавить пациента</button>
+            <button style={form_button} type="submit">Добавить пациента</button>
         </form>
     );
 };
@@ -96,5 +96,13 @@ const containerStyle = {
 const datePickerName = {
     margin: '0px',
 };
+
+const form_button = {
+    margin: '20px 0px',
+    padding: '10px',
+    backgroundColor: '#4B5672',
+    color: '#fff',
+    borderRadius: '4px'
+}
 
 

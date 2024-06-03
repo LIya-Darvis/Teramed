@@ -548,7 +548,7 @@ export async function getPatientAppointmentsByUserId(userId) {
             const patientDoc = await getDoc(doc(db, 'Patients', idPatient.id));
             const patientData = patientDoc.data();
 
-            console.log(appointmentData.ldm_datetime)
+            // console.log(appointmentData.ldm_datetime)
 
             const ldmDate = formatDate(appointmentData.ldm_datetime.toDate());
             const ldmTime = formatTime(appointmentData.ldm_datetime.toDate());
@@ -571,6 +571,20 @@ export async function getPatientAppointmentsByUserId(userId) {
         return [];
     }
 }
+
+// для обновления данных лдм (жалобы)
+export const updateAppointmentComplaints = async (appointmentId, complaints) => {
+    try {
+        const appointmentRef = doc(db, 'Appointments', appointmentId);
+        await updateDoc(appointmentRef, {
+            complaints: complaints
+        });
+        console.log('Appointment updated successfully');
+    } catch (error) {
+        console.error('Error updating appointment: ', error);
+        throw error;
+    }
+};
 
 // для получения данных врача по id пользователя
 export const getDoctorByUserId = async (userId) => {
@@ -627,6 +641,45 @@ export async function getFilteredAppointmentsByDoctorId(doctorId) {
             return appointment.doctor_location.id_doctor.id === doctorId &&
                 appointmentDate >= today &&
                 appointmentDate <= oneWeekAhead;
+        });
+
+        // Преобразование данных в нужный формат
+        const formattedAppointments = filteredAppointments.map(appointment => ({
+            id: appointment.id,
+            doctor: appointment.doctor,
+            room: appointment.room,
+            datetime: appointment.datetime,
+            event: appointment.event,
+            patient: appointment.patient,
+            id_patient: appointment.id_patient
+        }));
+
+        return formattedAppointments;
+    } catch (error) {
+        console.error('Error filtering appointments:', error);
+        return [];
+    }
+}
+
+// для фильтрации лдм для каждого врача и времени
+export async function getFilteredCurrentAppointmentsByDoctorId(doctorId) {
+    try {
+        // Получение всех назначений
+        const allAppointments = await getAppointments();
+
+        // Фильтрация назначений по id врача и дате
+        const filteredAppointments = allAppointments.filter(appointment => {
+            const appointmentDate = new Date(appointment.datetime);
+            const today = new Date();
+            const oneWeekAhead = new Date();
+            oneWeekAhead.setDate(today.getDate() + 7);
+
+            const currentTime = new Date();
+            const appointmentEndTime = new Date(appointmentDate.getTime() + appointment.event.time * 60000);
+
+            return appointment.doctor_location.id_doctor.id === doctorId &&
+                appointmentDate <= currentTime &&
+                currentTime <= appointmentEndTime;
         });
 
         // Преобразование данных в нужный формат
@@ -850,6 +903,22 @@ export async function addAppointmentReferral(idDoctorLocation, idLdm, idPatient,
         console.error('Error adding referral: ', error);
     }
 }
+
+// для получения данных из коллекции Referral_Statuses
+export const getReferralStatuses = async () => {
+    try {
+        const statusesCollectionRef = collection(db, 'Referral_Statuses');
+        const statusesSnapshot = await getDocs(statusesCollectionRef);
+        const statusesData = statusesSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        return statusesData;
+    } catch (error) {
+        console.error('Error fetching referral statuses:', error);
+        throw error;
+    }
+};
 
 export const addGospitalizationReferral = async ({ patientId, statusId, terapevtId, reason, startDate }) => {
     try {

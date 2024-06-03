@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ContentLabel from '../elements/ContentLabel'
 import { useData } from '../../components/DataProvider';
-import { getDoctorByUserId, getFilteredAppointmentsByDoctorId, getPatientAnalysesById, getPatientById, getPatientSickHistoryById, getPatients } from '../../components/fire_api';
+import { getDoctorByUserId, getFilteredAppointmentsByDoctorId, getFilteredCurrentAppointmentsByDoctorId, getPatientAnalysesById, getPatientById, getPatientSickHistoryById, getPatients, updateAppointmentComplaints } from '../../components/fire_api';
 import AppointmentCard from '../elements/AppointmentCard';
 import ModalPanel from '../elements/ModalPanel';
 import { AddButton, CloseButton, TopPanelButton, TopPanelDopButton } from '../elements/Buttons';
@@ -16,12 +16,14 @@ function DoctorsAppointmentsPanel() {
   const { data, setData } = useData();
   const [doctorsData, setDoctorsData] = useState([]);
   const [doctorAppointmentsData, setDoctorAppointmentsData] = useState([]);
+  const [doctorCurrentAppointmentsData, setDoctorCurrentAppointmentsData] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [patientId, setPatientId] = useState([]);
   const [activeTab, setActiveTab] = useState('patientInfo');
   const [patientInfo, setPatientInfo] = useState(null);
   const [sickHistory, setSickHistory] = useState(null);
   const [analyses, setAnalyses] = useState(null);
+  const [complaints, setComplaints] = useState('');
 
 
   // ассинхронно получаем данные врачей по id авторизованного пользователя
@@ -32,6 +34,8 @@ function DoctorsAppointmentsPanel() {
         setDoctorsData(doctors);
         const doctorAppointments = await getFilteredAppointmentsByDoctorId(doctors.id);
         setDoctorAppointmentsData(doctorAppointments);
+        const doctorCurrentAppointments = await getFilteredCurrentAppointmentsByDoctorId(doctors.id)
+        setDoctorCurrentAppointmentsData(doctorCurrentAppointments);
       } catch (error) {
         console.log(error.message);
       }
@@ -46,6 +50,19 @@ function DoctorsAppointmentsPanel() {
       setPatientInfo(data);
     } catch (error) {
       console.error('Ошибка при получении информации о пациенте:', error);
+    }
+  };
+
+  const handleComplaintsChange = (e) => {
+    setComplaints(e.target.value);
+  };
+
+  const handleConfirmClick = async () => {
+    try {
+      await updateAppointmentComplaints(selectedAppointment.id, complaints);
+      console.log('Complaints updated successfully');
+    } catch (error) {
+      console.log('Error updating complaints: ' + error.message);
     }
   };
 
@@ -114,6 +131,21 @@ function DoctorsAppointmentsPanel() {
             хыхы
           </div>
         )
+      case 'complaints':
+        return (
+          <div>
+            <input
+              type="text"
+              placeholder="Введите жалобы"
+              value={complaints}
+              onChange={handleComplaintsChange}
+              className="modal_edit_text"
+            />
+            <button onClick={handleConfirmClick} className="confirm_button">
+              Подтвердить
+            </button>
+          </div>
+        )
       default:
         return null;
     }
@@ -141,6 +173,14 @@ function DoctorsAppointmentsPanel() {
 
 
 
+      {doctorCurrentAppointmentsData.map(currentAppointment => (
+        <AppointmentCard
+          key={currentAppointment.id}
+          appointment={currentAppointment}
+          onClick={handleOpenModal}
+        />
+      ))}
+
       <ContentLabel title="Назначенные приемы" />
 
       {doctorAppointmentsData.map(appointment => (
@@ -160,6 +200,7 @@ function DoctorsAppointmentsPanel() {
             <TopPanelButton onClick={() => setActiveTab('sickHistory')} title="История болезни" />
             <TopPanelButton onClick={() => setActiveTab('analyses')} title="Анализы" />
             <TopPanelDopButton onClick={() => setActiveTab('makeAppointmentRefferal')} title="Направление на прием" />
+            <TopPanelButton onClick={() => setActiveTab('complaints')} title="Добавить жалобы" />
 
             {doctorsData?.position?.name === "Терапевт" && (
               <TopPanelDopButton

@@ -14,7 +14,7 @@ function PatientAppointmentViewPanel() {
       try {
         const patientAppointments = await getPatientAppointmentsByUserId(data.userData.id);
         setPatientAppointmentsData(patientAppointments);
-        // console.log(" => ", patientAppointments)
+        console.log(" => ", patientAppointments)
       } catch (error) {
         console.log(error.message);
       }
@@ -39,8 +39,8 @@ function PatientAppointmentViewPanel() {
           <tbody>
             {patientAppointmentsData.map(patientAppointment => (
               <tr key={patientAppointment.id}>
-                <td>{patientAppointment.ldm_name}</td>
-                <td>{patientAppointment.doctor}</td>
+                <td>{patientAppointment.ldm_name.name}</td>
+                <td>{patientAppointment.doctor.lastname} {patientAppointment.doctor.name} {patientAppointment.doctor.surname}</td>
                 <td>{patientAppointment.cabinet}</td>
                 <td>{patientAppointment.ldm_date}</td>
                 <td>{patientAppointment.ldm_time}</td>

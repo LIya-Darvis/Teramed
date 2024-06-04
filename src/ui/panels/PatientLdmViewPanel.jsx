@@ -25,7 +25,7 @@ function PatientLdmViewPanel() {
     return <p>Loading...</p>;
   }
 
-  console.log(patientData[0].id)
+  // console.log(patientData[0].id)
 
   return (
     <div className='content_panel'>

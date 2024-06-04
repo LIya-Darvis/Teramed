@@ -34,6 +34,7 @@ function DoctorsAppointmentsPanel() {
         const doctors = await getDoctorByUserId(data.userData.id);
         setDoctorsData(doctors);
         const doctorAppointments = await getFilteredAppointmentsByDoctorId(doctors.id);
+        console.log(doctorAppointments);
         setDoctorAppointmentsData(doctorAppointments);
         const doctorCurrentAppointments = await getFilteredCurrentAppointmentsByDoctorId(doctors.id)
         setDoctorCurrentAppointmentsData(doctorCurrentAppointments);
@@ -60,6 +61,7 @@ function DoctorsAppointmentsPanel() {
 
   const handleConfirmClick = async () => {
     try {
+      console.log(selectedAppointment)
       await updateAppointmentComplaints(selectedAppointment.id, complaints);
       console.log('Complaints updated successfully');
     } catch (error) {

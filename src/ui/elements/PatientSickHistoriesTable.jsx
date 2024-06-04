@@ -7,7 +7,6 @@ function PatientSickHystoriesTable({ patientId }) {
     useEffect(() => {
         async function fetchAppointments() {
             const data = await getPatientSickHistoryById(patientId);
-            console.log(data)
             setSickHystories(data);
         }
 

@@ -54,7 +54,7 @@ export const generateTimeSlots = (appointments, eventDuration, workHours, workDa
             const slotEnd = new Date(slotStart);
             slotEnd.setMinutes(slotStart.getMinutes() + eventDuration);
 
-            if (slotEnd > endOfDay) break;
+            if (slotEnd > endOfDay || (day.toDateString() === today.toDateString() && slotEnd <= today)) break;
 
             const isSlotAvailable = !appointments.some(appointment => {
                 const appointmentStart = new Date(appointment.datetime);
@@ -63,12 +63,11 @@ export const generateTimeSlots = (appointments, eventDuration, workHours, workDa
                 return (slotStart < appointmentEnd && slotEnd > appointmentStart);
             });
 
-            if (isSlotAvailable) {
-                daySlots.push({
-                    start: new Date(slotStart),
-                    end: new Date(slotEnd)
-                });
-            }
+            daySlots.push({
+                start: new Date(slotStart),
+                end: new Date(slotEnd),
+                isAvailable: isSlotAvailable
+            });
         }
 
         if (daySlots.length > 0) {
@@ -81,3 +80,6 @@ export const generateTimeSlots = (appointments, eventDuration, workHours, workDa
 
     return timeSlots;
 };
+
+
+

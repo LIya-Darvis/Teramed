@@ -15,7 +15,8 @@ function PatientAppointmentViewPanel() {
       try {
 
         const patient = await findPatientByUserId(data.userData.id);
-        setPatientData(patient);
+        setPatientData(patient[0]);
+        console.log(patient[0].id);   // здесь есть данные и они корректны
         // const patientAppointments = await getPatientAppointmentsByUserId(data.userData.id);
         // setPatientAppointmentsData(patientAppointments);
         // console.log(" => ", patientAppointments)
@@ -26,11 +27,16 @@ function PatientAppointmentViewPanel() {
     fetchData();
   }, []);
 
+  if (!patientData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='content_panel'>
       {/* <ContentLabel title="Назначенные приемы" /> */}
       
-      <PatientAppointmentsTable patientId={patientData[0].id} />
+      {/* а ниже уже проблема с id */}
+      <PatientAppointmentsTable patientId={patientData} />  
     </div>
   )
 }

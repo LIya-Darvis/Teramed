@@ -4,11 +4,12 @@ import { getFilteredAppointmentsByPatientId } from "../../components/fire_api";
 function PatientAppointmentsTable({ patientId }) {
     const [appointments, setAppointments] = useState([]);
 
-    console.log(patientId)
+    console.log("=> ", patientId)
+    console.log("=> ", patientId.id)
 
     useEffect(() => {
         async function fetchAppointments() {
-            const data = await getFilteredAppointmentsByPatientId(patientId);
+            const data = await getFilteredAppointmentsByPatientId(patientId.id);
             console.log(data)
             setAppointments(data);
         }

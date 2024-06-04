@@ -7,7 +7,6 @@ function PatientAnalysesTable({ patientId }) {
     useEffect(() => {
         async function fetchAppointments() {
             const data = await getPatientAnalysesById(patientId);
-            console.log(data)
             setAnalyses(data);
         }
 

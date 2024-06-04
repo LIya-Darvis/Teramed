@@ -127,7 +127,7 @@ export const addDoctor = async ({ positionId, userId, isArchived, isAvailable, l
             id_position: doc(db, 'Positions', positionId),
             id_user: doc(db, 'Users', userId),
             is_archived: isArchived,
-            id_available: isAvailable,
+            is_available: isAvailable,
             lastname: lastname,
             name: name,
             surname: surname,
@@ -384,7 +384,6 @@ export async function getLdms() {
 
 // для получения пациента по id пользователя
 export async function findPatientByUserId(userId) {
-    console.log(userId)
     try {
         const patientsQuery = query(collection(db, 'Patients'), where('id_user', '==', doc(db, 'Users', userId)));
         const patientsSnapshot = await getDocs(patientsQuery);
@@ -407,7 +406,7 @@ export async function findPatientByUserId(userId) {
 export async function findDoctorByPositionId(positionId) {
     try {
         // console.log(positionId)
-        const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId.id)));
+        const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId)));
         const doctorsSnapshot = await getDocs(doctorsQuery);
         const doctors = [];
         doctorsSnapshot.forEach((doc) => {
@@ -428,6 +427,7 @@ export async function findDoctorByPositionId(positionId) {
 export async function getDoctorLocationsByPositionId(positionId) {
     try {
         const doctors = await findDoctorByPositionId(positionId);
+        console.log(doctors)
         console.log(doctors[0].id)
         const doctorLocationsQuery = query(collection(db, 'Doctor_Locations'),
             where('id_doctor', '==', doc(db, 'Doctors', doctors[0].id)));
@@ -587,6 +587,20 @@ export const updateAppointmentComplaints = async (appointmentId, complaints) => 
     }
 };
 
+// для обновления данных лдм (подтверждение посещения приема пациентом)
+export const updateAppointmentIsConfirmed = async (appointmentId, isConfirmed) => {
+    try {
+        const appointmentRef = doc(db, 'Appointments', appointmentId);
+        await updateDoc(appointmentRef, {
+            is_confirmed: isConfirmed
+        });
+        console.log('Appointment updated successfully');
+    } catch (error) {
+        console.error('Error updating appointment: ', error);
+        throw error;
+    }
+};
+
 // для получения данных врача по id пользователя
 export const getDoctorByUserId = async (userId) => {
     try {
@@ -672,15 +686,17 @@ export async function getFilteredCurrentAppointmentsByDoctorId(doctorId) {
         const filteredAppointments = allAppointments.filter(appointment => {
             const appointmentDate = new Date(appointment.datetime);
             const today = new Date();
-            const oneWeekAhead = new Date();
-            oneWeekAhead.setDate(today.getDate() + 7);
 
-            const currentTime = new Date();
-            const appointmentEndTime = new Date(appointmentDate.getTime() + appointment.event.time * 60000);
+            // Устанавливаем начало и конец текущего дня
+            const startOfDay = new Date(today);
+            startOfDay.setHours(0, 0, 0, 0);
+
+            const endOfDay = new Date(today);
+            endOfDay.setHours(23, 59, 59, 999);
 
             return appointment.doctor_location.id_doctor.id === doctorId &&
-                appointmentDate <= currentTime &&
-                currentTime <= appointmentEndTime;
+                appointmentDate >= startOfDay &&
+                appointmentDate <= endOfDay;
         });
 
         // Преобразование данных в нужный формат
@@ -699,7 +715,7 @@ export async function getFilteredCurrentAppointmentsByDoctorId(doctorId) {
         console.error('Error filtering appointments:', error);
         return [];
     }
-}
+};
 
 // для фильтрации лдм для каждого пациента
 export async function getFilteredAppointmentsByPatientId(patientId) {
@@ -807,18 +823,13 @@ export async function deleteDoctorData(doctorId) {
 
 // для получения истории болезней определенного пациента
 export async function getPatientSickHistoryById(patientId) {
-    console.log(patientId)
     try {
-
         const sickHistoriesQuery = query(collection(db, 'Sick_Histories'), where('id_patient', '==', doc(db, 'Patients', patientId)));
         const sickHistoriesSnapshot = await getDocs(sickHistoriesQuery);
-
-        console.log(sickHistoriesSnapshot.docs)
         const sickHistories = [];
 
         for (const eachDoc of sickHistoriesSnapshot.docs) {
             const sickHistoryData = eachDoc.data();
-
             const idDoctor = sickHistoryData.id_doctor;
             const doctorDoc = await getDoc(doc(db, 'Doctors', idDoctor.id));
             const doctorData = doctorDoc.data();
@@ -847,11 +858,8 @@ export async function getPatientSickHistoryById(patientId) {
 // для получения всех анализов определенного пациента
 export async function getPatientAnalysesById(patientId) {
     try {
-
         const analysesQuery = query(collection(db, 'Analyses'), where('id_patient', '==', doc(db, 'Patients', patientId)));
         const analysesSnapshot = await getDocs(analysesQuery);
-
-        console.log(analysesSnapshot.docs)
         const analyses = [];
 
         for (const eachDoc of analysesSnapshot.docs) {

@@ -6,20 +6,24 @@ const UserTable = ({ usersData, handleEditUser }) => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [doctorsData, setDoctorsData] = useState({});
+    const [positionsData, setPositionsData] = useState({});
+    const [availableData, setAvailableData] = useState({});
 
     useEffect(() => {
         const fetchDoctorsData = async () => {
-            const data = {};
+            const positionsData = {};
+            const availableData = {};
             for (const user of usersData) {
                 try {
                     const doctorData = await getDoctorByUserId(user.id);
-                    data[user.id] = doctorData.position.name;
+                    positionsData[user.id] = doctorData.position.name;
+                    availableData[user.id] = doctorData.is_available;
+                    console.log(availableData[user.id])
                 } catch (error) {
                     console.error(`Error fetching doctor data for user ${user.id}:`, error);
                 }
             }
-            setDoctorsData(data);
+            setPositionsData(positionsData);
         };
 
         fetchDoctorsData();
@@ -54,6 +58,7 @@ const UserTable = ({ usersData, handleEditUser }) => {
               <th style={thStyle}>Пользователь</th>
               <th style={thStyle}>Роль</th>
               <th style={thStyle}>Должность (врача)</th>
+              {/* <th style={thStyle}>Доступен для записи (врач)</th> */}
               <th style={thStyle}>Логин</th>
               <th style={thStyle}>Пароль</th>
               {/* <th style={thStyle}>Действия</th> */}
@@ -64,7 +69,8 @@ const UserTable = ({ usersData, handleEditUser }) => {
               <tr key={user.id}>
                 <td style={thTdStyle}>{user.username}</td>
                 <td style={thTdStyle}>{user.role.name}</td>
-                <td style={thTdStyle}>{doctorsData[user.id] || '-'}</td>
+                <td style={thTdStyle}>{positionsData[user.id] || '-'}</td>
+                {/* <td style={thTdStyle}>{availableData[user.id] || '-'}</td> */}
                 <td style={thTdStyle}>{user.login}</td>
                 <td style={thTdStyle}>{user.password}</td>
                 {/* <td style={thTdStyle}> 

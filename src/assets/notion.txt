@@ -5,3 +5,35 @@
 Амбулаторные операции
 Профилактические осмотры
 Первичные консультации
+
+
+
+Кардиолог
+Невролог
+Эндокринолог
+Гастроэнтеролог
+Пульмонолог
+Ревматолог
+Офтальмолог
+Дерматолог
+Уролог
+Терапевт
+Лаборант
+
+
+name
+description
+id_ldm_type  Ldm_Types/
+id_position  Positions/
+is_available
+time
+price
+
+
+id_department  Departments/
+
+
+upper_limit
+lower_limit
+
+

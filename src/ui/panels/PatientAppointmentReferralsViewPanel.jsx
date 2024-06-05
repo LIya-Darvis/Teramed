@@ -27,7 +27,7 @@ function PatientAppointmentReferralsViewPanel() {
     <div>
       <ContentLabel title="Мои направления на прием" />
 
-      <PatientAppointmentReferralsTable patientId={'2'}/>
+      <PatientAppointmentReferralsTable patientId={patients[0].id}/>
     </div>
   )
 }

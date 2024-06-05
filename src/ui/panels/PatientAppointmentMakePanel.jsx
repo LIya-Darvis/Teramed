@@ -172,7 +172,7 @@ function PatientAppointmentMakePanel() {
         <div className='content_panel'>
             <ContentLabel title="Записаться на прием" />
 
-            <select onChange={handleSpecialtyChange}>
+            <select style={dropdownStyle} onChange={handleSpecialtyChange}>
                 <option value="">Выберите специальность</option>
                 {specialties.map(specialty => (
                     <option key={specialty.id} value={specialty.id}>
@@ -182,7 +182,7 @@ function PatientAppointmentMakePanel() {
             </select>
 
             {selectedSpecialty && (
-                <select onChange={handleDoctorChange}>
+                <select style={dropdownStyle} onChange={handleDoctorChange}>
                     <option value="">Выберите врача</option>
                     {filteredDoctors.map(doctor => (
                         <option key={doctor.id} value={doctor.id}>
@@ -275,4 +275,15 @@ const unavailableSlotStyle = {
     margin: '5px',
     borderRadius: '4px'
 };
+
+const dropdownStyle = {
+    margin: '5px 15px',
+    padding: '8px 10px 8px 10px',
+    // width: '40%',
+    color: '#355065',
+    border: 'solid #C0C0C0 1.4px',
+    fontSize: '14px',
+    borderRadius: '6px',
+    userSelect: 'auto',
+  };
 

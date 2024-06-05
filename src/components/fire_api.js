@@ -601,6 +601,51 @@ export const updateAppointmentIsConfirmed = async (appointmentId, isConfirmed) =
     }
 };
 
+// для получения данных направлений на прием
+export async function getAppointmentReferrals() {
+    try {
+        const appointmentReferralsCollectionRef = collection(db, 'Appointment_Referrals');
+        const appointmentReferralsSnapshot = await getDocs(appointmentReferralsCollectionRef);
+
+        const appointmentReferralsData = [];
+        for (const appointmentReferralDoc of appointmentReferralsSnapshot.docs) {
+            const appointmentReferralData = appointmentReferralDoc.data();
+
+            // Получаем ссылки на связанные документы
+            const ldmRef = appointmentReferralData.id_ldm;
+            const patientRef = appointmentReferralData.id_patient;
+            const referralMakerRef = appointmentReferralData.id_referral_maker;
+
+            // Получаем данные о лдм
+            const ldmDoc = await getDoc(ldmRef);
+            const ldmData = ldmDoc.exists() ? ldmDoc.data() : null;
+
+            // Получаем данные о пациенте
+            const patientDoc = await getDoc(patientRef);
+            const patientData = patientDoc.exists() ? patientDoc.data() : null;
+
+            // Получаем данные о враче, выдавшем направление
+            const referralMakerDoc = await getDoc(referralMakerRef);
+            const referralMakerData = referralMakerDoc.exists() ? referralMakerDoc.data() : null;
+
+            const totalAppointmentReferralData = {
+                id: appointmentReferralDoc.id,
+                ...appointmentReferralData,
+                ldm: ldmData,
+                patient: patientData,
+                referral_maker: referralMakerData,
+            };
+            appointmentReferralsData.push(totalAppointmentReferralData);
+        }
+
+        // console.log(appointmentReferralsData);
+        return appointmentReferralsData;
+    } catch (error) {
+        console.error('Error fetching appointment referrals:', error);
+        return [];
+    }
+}
+
 // для получения данных врача по id пользователя
 export const getDoctorByUserId = async (userId) => {
     try {

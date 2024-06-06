@@ -48,7 +48,7 @@ export default function PatientsContentPanel() {
     const [showAddAnalysisForm, setShowAddAnalysisForm] = useState(false);
     const [showAddGospitalizationsForm, setShowAddGospitalizationsForm] = useState(false);
 
-    // ассинхронно получаем данные пациентов из апи
+    // получаем данные пациентов
     useEffect(() => {
         async function fetchData() {
             try {
@@ -66,7 +66,7 @@ export default function PatientsContentPanel() {
             try {
                 const doctors = await getDoctorByUserId(data.userData.id);
                 setDoctorsData(doctors);
-                console.log(doctors.position.name);
+                console.log(doctors);
             } catch (error) {
                 console.log(error.message);
             }
@@ -153,38 +153,6 @@ export default function PatientsContentPanel() {
                     />
                 ))}
             </div>
-
-            {/* <div className='table_frame'>
-                <table className='data_table'>
-                    <thead>
-                        <tr>
-                            <th>Фамилия</th>
-                            <th>Имя</th>
-                            <th>Отчество</th>
-                            <th>Дата рождения</th>
-                            <th>Пол</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {patientsData.map(patient => (
-                            <tr key={patient.id}>
-                                <td>{patient.lastname}</td>
-                                <td>{patient.name}</td>
-                                <td>{patient.surname}</td>
-                                <td>{patient.birthday}</td>
-                                <td>{patient.gender.name}</td>
-                                <td>
-                                    <div className='table_buttons_frame'>
-                                        <SickHistoryViewButton title={"Диагнозы"} onClick={() => handlePatientDiagnoses(patient.id)} />
-                                        <AnalysViewButton title={"Анализы"} onClick={() => handlePatientAnalyses(patient.id)} />
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div> */}
 
             {isSickHistoryModalOpen && (
                 <ModalPanel >

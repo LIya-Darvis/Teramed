@@ -1,5 +1,3 @@
-
-
 class User {
   constructor(id, role, userName, login, password, photo) {
     this.id = id;

@@ -23,15 +23,11 @@ export async function getUsers() {
             const roleId = userData.id_role.id;
             const roleData = roles[roleId];
 
-            const storage = getStorage();
-            const photoRef = ref(storage, userData.photo);
-            const photoUrl = await getDownloadURL(photoRef);
-
             return {
                 id: userDoc.id,
                 ...userData,
                 role: roleData,
-                photo: photoUrl,
+                photo: "",
             };
         }));
 
@@ -43,14 +39,12 @@ export async function getUsers() {
 
 // добавление пользователя
 export const addUser = async ({ roleId, login, password, photo, username }) => {
-    console.log(roleId);
-    console.log(doc(db, 'Roles', roleId.toString()))
     try {
         const userRef = await addDoc(collection(db, 'Users'), {
             id_role: doc(db, 'Roles', roleId.toString()),
             login,
             password,
-            photo,
+            photo: "",
             username,
         });
         return userRef.id;
@@ -70,17 +64,17 @@ export async function fetchAccessiblePanelsForRole(roleName) {
         }
         const roleId = rolesQuerySnapshot.docs[0].id;
 
-        // получаем доступы для заданной роли 
+        // Получаем доступы для заданной роли 
         const accessRightsQuerySnapshot = await getDocs(query(collection(db, 'Access_Rights'), where('id_role', '==', doc(db, 'Roles', roleId))));
 
-        // собираем все id панелей
+        // Собираем все id панелей
         const panelIds = accessRightsQuerySnapshot.docs.map(docSnapshot => docSnapshot.data().id_panel.id);
         if (panelIds.length === 0) return [];
 
-        // получаем данные всех панелей за один запрос
+        // Получаем данные всех панелей за один запрос
         const panelsSnapshot = await getDocs(query(collection(db, 'Panels'), where('__name__', 'in', panelIds)));
 
-        // создаем массив названий панелей
+        // Создаем массив названий панелей
         const panelNames = panelsSnapshot.docs.map(panelDoc => panelDoc.data().name);
 
         return panelNames;
@@ -199,36 +193,21 @@ export async function getPatients() {
     try {
         const patientsCollectionRef = collection(db, 'Patients');
         const patientsSnapshot = await getDocs(patientsCollectionRef);
-
         const userIds = new Set();
         const genderIds = new Set();
-        const photoPaths = new Set();
-
         patientsSnapshot.docs.forEach(patientDoc => {
             const patientData = patientDoc.data();
             userIds.add(patientData.id_user.id);
             genderIds.add(patientData.id_gender.id);
-            photoPaths.add(patientData.photo);
         });
-
         const userPromises = Array.from(userIds).map(userId => getDoc(doc(db, 'Users', userId)));
         const genderPromises = Array.from(genderIds).map(genderId => getDoc(doc(db, 'Genders', genderId)));
-        const photoPromises = Array.from(photoPaths).map(photoPath => {
-            const storage = getStorage();
-            const photoRef = ref(storage, photoPath);
-            return getDownloadURL(photoRef);
-        });
-
-        const [userDocs, genderDocs, photoUrls] = await Promise.all([
+        const [userDocs, genderDocs] = await Promise.all([
             Promise.all(userPromises),
             Promise.all(genderPromises),
-            Promise.all(photoPromises)
         ]);
-
         const usersMap = Object.fromEntries(userDocs.map(doc => [doc.id, doc.data()]));
         const gendersMap = Object.fromEntries(genderDocs.map(doc => [doc.id, doc.data()]));
-        const photosMap = Object.fromEntries(photoPaths.map((path, index) => [path, photoUrls[index]]));
-
         const patientsData = patientsSnapshot.docs.map(patientDoc => {
             const patientData = patientDoc.data();
             return {
@@ -240,10 +219,9 @@ export async function getPatients() {
                 polis_final_date: formatDate(patientData.polis_final_date.toDate()),
                 id_user: usersMap[patientData.id_user.id],
                 gender: gendersMap[patientData.id_gender.id],
-                photo: photosMap[patientData.photo]
+                photo: ""
             };
         });
-
         return patientsData;
     } catch (error) {
         console.error('Error fetching patients:', error);
@@ -444,8 +422,9 @@ export async function findPatientByUserId(userId) {
 
 // для получения специалиста по id должности
 export async function findDoctorByPositionId(positionId) {
+    console.log(positionId)
     try {
-        const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId)));
+        const doctorsQuery = query(collection(db, 'Doctors'), where('id_position', '==', doc(db, 'Positions', positionId.id)));
         const doctorsSnapshot = await getDocs(doctorsQuery);
         return doctorsSnapshot.docs.map(doc => ({
             id: doc.id,
@@ -700,6 +679,8 @@ export async function getAppointmentReferrals() {
         const patientsMap = Object.fromEntries(patientsSnapshot.docs.map(doc => [doc.id, doc.data()]));
         const referralMakersMap = Object.fromEntries(referralMakersSnapshot.docs.map(doc => [doc.id, doc.data()]));
 
+        console.log(referralMakersMap)
+
         const appointmentReferralsData = appointmentReferralsSnapshot.docs.map(doc => {
             const data = doc.data();
             return {
@@ -755,24 +736,23 @@ export const getDoctorByUserId = async (userId) => {
 
 // для фильтрации лдм для каждого врача и времени
 export async function getFilteredAppointmentsByDoctorId(doctorId) {
+    console.log(doctorId)
     try {
-        // Получение всех назначений
         const allAppointments = await getAppointments();
+        const today = new Date();
+        const oneWeekAhead = new Date();
+        oneWeekAhead.setDate(today.getDate() + 7);
 
-        // Фильтрация назначений по id врача и дате
         const filteredAppointments = allAppointments.filter(appointment => {
             const appointmentDate = new Date(appointment.datetime);
-            const today = new Date();
-            const oneWeekAhead = new Date();
-            oneWeekAhead.setDate(today.getDate() + 7);
-
             return appointment.doctor_location.id_doctor.id === doctorId &&
                 appointmentDate >= today &&
                 appointmentDate <= oneWeekAhead;
         });
 
-        // Преобразование данных в нужный формат
-        const formattedAppointments = filteredAppointments.map(appointment => ({
+        console.log(filteredAppointments)
+
+        return filteredAppointments.map(appointment => ({
             id: appointment.id,
             doctor: appointment.doctor,
             room: appointment.room,
@@ -781,8 +761,6 @@ export async function getFilteredAppointmentsByDoctorId(doctorId) {
             patient: appointment.patient,
             id_patient: appointment.id_patient
         }));
-
-        return formattedAppointments;
     } catch (error) {
         console.error('Error filtering appointments:', error);
         return [];
@@ -792,28 +770,21 @@ export async function getFilteredAppointmentsByDoctorId(doctorId) {
 // для фильтрации лдм для каждого врача и времени
 export async function getFilteredCurrentAppointmentsByDoctorId(doctorId) {
     try {
-        // Получение всех назначений
         const allAppointments = await getAppointments();
+        const today = new Date();
+        const startOfDay = new Date(today);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(today);
+        endOfDay.setHours(23, 59, 59, 999);
 
-        // Фильтрация назначений по id врача и дате
         const filteredAppointments = allAppointments.filter(appointment => {
             const appointmentDate = new Date(appointment.datetime);
-            const today = new Date();
-
-            // Устанавливаем начало и конец текущего дня
-            const startOfDay = new Date(today);
-            startOfDay.setHours(0, 0, 0, 0);
-
-            const endOfDay = new Date(today);
-            endOfDay.setHours(23, 59, 59, 999);
-
             return appointment.doctor_location.id_doctor.id === doctorId &&
                 appointmentDate >= startOfDay &&
                 appointmentDate <= endOfDay;
         });
 
-        // Преобразование данных в нужный формат
-        const formattedAppointments = filteredAppointments.map(appointment => ({
+        return filteredAppointments.map(appointment => ({
             id: appointment.id,
             doctor: appointment.doctor,
             room: appointment.room,
@@ -822,8 +793,6 @@ export async function getFilteredCurrentAppointmentsByDoctorId(doctorId) {
             patient: appointment.patient,
             id_patient: appointment.id_patient
         }));
-
-        return formattedAppointments;
     } catch (error) {
         console.error('Error filtering appointments:', error);
         return [];
@@ -832,20 +801,11 @@ export async function getFilteredCurrentAppointmentsByDoctorId(doctorId) {
 
 // для фильтрации лдм для каждого пациента
 export async function getFilteredAppointmentsByPatientId(patientId) {
-    console.log(patientId)
     try {
-        // Получение всех назначений
         const allAppointments = await getAppointments();
+        const filteredAppointments = allAppointments.filter(appointment => appointment.id_patient.id === patientId);
 
-        // Фильтрация назначений по id врача и дате
-        const filteredAppointments = allAppointments.filter(appointment => {
-            return appointment.id_patient.id === patientId;
-        });
-
-        console.log(filteredAppointments)
-
-        // Преобразование данных в нужный формат
-        const formattedAppointments = filteredAppointments.map(appointment => ({
+        return filteredAppointments.map(appointment => ({
             id: appointment.id,
             doctor: appointment.doctor,
             room: appointment.room,
@@ -854,8 +814,6 @@ export async function getFilteredAppointmentsByPatientId(patientId) {
             patient: appointment.patient,
             id_patient: appointment.id_patient
         }));
-
-        return formattedAppointments;
     } catch (error) {
         console.error('Error filtering appointments:', error);
         return [];
@@ -865,14 +823,11 @@ export async function getFilteredAppointmentsByPatientId(patientId) {
 // для добавления нового врача
 export async function uploadDoctorData(lastname, name, surname, idPosition, isAvailable, login, password) {
     try {
-        // создаем ссылки на другие объекты
         const positionRef = doc(db, 'Positions', idPosition);
         const roleRef = doc(db, 'Roles', '2');
         const doctorPhoto = 'users_avatar/doctor.png';
         const username = formatUsername(lastname, name, surname);
-        var newUserId = null;
 
-        // добавляем новый документ в коллекцию пользователей
         const userRef = await addDoc(collection(db, 'Users'), {
             id_role: roleRef,
             username: username,
@@ -881,7 +836,6 @@ export async function uploadDoctorData(lastname, name, surname, idPosition, isAv
             photo: doctorPhoto,
         });
 
-        // добавляем новый документ в коллекцию врачей
         await addDoc(collection(db, 'Doctors'), {
             lastname: lastname,
             name: name,
@@ -890,6 +844,7 @@ export async function uploadDoctorData(lastname, name, surname, idPosition, isAv
             id_user: userRef,
             id_available: isAvailable,
         });
+
         console.log('Данные успешно загружены в коллекцию Doctors');
     } catch (error) {
         console.error('Ошибка при загрузке данных в коллекцию Doctors:', error);
@@ -900,16 +855,16 @@ export async function uploadDoctorData(lastname, name, surname, idPosition, isAv
 export async function updateDoctorData(doctorId, lastname, name, surname, idPosition, isAvailable) {
     try {
         const positionRef = doc(db, 'Positions', idPosition);
+        const doctorRef = doc(db, 'Doctors', doctorId);
 
         const newData = {
-            lastname: lastname,
-            name: name,
-            surname: surname,
+            lastname,
+            name,
+            surname,
             id_position: positionRef,
             is_available: isAvailable,
         };
 
-        const doctorRef = doc(db, 'Doctors', doctorId);
         await updateDoc(doctorRef, newData);
 
         console.log('Данные успешно обновлены для врача с Id:', doctorId);
@@ -921,12 +876,8 @@ export async function updateDoctorData(doctorId, lastname, name, surname, idPosi
 // для архивации записи врача (полное удаление приведет к некорректным связям в других таблицах)
 export async function deleteDoctorData(doctorId) {
     try {
-        const newData = {
-            is_archived: true,
-        };
-
         const doctorRef = doc(db, "Doctors", doctorId);
-        await updateDoc(doctorRef, newData);
+        await updateDoc(doctorRef, { is_archived: true });
 
         console.log("Доктор успешно удален(архивирован)");
     } catch (error) {
@@ -941,15 +892,25 @@ export async function getPatientSickHistoryById(patientId) {
         const sickHistoriesSnapshot = await getDocs(sickHistoriesQuery);
         const sickHistories = [];
 
+        const doctorsCache = new Map();
+        const diagnosesCache = new Map();
+
         for (const eachDoc of sickHistoriesSnapshot.docs) {
             const sickHistoryData = eachDoc.data();
-            const idDoctor = sickHistoryData.id_doctor;
-            const doctorDoc = await getDoc(doc(db, 'Doctors', idDoctor.id));
-            const doctorData = doctorDoc.data();
 
-            const idDiagnos = sickHistoryData.id_diagnos;
-            const diagnosDoc = await getDoc(doc(db, 'Diagnoses', idDiagnos.id));
-            const diagnosData = diagnosDoc.data();
+            let doctorData = doctorsCache.get(sickHistoryData.id_doctor.id);
+            if (!doctorData) {
+                const doctorDoc = await getDoc(doc(db, 'Doctors', sickHistoryData.id_doctor.id));
+                doctorData = doctorDoc.data();
+                doctorsCache.set(sickHistoryData.id_doctor.id, doctorData);
+            }
+
+            let diagnosData = diagnosesCache.get(sickHistoryData.id_diagnos.id);
+            if (!diagnosData) {
+                const diagnosDoc = await getDoc(doc(db, 'Diagnoses', sickHistoryData.id_diagnos.id));
+                diagnosData = diagnosDoc.data();
+                diagnosesCache.set(sickHistoryData.id_diagnos.id, diagnosData);
+            }
 
             const diagnosDate = formatDate(sickHistoryData.diagnos_date.toDate());
 
@@ -957,10 +918,10 @@ export async function getPatientSickHistoryById(patientId) {
                 id: eachDoc.id,
                 doctor: doctorData,
                 diagnos: diagnosData.name,
-                diagnosDate: diagnosDate,
+                diagnosDate,
                 ...sickHistoryData
             });
-        };
+        }
         return sickHistories;
     } catch (error) {
         console.error('Ошибка при получении записей Sick_Histories:', error);
@@ -975,16 +936,25 @@ export async function getPatientAnalysesById(patientId) {
         const analysesSnapshot = await getDocs(analysesQuery);
         const analyses = [];
 
+        const doctorsCache = new Map();
+        const analysTypesCache = new Map();
+
         for (const eachDoc of analysesSnapshot.docs) {
             const analysData = eachDoc.data();
 
-            const idDoctor = analysData.id_doctor;
-            const doctorDoc = await getDoc(doc(db, 'Doctors', idDoctor.id));
-            const doctorData = doctorDoc.data();
+            let doctorData = doctorsCache.get(analysData.id_doctor.id);
+            if (!doctorData) {
+                const doctorDoc = await getDoc(doc(db, 'Doctors', analysData.id_doctor.id));
+                doctorData = doctorDoc.data();
+                doctorsCache.set(analysData.id_doctor.id, doctorData);
+            }
 
-            const idAnalysType = analysData.id_analys_type;
-            const analysTypeDoc = await getDoc(doc(db, 'Analys_Types', idAnalysType.id));
-            const analysTypeData = analysTypeDoc.data();
+            let analysTypeData = analysTypesCache.get(analysData.id_analys_type.id);
+            if (!analysTypeData) {
+                const analysTypeDoc = await getDoc(doc(db, 'Analys_Types', analysData.id_analys_type.id));
+                analysTypeData = analysTypeDoc.data();
+                analysTypesCache.set(analysData.id_analys_type.id, analysTypeData);
+            }
 
             const analysDate = formatDate(analysData.analys_date.toDate());
 
@@ -992,10 +962,10 @@ export async function getPatientAnalysesById(patientId) {
                 id: eachDoc.id,
                 doctor: doctorData,
                 analysType: analysTypeData,
-                analysDate: analysDate,
+                analysDate,
                 ...analysData
             });
-        };
+        }
         return analyses;
     } catch (error) {
         console.error('Ошибка при получении записей Analyses:', error);
@@ -1005,13 +975,11 @@ export async function getPatientAnalysesById(patientId) {
 
 export async function addAppointmentReferral(idDoctorLocation, idLdm, idPatient, idReferralMaker) {
     try {
-        // Создаем ссылки на документы
         const doctorLocationRef = doc(db, 'Doctor_Locations', idDoctorLocation);
         const ldmRef = doc(db, 'Ldms', idLdm);
         const patientRef = doc(db, 'Patients', idPatient);
         const referralMakerRef = doc(db, 'Doctors', idReferralMaker);
 
-        // Создаем новый документ в коллекции Appointments
         await addDoc(collection(db, 'Appointment_Referrals'), {
             id_doctor_location: doctorLocationRef,
             id_ldm: ldmRef,
@@ -1029,13 +997,11 @@ export async function addAppointmentReferral(idDoctorLocation, idLdm, idPatient,
 // для получения данных из коллекции Referral_Statuses
 export const getReferralStatuses = async () => {
     try {
-        const statusesCollectionRef = collection(db, 'Referral_Statuses');
-        const statusesSnapshot = await getDocs(statusesCollectionRef);
-        const statusesData = statusesSnapshot.docs.map(doc => ({
+        const statusesSnapshot = await getDocs(collection(db, 'Referral_Statuses'));
+        return statusesSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
-        return statusesData;
     } catch (error) {
         console.error('Error fetching referral statuses:', error);
         throw error;
@@ -1045,12 +1011,12 @@ export const getReferralStatuses = async () => {
 export const addGospitalizationReferral = async ({ patientId, statusId, terapevtId, reason, startDate }) => {
     try {
         const gospitalizationReferral = {
-            creation_date: Timestamp.fromDate(new Date()), // Текущая дата
-            id_patient: doc(db, 'Patients', patientId), // Преобразование в ссылку
-            id_status: doc(db, 'Referral_Statuses', statusId), // Преобразование в ссылку
-            id_terapevt: doc(db, 'Doctors', terapevtId), // Преобразование в ссылку
-            reason: reason,
-            start_date: Timestamp.fromDate(new Date(startDate)), // Преобразование startDate в Timestamp
+            creation_date: Timestamp.fromDate(new Date()),
+            id_patient: doc(db, 'Patients', patientId),
+            id_status: doc(db, 'Referral_Statuses', statusId),
+            id_terapevt: doc(db, 'Doctors', terapevtId),
+            reason,
+            start_date: Timestamp.fromDate(new Date(startDate)),
         };
         const docRef = await addDoc(collection(db, "Gospitalization_Referrals"), gospitalizationReferral);
         console.log("Document written with ID: ", docRef.id);

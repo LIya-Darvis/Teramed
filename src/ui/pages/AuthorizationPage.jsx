@@ -5,7 +5,7 @@ import React from 'react';
 import { useData } from '../../components/DataProvider.jsx';
 import { User } from '../../components/classes.js';
 import './styles.css';
-import { getUsers } from '../../components/fire_api.js';
+import { getUsers } from "../../components/supabaseApi.js";
 
 // авторизация
 function AuthorizationPage() {
@@ -19,15 +19,18 @@ function AuthorizationPage() {
             setErrorText("Заполните пустые поля");
         } else {
             try {
-                var users = await getUsers();
+                var users = (await getUsers()).data;
+
+                console.log(users)
                 // если данные пользователей получены успешно
                 if (users) {
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
-                            var authUser = new User(user.id, user.role.name, user.username,
+                            var authUser = new User(user.id, user.role_id, user.username,
                                 user.login, user.password, user.photo)
                             setData({ isLogin: true, userData: authUser });
                             setErrorText("");
+                            console.log(authUser)
                         }
                         else {
                             setErrorText("Неверный логин или пароль");
@@ -68,7 +71,6 @@ function AuthorizationPage() {
                     transition: { duration: 25, repeat: Infinity, repeatType: "reverse" }
                 }}
             >
-
                 <div className='authorization_panel'>
                     <div className='authorization_form'>
                         <h2 className='authorization_label'>TERAMED</h2>
@@ -82,11 +84,7 @@ function AuthorizationPage() {
                         <button className='panel_btn' onClick={() => autorization(login, password)}>Войти</button>
                     </div>
                 </div>
-
             </motion.div>
-
-
-
         </div>
 
     )

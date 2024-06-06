@@ -6,7 +6,6 @@ import { useData } from '../../components/DataProvider';
 
 function PatientAppointmentReferralsViewPanel() {
   const { data, setData } = useData();
-
   const [patients, setPatients] = useState([]);
 
   const loadPatient = async () => {
@@ -18,7 +17,6 @@ function PatientAppointmentReferralsViewPanel() {
     }
   };
 
-
   useEffect(() => {
     loadPatient();
   }, []);
@@ -26,10 +24,14 @@ function PatientAppointmentReferralsViewPanel() {
   return (
     <div>
       <ContentLabel title="Мои направления на прием" />
-
-      <PatientAppointmentReferralsTable patientId={patients[0].id}/>
+      <PatientAppointmentReferralsTable patientId={patients[0]}/>
     </div>
   )
 }
 
 export default PatientAppointmentReferralsViewPanel
+
+
+
+
+

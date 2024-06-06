@@ -1,6 +1,9 @@
 import React from "react";
 
 const AppointmentCard = ({ appointment, onClick }) => {
+
+    console.log(appointment)
+
     const cardStyles = {
         backgroundColor: '#fff',
         borderRadius: '8px',

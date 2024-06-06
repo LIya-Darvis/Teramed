@@ -11,7 +11,7 @@ import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
 import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
 import './styles.css';
 
-import { fetchAccessiblePanelsForRole } from '../../components/fire_api';
+import { fetchAccessiblePanelsForRole } from '../../components/supabaseApi';
 import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';
 import PatientAppointmentReferralsViewPanel from '../panels/PatientAppointmentReferralsViewPanel';
 
@@ -31,27 +31,24 @@ const components = [
 export default function UserPage() {
 
   const { data, setData } = useData();
-  var user = data.userData.role;
+  var roleId = data.userData.role;
 
   const [activePanel, setActivePanel] = useState(null);
   const [accessiblePanels, setAccessiblePanels] = useState([]);
 
   const handlePanelChange = (panelName) => {
     setActivePanel(panelName);
-    console.log(panelName);
   };
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-        const panels = await fetchAccessiblePanelsForRole(user);
-        setAccessiblePanels(panels);
+        const panels = (await fetchAccessiblePanelsForRole(roleId)).data;
+        setAccessiblePanels(panels || []);
       } catch (error) {
         console.error('Ошибка при получении доступных панелей:', error);
       }
     };
-
     fetchData();
   }, [])
 
@@ -59,17 +56,18 @@ export default function UserPage() {
   return (
     <div>
       <div className='user_page_back_frame'>
-        {/* панель бокового меню навигации */}
         <SideMenu>
           {accessiblePanels.map((panelName, index) => {
-            const { component, title } = components.find((item) => Object.keys(item)[0] === panelName)[panelName];
-            return (
-              <MenuButton key={index} title={title} onClick={() => handlePanelChange(panelName)} />
-            );
+            const componentData = components.find((item) => Object.keys(item)[0] === panelName.panel_name);
+            if (componentData) { // Проверяем наличие компонента в components
+              const { component, title } = componentData[panelName.panel_name];
+              return (
+                <MenuButton key={index} title={title} onClick={() => handlePanelChange(panelName.panel_name)} />
+              );
+            }
+            return null;
           })}
         </SideMenu>
-
-        {/* контейнер для отображения функциональных панелей */}
         <div className='user_page_content_frame'>
           {activePanel && components.map(item => {
             const panelName = Object.keys(item)[0];

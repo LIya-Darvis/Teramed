@@ -19,3 +19,4 @@ function AnalysViewCard(props) {
 }
 
 export default AnalysViewCard
+

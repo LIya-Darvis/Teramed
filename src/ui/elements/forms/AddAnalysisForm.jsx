@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ModalEditText from './ModalEditText';
-import { DropdownListDiagnoses } from './DropdownLists';
-import { addAnalysis, getAnalysTypes } from '../../components/fire_api';
+import ModalEditText from '../components/ModalEditText';
+import { DropdownListDiagnoses } from '../components/DropdownLists';
+import { addAnalysis, getAnalysTypes } from '../../../api/fire_api';
 
 export function AddAnalysisForm({ doctorId, patientId }) {
   const [analysTypes, setAnalysTypes] = useState([]);

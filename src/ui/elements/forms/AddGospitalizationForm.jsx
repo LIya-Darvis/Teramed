@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { addGospitalizationReferral, getReferralStatuses } from '../../components/fire_api';
-import ModalEditText from './ModalEditText';
-import { DropdownList } from './DropdownLists';
-import DatePickerComponent from './DatePickerComponent';
+import { addGospitalizationReferral, getReferralStatuses } from '../../../api/fire_api';
+import ModalEditText from '../components/ModalEditText';
+import { DropdownList } from '../components/DropdownLists';
+import DatePickerComponent from '../components/DatePickerComponent';
 
 function AddGospitalizationForm({ patientId, terapevtId }) {
     const [statusId, setStatusId] = useState(1);

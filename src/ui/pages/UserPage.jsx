@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useData } from '../../components/DataProvider';
+import { useData } from '../../dataProviders/DataProvider';
 import { SideMenu } from '../elements/SideMenu';
-import { MenuButton } from '../elements/MenuButton';
-import DoctorsContentPanel from '../panels/DoctorsContentPanel';
+import { MenuButton } from '../elements/components/MenuButton';
+import DoctorsContentPanel from '../panels/admin/DoctorsContentPanel';
 import GospitalizationsContentPanel from '../panels/GospitalizationsContentPanel';
 import PatientsContentPanel from '../panels/PatientsContentPanel';
 import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
@@ -10,11 +10,9 @@ import UsersContentPanel from '../panels/UsersContentPanel';
 import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
 import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
 import './styles.css';
-
-import { fetchAccessiblePanelsForRole } from '../../components/supabaseApi';
+import { fetchAccessiblePanelsForRole } from '../../api/supabaseApi';
 import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';
 import PatientAppointmentReferralsViewPanel from '../panels/PatientAppointmentReferralsViewPanel';
-
 
 const components = [
   { 'DoctorsContentPanel': { component: <DoctorsContentPanel />, title: "Сотрудники" } },

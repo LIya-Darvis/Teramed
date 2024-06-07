@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useData } from '../../components/DataProvider';
-import ContentLabel from '../elements/ContentLabel';
-import LoadingIcon from '../elements/LoadingIcon';
-import { ConfirmButton, CloseButton, DeleteButton } from '../elements/Buttons';
+import { useData } from '../../dataProviders/DataProvider';
+import ContentLabel from '../elements/components/ContentLabel';
+import LoadingIcon from '../elements/components/LoadingIcon';
+import { ConfirmButton, CloseButton, DeleteButton } from '../elements/components/Buttons';
 import {
     getLdms, findPatientByUserId, getDoctorLocationsByPositionId,
     uploadDataToAppointment,
     getAppointments,
     getDoctors,
     getPositions
-} from '../../components/fire_api';
-import LdmCard from '../elements/LdmCard';
+} from '../../api/fire_api';
+import LdmCard from '../elements/cards/LdmCard';
 import { TimeCard } from '../elements/TimeCard';
-import ModalPanel from '../elements/ModalPanel';
+import ModalPanel from '../elements/components/ModalPanel';
 import './styles.css';
 
-import { generateTimeSlots, getAppointmentTimePeriods } from '../../components/generations';
+import { generateTimeSlots, getAppointmentTimePeriods } from '../../dataProviders/generations';
 
 
 

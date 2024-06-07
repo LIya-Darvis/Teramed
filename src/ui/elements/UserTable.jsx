@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { EditButton } from "./Buttons";
-import { getDoctorByUserId } from "../../components/fire_api";
+import { EditButton } from "./components/Buttons";
+import { getDoctorByUserId } from "../../api/fire_api";
 
 const UserTable = ({ usersData, handleEditUser }) => {
 

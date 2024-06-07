@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css';
 
 export function DropdownList({ options, value, onChange, placeholder }) {
   const dropdownStyle = {

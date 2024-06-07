@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getGenders } from "../../components/fire_api";
-import ModalEditText from "./ModalEditText";
-import { DropdownList } from "./DropdownLists";
-import ModalCheckBox from "./ModalCheckBox";
-import DatePickerComponent from "./DatePickerComponent";
+import { getGenders } from "../../../api/fire_api";
+import ModalEditText from "../components/ModalEditText";
+import { DropdownList } from "../components/DropdownLists";
+import ModalCheckBox from "../components/ModalCheckBox";
+import DatePickerComponent from "../components/DatePickerComponent";
 
 
 const AddPatientUserForm = ({ onSubmit }) => {

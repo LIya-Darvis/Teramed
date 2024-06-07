@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getFilteredAppointmentsByPatientId } from "../../components/fire_api";
+import { getFilteredAppointmentsByPatientId } from "../../../api/fire_api";
 
 function PatientAppointmentsTable({ patientId }) {
     const [appointments, setAppointments] = useState([]);

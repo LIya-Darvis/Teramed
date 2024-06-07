@@ -1,13 +1,17 @@
 import React from 'react'
 import './styles.css'
 
-export default function SearchPanel(props) {
+export default function SearchPanel({ onChange }) {
     return (
         <div>
-            <input type="text" className='seach_input' 
-            placeholder='Найти...' onChange={props.onChange} />
+            <input 
+                type="text" 
+                className='search_input' 
+                placeholder='Найти...' 
+                onChange={onChange} 
+            />
         </div>
-    )
+    );
 }
 
 

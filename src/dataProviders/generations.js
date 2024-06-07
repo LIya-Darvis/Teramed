@@ -1,4 +1,4 @@
-import { workingHours } from './data';
+import { workingHours } from '../staticData/data';
 
 export function getAppointmentTimePeriods() {
     const timePeriods = [];

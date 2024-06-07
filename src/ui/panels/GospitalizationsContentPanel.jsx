@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ContentLabel from '../elements/ContentLabel';
+import ContentLabel from '../elements/components/ContentLabel';
 import {
     getLdms, getDoctorLocationsByPositionId,
     findDoctorByPositionId, getAppointments, getLdmTypes
-} from '../../components/fire_api';
-import { generateTimeSlots } from '../../components/generations';
-import LoadingIcon from '../elements/LoadingIcon';
+} from '../../api/fire_api';
+import { generateTimeSlots } from '../../dataProviders/generations';
+import LoadingIcon from '../elements/components/LoadingIcon';
 
 const workHours = {
     startHour: 8, // Часы начала рабочего дня

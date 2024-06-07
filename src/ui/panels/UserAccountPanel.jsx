@@ -1,5 +1,5 @@
 import React from 'react'
-import { useData } from '../../components/DataProvider';
+import { useData } from '../../dataProviders/DataProvider';
 import './styles.css';
 
 export default function UserAccountPanel() {

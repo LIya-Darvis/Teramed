@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPatientSickHistoryById } from "../../components/fire_api";
+import { getPatientSickHistoryById } from "../../api/fire_api";
 
 function PatientSickHystoriesTable({ patientId }) {
     const [sickHystories, setSickHystories] = useState([]);

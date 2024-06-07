@@ -2,10 +2,10 @@
 import { motion, useAnimate, usePresence } from "framer-motion";
 import { useState, useContext, createContext, useEffect } from 'react';
 import React from 'react';
-import { useData } from '../../components/DataProvider.jsx';
-import { User } from '../../components/classes.js';
+import { useData } from '../../dataProviders/DataProvider.jsx';
+import { User } from '../../staticData/classes.js';
 import './styles.css';
-import { getUsers } from "../../components/supabaseApi.js";
+import { getUsers } from "../../api/supabaseApi.js";
 
 // авторизация
 function AuthorizationPage() {
@@ -26,7 +26,7 @@ function AuthorizationPage() {
                 if (users) {
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
-                            var authUser = new User(user.id, user.role_id, user.username,
+                            var authUser = new User(user.id, user.role.id, user.username,
                                 user.login, user.password, user.photo)
                             setData({ isLogin: true, userData: authUser });
                             setErrorText("");

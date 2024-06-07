@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import loadingIcon from '../../assets/icons/refresh-2-svgrepo-com.svg';
+import loadingIcon from '../../../assets/icons/refresh-2-svgrepo-com.svg';
 
 export default function LoadingIcon () {
     return (

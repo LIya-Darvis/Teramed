@@ -1,7 +1,7 @@
 import './App.css';
 import AuthorizationPage from './ui/pages/AuthorizationPage';
-import { DataProvider } from './components/DataProvider';
-import { GlobalSpace } from './components/GlobalSpace';
+import { DataProvider } from './dataProviders/DataProvider';
+import { GlobalSpace } from './dataProviders/GlobalSpace';
 
 function App() {
   

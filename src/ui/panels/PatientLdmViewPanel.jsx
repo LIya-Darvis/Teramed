@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import ContentLabel from '../elements/ContentLabel'
-import PatientAnalysesTable from '../elements/PatientAnalysesTable'
+import ContentLabel from '../elements/components/ContentLabel'
+import PatientAnalysesTable from '../elements/tables/PatientAnalysesTable'
 import PatientSickHystoriesTable from '../elements/PatientSickHistoriesTable'
-import { useData } from '../../components/DataProvider';
-import { findPatientByUserId } from '../../components/fire_api';
+import { useData } from '../../dataProviders/DataProvider';
+import { findPatientByUserId } from '../../api/fire_api';
 
 function PatientLdmViewPanel() {
   const [patientData, setPatientData] = useState(null);

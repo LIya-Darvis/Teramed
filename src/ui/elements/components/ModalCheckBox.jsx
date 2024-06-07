@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css';
+import '../styles.css';
 
 function ModalCheckBox({ title, value, onChange }) {
     return (

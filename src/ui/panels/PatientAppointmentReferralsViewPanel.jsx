@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import ContentLabel from '../elements/ContentLabel'
-import PatientAppointmentReferralsTable from '../elements/PatientAppointmentReferralsTable'
-import { findPatientByUserId } from '../../components/fire_api';
-import { useData } from '../../components/DataProvider';
+import ContentLabel from '../elements/components/ContentLabel'
+import PatientAppointmentReferralsTable from '../elements/tables/PatientAppointmentReferralsTable'
+import { findPatientByUserId } from '../../api/fire_api';
+import { useData } from '../../dataProviders/DataProvider';
 
 function PatientAppointmentReferralsViewPanel() {
   const { data, setData } = useData();

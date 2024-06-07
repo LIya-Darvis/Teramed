@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { addAppointmentReferral } from '../../components/fire_api';
+import { addAppointmentReferral } from '../../api/fire_api';
 import {
     getLdms, getDoctorLocationsByPositionId,
     findDoctorByPositionId, getAppointments, getLdmTypes
-} from '../../components/fire_api';
-import { DropdownList, DropdownListDoctors } from './DropdownLists';
+} from '../../api/fire_api';
+import { DropdownList, DropdownListDoctors } from './components/DropdownLists';
 
 
 function AddAppointmentReferralPanel({ id_patient, id_referral_maker, onSubmit }) {

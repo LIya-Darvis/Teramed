@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import ContentLabel from '../elements/ContentLabel'
-import { useData } from '../../components/DataProvider';
-import { getDoctorByUserId, getFilteredAppointmentsByDoctorId, getFilteredCurrentAppointmentsByDoctorId, getPatientAnalysesById, getPatientById, getPatientSickHistoryById, getPatients, updateAppointmentComplaints } from '../../components/fire_api';
-import AppointmentCard from '../elements/AppointmentCard';
-import ModalPanel from '../elements/ModalPanel';
-import { AddButton, CloseButton, TopPanelButton, TopPanelDopButton } from '../elements/Buttons';
+import ContentLabel from '../elements/components/ContentLabel';
+import { useData } from '../../dataProviders/DataProvider';
+import { getDoctorByUserId, getFilteredAppointmentsByDoctorId, getFilteredCurrentAppointmentsByDoctorId, getPatientAnalysesById, getPatientById, getPatientSickHistoryById, getPatients, updateAppointmentComplaints } from '../../api/fire_api';
+import AppointmentCard from '../elements/cards/AppointmentCard';
+import ModalPanel from '../elements/components/ModalPanel';
+import { AddButton, CloseButton, TopPanelButton, TopPanelDopButton } from '../elements/components/Buttons';
 import './styles.css';
-import PatientAppointmentsTable from '../elements/PatientAppointmentsTable';
-import PatientAnalysesTable from '../elements/PatientAnalysesTable';
+import PatientAppointmentsTable from '../elements/tables/PatientAppointmentsTable';
+import PatientAnalysesTable from '../elements/tables/PatientAnalysesTable';
 import PatientSickHystoriesTable from '../elements/PatientSickHistoriesTable';
 import AddAppointmentReferralPanel from '../elements/AddAppointmentReferralPanel';
-import AddGospitalizationForm from '../elements/AddGospitalizationForm';
+import AddGospitalizationForm from '../elements/forms/AddGospitalizationForm';
 
 
 function DoctorsAppointmentsPanel() {

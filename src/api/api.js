@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient";
+import { supabase } from "./supabaseClient";
 
 export async function fetchData(endpoint, params = {}) {
     try {
@@ -14,4 +14,21 @@ export async function fetchData(endpoint, params = {}) {
         console.error(`Ошибка получения данных с сервера (${endpoint}):`, error);
         return { data: null, error: 'Ошибка сети', status: null }; // Возвращаем ошибку сети
     }
+}
+
+export function subscribeToData(endpoint, params, dispatch) {
+    const subscription = supabase
+        .from(endpoint)
+        .on('*', async () => {
+            const { data, error, status } = await fetchData(endpoint, params);
+
+            if (error) {
+                dispatch({ type: 'data/fetchError', payload: { endpoint, error } });
+            } else {
+                dispatch({ type: 'data/fetchSuccess', payload: { endpoint, data } });
+            }
+        })
+        .subscribe();
+
+    return subscription;
 }

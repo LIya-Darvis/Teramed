@@ -74,30 +74,6 @@
     margin: 0px 3px;
 }
 
-.table_frame {
-    background-color: #FFF;
-    margin: 10px;
-    padding: 15px;
-    box-shadow: 1px 4px 8px #DAE1F9;
-    border-radius: 12px;
-}
-
-.data_table {
-    text-align: left;
-    font-size: 14px;
-}
-
-.data_table th {
-    text-align: center;
-    height: 30px;
-}
-
-.data_table td {
-    text-align: left;
-    height: 30px;
-    padding: 0px 10px;
-}
-
 .card_list_frame {
     width: 100%;
     display: flex;

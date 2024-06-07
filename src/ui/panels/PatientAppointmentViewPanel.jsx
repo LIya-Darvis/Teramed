@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { useData } from '../../components/DataProvider';
-import { findPatientByUserId, getPatientAppointmentsByUserId } from '../../components/fire_api';
-import ContentLabel from '../elements/ContentLabel'
+import { useData } from '../../dataProviders/DataProvider';
+import { findPatientByUserId, getPatientAppointmentsByUserId } from '../../api/fire_api';
+import ContentLabel from '../elements/components/ContentLabel'
 import './styles.css';
-import PatientAppointmentsTable from '../elements/PatientAppointmentsTable';
+import PatientAppointmentsTable from '../elements/tables/PatientAppointmentsTable';
 
 function PatientAppointmentViewPanel() {
   const { data, setData } = useData();

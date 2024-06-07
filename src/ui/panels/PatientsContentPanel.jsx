@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { getPatients, getPatientSickHistoryById, getPatientAnalysesById, getDoctorByUserId } from "../../components/fire_api";
-import { SickHistoryViewButton, AnalysViewButton, ConfirmButton, CloseButton } from '../elements/Buttons';
+import { getPatients, getPatientSickHistoryById, getPatientAnalysesById, getDoctorByUserId } from "../../api/fire_api";
+import { SickHistoryViewButton, AnalysViewButton, ConfirmButton, CloseButton } from '../elements/components/Buttons';
 import SearchPanel from '../elements/SearchPanel';
-import ContentLabel from '../elements/ContentLabel';
-import ModalPanel from '../elements/ModalPanel';
-import ModalEditText from '../elements/ModalEditText';
-import ModalCheckBox from '../elements/ModalCheckBox';
+import ContentLabel from '../elements/components/ContentLabel';
+import ModalPanel from '../elements/components/ModalPanel';
+import ModalEditText from '../elements/components/ModalEditText';
+import ModalCheckBox from '../elements/components/ModalCheckBox';
 import "./styles.css";
 import SickHistoryViewCard from '../elements/SickHistoryViewCard';
-import AnalysViewCard from '../elements/AnalysViewCard';
+import AnalysViewCard from '../elements/cards/AnalysViewCard';
 import PatientInfoCard from '../elements/PatientInfoCard';
-import { generateSchedule } from '../../components/generations';
-import { useData } from '../../components/DataProvider';
+import { generateSchedule } from '../../dataProviders/generations';
+import { useData } from '../../dataProviders/DataProvider';
 import PatientSickHystoriesTable from '../elements/PatientSickHistoriesTable';
-import PatientAnalysesTable from '../elements/PatientAnalysesTable';
-import { AddAnalysisForm } from '../elements/AddAnalysisForm';
-import PatientAppointmentsTable from '../elements/PatientAppointmentsTable';
-import AddGospitalizationForm from '../elements/AddGospitalizationForm';
+import PatientAnalysesTable from '../elements/tables/PatientAnalysesTable';
+import { AddAnalysisForm } from '../elements/forms/AddAnalysisForm';
+import PatientAppointmentsTable from '../elements/tables/PatientAppointmentsTable';
+import AddGospitalizationForm from '../elements/forms/AddGospitalizationForm';
 
 
 export default function PatientsContentPanel() {

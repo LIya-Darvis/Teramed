@@ -1,7 +1,7 @@
-import { db } from "../firebase";
+import { db } from "./firebase";
 import { collection, getDocs, getDoc, doc, query, where, addDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { formatUsername, formatDate, formatTime, formatAges, calculateAges } from "./formations";
+import { formatUsername, formatDate, formatTime, formatAges, calculateAges } from "../dataProviders/formations";
 import { string } from "prop-types";
 
 // для получения списка пользователей (в основном для авторизации)

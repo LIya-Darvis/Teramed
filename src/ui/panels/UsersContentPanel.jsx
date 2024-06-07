@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { addDoctor, addPatient, addUser, getUsers } from '../../components/fire_api';
-import { EditButton, DeleteButton, AddButton, CloseButton, TopPanelButton } from '../elements/Buttons';
+import { addDoctor, addPatient, addUser, getUsers } from '../../api/fire_api';
+import { EditButton, DeleteButton, AddButton, CloseButton, TopPanelButton } from '../elements/components/Buttons';
 import SearchPanel from '../elements/SearchPanel';
-import ContentLabel from '../elements/ContentLabel';
+import ContentLabel from '../elements/components/ContentLabel';
 import UserTable from '../elements/UserTable';
-import ModalPanel from '../elements/ModalPanel';
-import AddDoctorUserForm from '../elements/AddDoctorUserForm';
-import AddPatientUserForm from '../elements/AddPatientUserForm';
+import ModalPanel from '../elements/components/ModalPanel';
+import AddDoctorUserForm from '../elements/forms/AddDoctorUserForm';
+import AddPatientUserForm from '../elements/forms/AddPatientUserForm';
 
 function UsersContentPanel() {
   const [usersData, setUsersData] = useState([]);

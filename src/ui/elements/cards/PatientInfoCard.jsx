@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import arrowIcon from '../../assets/icons/chevron-down-svgrepo-com.svg';
+import arrowIcon from '../../../assets/icons/chevron-down-svgrepo-com.svg';
 
 function PatientInfoCard({ patient, position, onClickSickHistory, onClickAnalises, onClickGospitalization }) {
 

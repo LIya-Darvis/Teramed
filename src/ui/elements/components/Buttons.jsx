@@ -1,5 +1,6 @@
 import React from 'react'
 import '../styles.css'
+import closeIcon from '../../../assets/icons/close-svgrepo-com.svg';
 
 export function EditButton(props) {
   return (
@@ -58,7 +59,10 @@ export function AddButton(props) {
 export function CloseButton(props) {
   return (
     <div className='close_button' onClick={props.onClick}>
-      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      {/* <img src={closeIcon} style={{
+                width: '20px', height: '20px',
+                borderRadius: '50px', padding: '6px'
+            }}/> */}
       <p>{props.title}</p>
     </div>
   )
@@ -67,6 +71,15 @@ export function CloseButton(props) {
 export function ConfirmButton(props) {
   return (
     <div className='confirm_button' onClick={props.onClick}>
+      {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
+      <p>{props.title}</p>
+    </div>
+  )
+}
+
+export function DopInfoButton(props) {
+  return (
+    <div className='table_button' onClick={props.onClick}>
       {/* <img src="../../../src/assets/icons/delete.svg" alt="delete"/> */}
       <p>{props.title}</p>
     </div>

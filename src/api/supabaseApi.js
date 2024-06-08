@@ -3,25 +3,24 @@ import { fetchData } from "./api";
 export async function getUsers() {
     try {
         const { data, error, status } = await fetchData('get_users');
-
         if (error) {
             console.error('Ошибка получения данных пользователей:', error);
-            return { error, status }; // Возвращаем объект с ошибкой и статусом
+            return { error, status };
         }
-
         const usersData = data.map(user => ({
             ...user,
+            id: user.iser_id,
             role: {
                 id: user.role_id,
                 name: user.role_name,
             },
+            position: user.position_name,
             photo: "",
         }));
-
-        return { data: usersData, status }; // Возвращаем данные и статус ответа
+        return { data: usersData, status };
     } catch (error) {
         console.error('Ошибка получения данных пользователей:', error);
-        return { error: 'Ошибка сети', status: null }; // Возвращаем ошибку сети
+        return { error: 'Ошибка сети', status: null };
     }
 }
 
@@ -34,17 +33,17 @@ export async function fetchAccessiblePanelsForRole(roleId) {
             return { error, status };
         }
 
-        return { data, status }; // Возвращаем данные и статус ответа
+        return { data, status };
     } catch (error) {
         console.error('Ошибка при вызове функции fetch_accessible_panels:', error);
-        return { error: 'Ошибка сети', status: null }; // Возвращаем ошибку сети
+        return { error: 'Ошибка сети', status: null };
     }
 }
 
 export async function getDoctors() {
     try {
         const { data, error, status } = await fetchData('get_doctors');
-        
+
         if (error) {
             console.error('Ошибка при получении данных о врачах:', error);
             return { error, status };
@@ -71,11 +70,57 @@ export async function getDoctors() {
             surname: doctor.surname
         }));
 
-        console.log("=> ", doctorsData)
-
         return { data: doctorsData, status };
     } catch (error) {
         console.error('Ошибка при вызове функции get_doctors:', error);
         return { error: 'Ошибка сети', status: null };
     }
 }
+
+export async function getPatients() {
+    try {
+        const { data, error, status } = await fetchData('get_patients');
+
+        if (error) {
+            console.error('Ошибка при получении данных о пациентах:', error);
+            return { error, status };
+        }
+
+        const patientsData = data.map(patient => ({
+            id: patient.patient_id,
+            lastname: patient.lastname,
+            name: patient.name,
+            surname: patient.surname,
+            address: patient.address,
+            birthday: patient.birthday,
+            email: patient.email,
+            phone: patient.phone,
+            gender: patient.gender_name,
+            user: {
+                id: patient.user_id,
+                username: patient.username,
+                login: patient.login,
+                password: patient.password,
+                photo: patient.user_photo,
+                role: {
+                    id: patient.role_id,
+                    name: patient.role_name,
+                },
+            },
+            is_archived: patient.is_archived,
+            med_date: patient.med_date,
+            passport_num: patient.passport_num,
+            passport_series: patient.passport_series,
+            photo: patient.patient_photo,
+            polis_final_date: patient.polis_final_date,
+            polis_num: patient.polis_num,
+        }));
+
+        return { data: patientsData, status };
+    } catch (error) {
+        console.error('Ошибка получения данных пациентов:', error);
+        return { error: 'Ошибка сети', status: null };
+    }
+}
+
+

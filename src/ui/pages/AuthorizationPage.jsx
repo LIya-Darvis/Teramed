@@ -21,8 +21,6 @@ function AuthorizationPage() {
             try {
                 var users = (await getUsers()).data;
 
-                console.log(users)
-                // если данные пользователей получены успешно
                 if (users) {
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
@@ -30,7 +28,6 @@ function AuthorizationPage() {
                                 user.login, user.password, user.photo)
                             setData({ isLogin: true, userData: authUser });
                             setErrorText("");
-                            console.log(authUser)
                         }
                         else {
                             setErrorText("Неверный логин или пароль");
@@ -51,22 +48,22 @@ function AuthorizationPage() {
         <div >
             {/* <motion.div
                 initial={{ y: -100, opacity: 0 }}
-                animate={{ y: isVisible ? 0 : -100, opacity: isVisible ? 1 : 0 }}
-                transition={{ duration: 0.7 }} // длительность анимации
+                animate={{ y: 25, opacity: 1 }}
+                transition={{ duration: 1.7 }} // длительность анимации
                 style={{ position: "fixed", top: 0, left: 0, transform: "translateX(-50%)" }}
             >
-                🌌👾✨ неправильный логин или пароль
+                🌌👾✨ Добро пожаловать!
             </motion.div> */}
 
             <motion.div
                 className='authorization_back_frame'
-                initial={{ background: "linear-gradient(45deg, #20C997, #007BFF)" }}
+                initial={{ background: "linear-gradient(45deg, #007BFF, #33D1B5)" }}
                 animate={{
                     background: [
-                        "linear-gradient(45deg, #007BFF, #339AF0)",
-                        "linear-gradient(45deg, #007BFF, #5C9DF0)",
-                        "linear-gradient(45deg, #007BFF, #3B8BE0)",
-                        "linear-gradient(45deg, #007BFF, #339AF0)"
+                        "linear-gradient(45deg, #007BFF, #33D1B5)",
+                        "linear-gradient(45deg, #33D1B5, #007BFF)",
+                        "linear-gradient(45deg, #007BFF, #5CD4B5)",
+                        "linear-gradient(45deg, #33D1B5, #007BFF)"
                     ],
                     transition: { duration: 25, repeat: Infinity, repeatType: "reverse" }
                 }}

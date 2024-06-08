@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from 'react'
-import { addDoctor, addPatient, addUser, getUsers } from '../../api/fire_api';
-import { EditButton, DeleteButton, AddButton, CloseButton, TopPanelButton } from '../elements/components/Buttons';
-import SearchPanel from '../elements/SearchPanel';
-import ContentLabel from '../elements/components/ContentLabel';
-import UserTable from '../elements/UserTable';
-import ModalPanel from '../elements/components/ModalPanel';
-import AddDoctorUserForm from '../elements/forms/AddDoctorUserForm';
-import AddPatientUserForm from '../elements/forms/AddPatientUserForm';
+import { addDoctor, addPatient, addUser, getUsers } from '../../../api/fire_api';
+import { EditButton, DeleteButton, AddButton, CloseButton, TopPanelButton } from '../../elements/components/Buttons';
+import SearchPanel from '../../elements/SearchPanel';
+import ContentLabel from '../../elements/components/ContentLabel';
+import UserTable from '../../elements/tables/UsersTable';
+import ModalPanel from '../../elements/components/ModalPanel';
+import AddDoctorUserForm from '../../elements/forms/AddDoctorUserForm';
+import AddPatientUserForm from '../../elements/forms/AddPatientUserForm';
+import useRealtimeData from '../../../dataProviders/useRealtimeData';
 
 function UsersContentPanel() {
-  const [usersData, setUsersData] = useState([]);
-  const [searchData, setSearchData] = useState([]);
+  const usersData = useRealtimeData('get_users').data;
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('patientInfo');
   const [searchText, setSearchText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ассинхронно получаем данные пользователей
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const users = await getUsers();
-        setUsersData(users);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    fetchData();
-  }, []);
+  // Фильтрация данных на основе поискового запроса
+  const filteredUsers = usersData?.filter(user => {
+    const searchString = searchQuery.toLowerCase();
+    return (
+      user.username.toLowerCase().includes(searchString) ||
+      user.position_name.toLowerCase().includes(searchString) ||
+      user.role_name.toLowerCase().includes(searchString)
+    );
+  });
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -144,12 +146,14 @@ function UsersContentPanel() {
     <div>
       <ContentLabel title="Пользователи" />
       <div className='func_frame'>
-        <SearchPanel onChange={e => setSearchText(e.target.value)} value={searchText} />
+        <SearchPanel onChange={handleSearchChange}/>
         <AddButton title="Добавить пользователя" onClick={() => handleAddUser()} />
       </div>
-      <UserTable usersData={usersData} handleEditUser={handleEditUser} />
-
-      {/* модальное окно */}
+      {usersData ? (
+        <UserTable usersData={filteredUsers} handleEditUser={handleEditUser} />
+      ) : (
+        <p>Загрузка...</p>
+      )}
       {isModalOpen && (
         <ModalPanel>
           <CloseButton title="Х" onClick={handleCloseModal} />

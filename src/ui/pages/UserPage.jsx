@@ -6,7 +6,7 @@ import DoctorsContentPanel from '../panels/admin/DoctorsContentPanel';
 import GospitalizationsContentPanel from '../panels/GospitalizationsContentPanel';
 import PatientsContentPanel from '../panels/PatientsContentPanel';
 import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
-import UsersContentPanel from '../panels/UsersContentPanel';
+import UsersContentPanel from '../panels/admin/UsersContentPanel';
 import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
 import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
 import './styles.css';

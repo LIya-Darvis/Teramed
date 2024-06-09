@@ -12,20 +12,32 @@
 
 .modal {
     position: absolute;
-    /* width: 50%; */
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
     min-width: 500px;
     width: fit-content;
     max-width: 800px;
+    overflow: hidden; /* Добавляем overflow hidden */
     background-color: #fff;
     border-radius: 8px;
     padding: 20px;
     outline: none;
 }
-
-.modal-content {
-    position: relative;
+/* 
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    width: 80%;
+    max-height: 80%;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
     padding: 20px;
-}
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+} */
 
 .modal-content {
     position: relative;
@@ -42,6 +54,31 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
+}
+
+.add-button {
+    align-self: flex-end;
+    margin-bottom: 10px;
+    height: 30px;
+    width: 30px;
+}
+
+.form-container, .table-container {
+    flex: 1;
+    overflow-y: auto; /* Добавляем overflow для контейнеров */
+    overflow-x: hidden; /* Запрещаем горизонтальную прокрутку */
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
 .main-info {

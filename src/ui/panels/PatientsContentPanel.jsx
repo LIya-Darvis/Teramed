@@ -39,6 +39,8 @@ export default function PatientsContentPanel() {
         setSearchQuery(event.target.value);
     };
 
+    const filteredDoctorData = doctorsData?.filter(doctor => doctor.user_id === data.userData.id)[0];
+
     const handleDiagnosPatient = (patient) => {
         setSelectedPatient(patient);
         setDiagnosisModalIsOpen(true);
@@ -68,7 +70,7 @@ export default function PatientsContentPanel() {
     };
 
     const handleAddAnalysis = async (patientId, newAnalysis) => {
-        console.log(patientId, newAnalysis);
+        // console.log(patientId, newAnalysis);
         // await addAnalysis(patientId, newAnalysis);
         // fetchData(); // Обновляем данные после добавления нового анализа
     };
@@ -86,7 +88,7 @@ export default function PatientsContentPanel() {
                     handleAnalysPatient={handleAnalysPatient}
                     handleOpenModal={handleOpenDetailsModal}
                     handleGospitalizationsPatient={handleGospitalizationsPatient}
-                    doctorPosition={doctorsData} />
+                    doctorData={filteredDoctorData} />
             ) : (
                 <p>Загрузка...</p>
             )}
@@ -98,17 +100,20 @@ export default function PatientsContentPanel() {
             <GospitalizationsModal
                 isOpen={gospitalizationsModalIsOpen}
                 onRequestClose={handleCloseModals}
-                patient={selectedPatient} />
+                patient={selectedPatient}
+                doctorData={filteredDoctorData} />
             <AnalysisModal
                 isOpen={analysisModalIsOpen}
                 onRequestClose={handleCloseModals}
                 patient={selectedPatient}
                 handleAddAnalysis={handleAddAnalysis}
+                doctorData={filteredDoctorData}
             />
             <DiagnosisModal
                 isOpen={diagnosisModalIsOpen}
                 onRequestClose={handleCloseModals}
                 patient={selectedPatient}
+                doctorData={filteredDoctorData}
             />
         </div >
     )

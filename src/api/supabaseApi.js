@@ -9,7 +9,7 @@ export async function getUsers() {
         }
         const usersData = data.map(user => ({
             ...user,
-            id: user.iser_id,
+            id: user.user_id,
             role: {
                 id: user.role_id,
                 name: user.role_name,
@@ -123,4 +123,20 @@ export async function getPatients() {
     }
 }
 
+export async function addAnalysis (analysisData) {
+    const { data, error } = await fetchData('add_analysis', {
+        p_analys_date: analysisData.analys_date,
+        p_comment: analysisData.comment,
+        p_id_analys_type: analysisData.id_analys_type,
+        p_id_doctor: analysisData.id_doctor,
+        p_id_patient: analysisData.id_patient,
+        p_value: analysisData.value,
+    });
+
+    if (error) {
+        console.error('Error adding analysis:', error);
+    } else {
+        console.log('Analysis added successfully:', data);
+    }
+};
 

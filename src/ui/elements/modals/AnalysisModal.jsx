@@ -45,10 +45,13 @@ const AnalysisModal = ({ isOpen, onRequestClose, patient, handleAddAnalysis, doc
                     />
                 ) : (
                     <div>
-                        <h2>Анализы пациента</h2>
-                        {doctorData.position_name === 'Лаборант' && !isAdding && (
-                            <AddButton onClick={handleAddClick} title={"Добавить анализ"} />
-                        )}
+                        <div className="top-frame">
+                            <h2>Анализы пациента</h2>
+                            {doctorData.position_name === 'Лаборант' && !isAdding && (
+                                <AddButton onClick={handleAddClick} title={"Добавить анализ"} />
+                            )}
+                        </div>
+
                         <AnalysisTable analysesData={filteredAnalyses} />
                     </div>
                 )}

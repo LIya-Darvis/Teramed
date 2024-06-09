@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import './styles.css';
@@ -10,18 +10,13 @@ import { getSickHistories } from '../../../api/supabaseApi';
 
 const DiagnosisModal = ({ isOpen, onRequestClose, patient, handleAddDiagnosis, doctorData }) => {
     const diagnosesData = useRealtimeData('get_sick_histories').data;
-    // const diagnosesData = getSickHistories();
     const [isAdding, setIsAdding] = useState(false);
-
-    console.log(patient)
-    console.log(diagnosesData)
 
     if (!patient) return null;
     if (!diagnosesData) return null;
 
-    const filteredDiagnoses = diagnosesData.filter(diagnosis => diagnosis.patient_id === patient);
+    const filteredDiagnoses = diagnosesData?.filter(diagnosis => diagnosis.patient_id === patient);
     
-
     const handleAddClick = () => {
         setIsAdding(true);
     };
@@ -51,10 +46,10 @@ const DiagnosisModal = ({ isOpen, onRequestClose, patient, handleAddDiagnosis, d
                 ) : (
                     <div>
                         <h2>Диагнозы пациента</h2>
-                        {doctorData.position_name != 'Лаборант' && !isAdding && (
+                        {doctorData.position_name !== 'Лаборант' && !isAdding && (
                             <AddButton onClick={handleAddClick} title={"Добавить диагноз"} />
                         )}
-                        <DiagnosesTable diagnosesData={filteredDiagnoses} />
+                        <DiagnosesTable diagnosesData={filteredDiagnoses} doctorData={doctorData} />
                     </div>
                 )}
 

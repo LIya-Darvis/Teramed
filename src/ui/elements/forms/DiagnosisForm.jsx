@@ -7,7 +7,7 @@ import { AddButton } from '../components/Buttons';
 import { supabase } from '../../../api/supabaseClient';
 import { fetchData } from '../../../api/api';
 import useRealtimeData from '../../../dataProviders/useRealtimeData';
-import { addAnalysis } from '../../../api/supabaseApi';
+import { addAnalysis, addDiagnosis } from '../../../api/supabaseApi';
 
 const DiagnosisForm = ({ isOpen, onRequestClose, doctorData, therapistData, patientId, handleAddDiagnosis }) => {
     const diagnosesPositions = useRealtimeData('get_diagnoses_with_positions').data;
@@ -31,7 +31,7 @@ const DiagnosisForm = ({ isOpen, onRequestClose, doctorData, therapistData, pati
             id_therapist: null, // позднее редактируется на запись терапевта, подтвердившего диагноз
         };
         console.log(diagnosisData);
-        // addDiagnosis(diagnosisData);
+        addDiagnosis(diagnosisData);
 
         onRequestClose();
     };
@@ -70,7 +70,7 @@ const DiagnosisForm = ({ isOpen, onRequestClose, doctorData, therapistData, pati
                 </div>
 
                 <div className="form-buttons">
-                    <button type="button" onClick={onRequestClose}>Назад</button>
+                    <button className='back-button' type="button" onClick={onRequestClose}>Назад</button>
                     <button type="submit">Подтвердить</button>
                 </div>
             </form>

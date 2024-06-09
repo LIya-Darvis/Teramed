@@ -17,7 +17,7 @@
     left: 50%;
     min-width: 500px;
     width: fit-content;
-    max-width: 800px;
+    max-width: 90%;
     overflow: hidden; /* Добавляем overflow hidden */
     background-color: #fff;
     border-radius: 8px;
@@ -44,6 +44,13 @@
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
+}
+
+.top-frame {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .close-button {

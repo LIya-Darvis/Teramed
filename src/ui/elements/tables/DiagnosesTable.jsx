@@ -2,9 +2,21 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import DataDisplay from '../../../dataProviders/DataDisplay';
+import { updateSickHistory } from '../../../api/supabaseApi';
 // import './modalStyles.css';
 
-const DiagnosesTable = ({ diagnosesData }) => {
+const DiagnosesTable = ({ diagnosesData, doctorData }) => {
+
+    console.log("=> ", diagnosesData)
+
+    const handleConfirm = async (id, therapistId) => {
+        console.log(id, therapistId)
+        const result = await updateSickHistory(id, true, therapistId);
+        if (result) {
+            console.log('Sick history updated successfully:', result);
+            // Обновите состояние или перезагрузите данные, если это необходимо
+        }
+    };
 
     return (
         // <DataDisplay
@@ -32,13 +44,24 @@ const DiagnosesTable = ({ diagnosesData }) => {
                                 <td>{new Date(diagnosis.diagnos_date).toLocaleDateString()}</td>
                                 <td>{diagnosis.diagnos_name}</td>
                                 <td>{diagnosis.doctor_lastname} {diagnosis.doctor_name} {diagnosis.doctor_surname}</td>
-                                <td>{diagnosis.is_confirmed ? 'Да' : 'Нет'}</td>
+                                <td>
+                                    {diagnosis.is_confirmed ? (
+                                        `${diagnosis.therapist_lastname} ${diagnosis.therapist_name} ${diagnosis.therapist_surname}`
+                                    ) : (
+                                        ''
+                                    )}
+                                </td>
                                 <td>{diagnosis.recomendations}</td>
                                 <td>{diagnosis.symptoms}</td>
                                 <td>
-                                    <div className='table_buttons_frame'>
-                                        <button>Подтвердить</button>
-                                    </div>
+                                    {diagnosis.is_confirmed ? (
+                                        ''
+                                    ) : (
+                                        <div className='table_buttons_frame'>
+                                            <button onClick={() => handleConfirm(diagnosis.id, doctorData.doctor_id)}>Подтвердить</button>
+                                        </div>
+                                    )}
+
                                 </td>
                             </tr>
                         ))}
@@ -48,13 +71,14 @@ const DiagnosesTable = ({ diagnosesData }) => {
                 <p>Нет данных</p>
             )}
         </div>
-        //     )}
+        // )}
         // />
     );
 };
 
 DiagnosesTable.propTypes = {
     diagnosesData: PropTypes.array.isRequired,
+    doctorData: PropTypes.object,
 };
 
 export default DiagnosesTable;

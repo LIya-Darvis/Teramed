@@ -1,0 +1,15 @@
+.back-button {
+    background-color: #F2F5FF;
+    color: #4B5672;
+    border-radius: 3px;
+    border-width: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: fit-content;
+    padding: 5px 12px;
+    margin: 0px 3px;
+    font-size: 16px;
+    cursor: pointer;
+}

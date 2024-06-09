@@ -125,7 +125,7 @@ export async function getPatients() {
 }
 
 export async function getSickHistories() {
-    const { data, error } = await supabase.rpc('get_sick_histories');
+    const { data, error } = await fetchData('get_sick_histories');
 
     if (error) {
         console.error('Error fetching sick histories:', error);
@@ -161,7 +161,7 @@ export async function addDiagnosis(diagnosisData) {
         p_is_confirmed: diagnosisData.is_confirmed,
         p_recomendations: diagnosisData.recomendations,
         p_symptoms: diagnosisData.symptoms,
-        p_id_therapist: diagnosisData.id_therapist,
+        p_id_therapist: 'f1663231-7522-4d07-a12c-bb59b332626f',
     });
 
     if (error) {
@@ -169,5 +169,20 @@ export async function addDiagnosis(diagnosisData) {
     } else {
         console.log('Diagnosis added successfully:', data);
     }
+}
+
+export async function updateSickHistory(id, isConfirmed, therapistId) {
+    const { data, error } = await supabase.rpc('update_sick_history', {
+        p_id: id,
+        p_is_confirmed: isConfirmed,
+        p_id_therapist: therapistId
+    });
+
+    if (error) {
+        console.error('Error updating sick history:', error);
+        return null;
+    }
+
+    return data;
 }
 

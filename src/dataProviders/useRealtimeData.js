@@ -10,28 +10,26 @@ const useRealtimeData = (endpoint, params) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-      const fetchDataInterval = async () => {
-          try {
-              const response = await fetchData(endpoint, params);
-              if (response.error) {
-                  throw new Error(response.error.message);
-              }
-              dispatch(updateData({ endpoint, data: response.data }));
-              setLoading(false);
-          } catch (err) {
-              setError(err);
-              setLoading(false);
-          }
-      };
+    const fetchDataInterval = async () => {
+      try {
+        const response = await fetchData(endpoint, params);
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
+        dispatch(updateData({ endpoint, data: response.data }));
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
 
-      fetchDataInterval(); // Сразу получаем данные при монтировании компонента
-      const intervalId = setInterval(fetchDataInterval, 5000); // Обновление каждые 5 секунд
+    fetchDataInterval(); // Fetch data immediately on mount
+    const intervalId = setInterval(fetchDataInterval, 3000); // Update every 3 seconds
 
-      return () => clearInterval(intervalId); // Очистка интервала при размонтировании
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
   }, [dispatch, endpoint, params]);
-
   return { data, loading, error };
 };
-
 
 export default useRealtimeData;

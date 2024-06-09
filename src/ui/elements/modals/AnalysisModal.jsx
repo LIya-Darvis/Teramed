@@ -35,16 +35,7 @@ const AnalysisModal = ({ isOpen, onRequestClose, patient, handleAddAnalysis, doc
         >
             <div className="modal-content">
                 <button className="close-button" onClick={onRequestClose}>×</button>
-
-                {/* <AnimatePresence> */}
                 {isAdding ? (
-                    // <motion.div
-                    //     initial={{ x: '100%' }}
-                    //     animate={{ x: 0 }}
-                    //     exit={{ x: '100%' }}
-                    //     transition={{ duration: 0.5 }}
-                    //     className="form-container"
-                    // >
                     <AnalysisForm
                         isOpen={isAdding}
                         onRequestClose={handleBackClick}
@@ -52,32 +43,19 @@ const AnalysisModal = ({ isOpen, onRequestClose, patient, handleAddAnalysis, doc
                         patientId={patient}
                         handleAddAnalysis={handleAddAnalysis}
                     />
-                    // </motion.div>
                 ) : (
-                    // <motion.div
-                    //     initial={{ x: '-100%' }}
-                    //     animate={{ x: 0 }}
-                    //     exit={{ x: '-100%' }}
-                    //     transition={{ duration: 0.5 }}
-                    //     className="table-container"
-                    // >
                     <div>
                         <h2>Анализы пациента</h2>
                         {doctorData.position_name === 'Лаборант' && !isAdding && (
                             <AddButton onClick={handleAddClick} title={"Добавить анализ"} />
                         )}
                         <AnalysisTable analysesData={filteredAnalyses} />
-
                     </div>
-
-                    // </motion.div>
                 )}
-                {/* </AnimatePresence> */}
             </div>
         </Modal>
     );
 };
-
 
 AnalysisModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,

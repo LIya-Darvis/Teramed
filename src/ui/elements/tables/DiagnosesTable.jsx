@@ -6,13 +6,6 @@ import DataDisplay from '../../../dataProviders/DataDisplay';
 
 const DiagnosesTable = ({ diagnosesData }) => {
 
-    const getBackgroundColor = (value, lowerLimit, upperLimit) => {
-        if (value < lowerLimit || value > upperLimit) {
-            return '#ffcccc'; // Красноватый фон
-        }
-        return '#ccffcc'; // Зеленоватый фон
-    };
-
     return (
         // <DataDisplay
         //     endpoint="get_sick_histories"
@@ -30,6 +23,7 @@ const DiagnosesTable = ({ diagnosesData }) => {
                             <th>Подтверждено</th>
                             <th>Рекомендации</th>
                             <th>Симптомы</th>
+                            <th>Действия</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +35,11 @@ const DiagnosesTable = ({ diagnosesData }) => {
                                 <td>{diagnosis.is_confirmed ? 'Да' : 'Нет'}</td>
                                 <td>{diagnosis.recomendations}</td>
                                 <td>{diagnosis.symptoms}</td>
+                                <td>
+                                    <div className='table_buttons_frame'>
+                                        <button>Подтвердить</button>
+                                    </div>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

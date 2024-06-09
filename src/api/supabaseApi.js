@@ -1,4 +1,5 @@
 import { fetchData } from "./api";
+import { supabase } from "./supabaseClient";
 
 export async function getUsers() {
     try {
@@ -123,7 +124,18 @@ export async function getPatients() {
     }
 }
 
-export async function addAnalysis (analysisData) {
+export async function getSickHistories() {
+    const { data, error } = await supabase.rpc('get_sick_histories');
+
+    if (error) {
+        console.error('Error fetching sick histories:', error);
+        return [];
+    }
+
+    return data;
+}
+
+export async function addAnalysis(analysisData) {
     const { data, error } = await fetchData('add_analysis', {
         p_analys_date: analysisData.analys_date,
         p_comment: analysisData.comment,
@@ -139,4 +151,23 @@ export async function addAnalysis (analysisData) {
         console.log('Analysis added successfully:', data);
     }
 };
+
+export async function addDiagnosis(diagnosisData) {
+    const { data, error } = await fetchData('add_diagnosis', {
+        p_diagnos_date: diagnosisData.diagnos_date,
+        p_id_diagnos: diagnosisData.id_diagnos,
+        p_id_doctor: diagnosisData.id_doctor,
+        p_id_patient: diagnosisData.id_patient,
+        p_is_confirmed: diagnosisData.is_confirmed,
+        p_recomendations: diagnosisData.recomendations,
+        p_symptoms: diagnosisData.symptoms,
+        p_id_therapist: diagnosisData.id_therapist,
+    });
+
+    if (error) {
+        console.error('Error adding diagnosis:', error);
+    } else {
+        console.log('Diagnosis added successfully:', data);
+    }
+}
 

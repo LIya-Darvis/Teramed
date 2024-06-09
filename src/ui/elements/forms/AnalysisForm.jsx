@@ -29,7 +29,7 @@ const AnalysisForm = ({ isOpen, onRequestClose, doctorId, patientId, handleAddAn
             value,
         };
         // await handleAddAnalysis(analysisData);
-        console.log(analysisData);
+
         addAnalysis(analysisData);
 
         onRequestClose();

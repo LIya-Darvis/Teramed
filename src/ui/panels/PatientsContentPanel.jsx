@@ -75,6 +75,12 @@ export default function PatientsContentPanel() {
         // fetchData(); // Обновляем данные после добавления нового анализа
     };
 
+    const handleAddDiagnosis = async (patientId, newAnalysis) => {
+        // console.log(patientId, newAnalysis);
+        // await addAnalysis(patientId, newAnalysis);
+        // fetchData(); // Обновляем данные после добавления нового анализа
+    };
+
     return (
         <div className='content_panel'>
             <ContentLabel title="Пациенты" />
@@ -113,6 +119,7 @@ export default function PatientsContentPanel() {
                 isOpen={diagnosisModalIsOpen}
                 onRequestClose={handleCloseModals}
                 patient={selectedPatient}
+                handleAddDiagnosis={handleAddDiagnosis}
                 doctorData={filteredDoctorData}
             />
         </div >

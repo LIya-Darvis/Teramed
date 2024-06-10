@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { DopInfoButton, EditButton } from "../components/Buttons";
 import DataDisplay from "../../../dataProviders/DataDisplay";
+import '../styles.css';
 
 
 const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient, handleGospitalizationsPatient, handleOpenModal, doctorPosition }) => {

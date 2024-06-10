@@ -186,3 +186,24 @@ export async function updateSickHistory(id, isConfirmed, therapistId) {
     return data;
 }
 
+export const addAppointment = async (appointmentData) => {
+    const { complaints, id_doctor_location, id_ldm, id_patient, is_confirmed, ldm_datetime } = appointmentData;
+
+    const { data, error } = await supabase
+        .rpc('add_appointment', {
+            p_complaints: complaints,
+            p_id_doctor_location: id_doctor_location,
+            p_id_ldm: id_ldm,
+            p_id_patient: id_patient,
+            p_is_confirmed: is_confirmed,
+            p_ldm_datetime: ldm_datetime
+        });
+
+    if (error) {
+        console.error('Error adding appointment:', error);
+        throw error;
+    }
+
+    return data;
+};
+

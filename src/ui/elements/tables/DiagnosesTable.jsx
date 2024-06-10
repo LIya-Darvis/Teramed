@@ -3,14 +3,11 @@ import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import DataDisplay from '../../../dataProviders/DataDisplay';
 import { updateSickHistory } from '../../../api/supabaseApi';
-// import './modalStyles.css';
+import '../styles.css';
 
 const DiagnosesTable = ({ diagnosesData, doctorData }) => {
 
-    console.log("=> ", diagnosesData)
-
     const handleConfirm = async (id, therapistId) => {
-        console.log(id, therapistId)
         const result = await updateSickHistory(id, true, therapistId);
         if (result) {
             console.log('Sick history updated successfully:', result);
@@ -57,11 +54,14 @@ const DiagnosesTable = ({ diagnosesData, doctorData }) => {
                                     {diagnosis.is_confirmed ? (
                                         ''
                                     ) : (
-                                        <div className='table_buttons_frame'>
+                                        doctorData.position_name === "Терапевт" ? (
+                                            <div className='table_buttons_frame'>
                                             <button onClick={() => handleConfirm(diagnosis.id, doctorData.doctor_id)}>Подтвердить</button>
                                         </div>
+                                        ) : (
+                                            ''
+                                        ) 
                                     )}
-
                                 </td>
                             </tr>
                         ))}

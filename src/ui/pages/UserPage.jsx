@@ -8,7 +8,7 @@ import PatientsContentPanel from '../panels/PatientsContentPanel';
 import PatientLdmViewPanel from '../panels/PatientLdmViewPanel';
 import UsersContentPanel from '../panels/admin/UsersContentPanel';
 import PatientAppointmentMakePanel from '../panels/PatientAppointmentMakePanel';
-import PatientAppointmentViewPanel from '../panels/PatientAppointmentViewPanel';
+import PatientAppointmentViewPanel from '../panels/patient/PatientAppointmentViewPanel';
 import './styles.css';
 import { fetchAccessiblePanelsForRole } from '../../api/supabaseApi';
 import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';

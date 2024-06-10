@@ -1,73 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { getFilteredAppointmentsByPatientId } from "../../../api/fire_api";
+import PropTypes from 'prop-types';
+import '../styles.css';
+import useRealtimeData from '../../../dataProviders/useRealtimeData';
 
-function PatientAppointmentsTable({ patientId }) {
-    const [appointments, setAppointments] = useState([]);
+function PatientAppointmentsTable({ patientData }) {
+    const appointmentsData = useRealtimeData('get_appointments').data;
 
-    console.log("=> ", patientId)
-    console.log("=> ", patientId.id)
+    if (!appointmentsData) return null;
 
-    useEffect(() => {
-        async function fetchAppointments() {
-            const data = await getFilteredAppointmentsByPatientId(patientId.id);
-            console.log(data)
-            setAppointments(data);
-        }
-
-        fetchAppointments();
-    }, [patientId]);
-
-    const tableStyle = {
-        width: '90%',
-        borderCollapse: 'collapse',
-        margin: '16px 0',
-        fontSize: '16px',
-    };
-
-    const thTdStyle = {
-        border: '1px solid #ddd',
-        padding: '8px',
-        textAlign: 'left',
-    };
-
-    const thStyle = {
-        ...thTdStyle,
-        backgroundColor: '#f2f2f2',
-    };
+    console.log("=>> ", patientData.patient_id)
+    const filteredAppointmentsData = appointmentsData?.filter(appointment => appointment.id_patient === patientData.patient_id);
+    console.log(filteredAppointmentsData)
 
     return (
         <div>
-            <h5>Назначения пациента</h5>
-            <table style={tableStyle}>
-                <thead>
-                    <tr>
-                        <th style={thStyle}>Дата и время</th>
-                        <th style={thStyle}>Врач</th>
-                        <th style={thStyle}>Кабинет</th>
-                        <th style={thStyle}>ЛДМ</th>
-                        <th style={thStyle}>Жалобы</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {appointments.length > 0 ? (
-                        appointments.map((appointment) => (
-                            <tr key={appointment.id}>
-                                <td style={thTdStyle}>{new Date(appointment.datetime).toLocaleString()}</td>
-                                <td style={thTdStyle}>{`${appointment.doctor.lastname} ${appointment.doctor.name} ${appointment.doctor.surname}`}</td>
-                                <td style={thTdStyle}>{appointment.room.num}</td>
-                                <td style={thTdStyle}>{appointment.event.name}</td>
-                                <td style={thTdStyle}>{appointment.complaints}</td>
+            <div className='table_frame'>
+                {filteredAppointmentsData.length > 0 ? (
+                    <table className='data_table'>
+                        <thead>
+                            <tr>
+                                <th>Пациент</th>
+                                <th>Врач</th>
+                                <th>Мероприятие</th>
+                                <th>Кабинет</th>
+                                <th>Дата и время</th>
+                                {/* <th>Жалобы</th>
+                                <th>Подтверждено</th> */}
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td style={thTdStyle} colSpan="5">Нет назначений для данного пациента.</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            {filteredAppointmentsData.map(appointment => (
+                                <tr key={appointment.id}>
+                                    <td>{appointment.patient_lastname} {appointment.patient_name} {appointment.patient_surname}</td>
+                                    <td>{appointment.doctor_lastname} {appointment.doctor_name} {appointment.doctor_surname}</td>
+                                    <td>{appointment.ldm_name}</td>
+                                    <td>{appointment.cabinet_num}</td>
+                                    <td>{new Date(appointment.ldm_datetime).toLocaleString()}</td>
+                                    {/* <td>{appointment.complaints}</td>
+                                    <td>{appointment.is_confirmed ? 'Да' : 'Нет'}</td> */}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p>Нет данных</p>
+                )}
+            </div>
         </div>
     );
 }
+
+PatientAppointmentsTable.propTypes = {
+    patientsData: PropTypes.array.isRequired,
+};
 
 export default PatientAppointmentsTable;

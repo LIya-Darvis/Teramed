@@ -1,5 +1,44 @@
+import axios from 'axios';
 import { fetchData } from "./api";
 import { supabase } from "./supabaseClient";
+
+export async function uploadPhoto(file) {
+
+    const folder = 'user_avatars';
+    const fileName = `${Date.now()}_${file.name}`;
+    const url = `https://eqldiylnpfriitiycqga.supabase.co/storage/v1/object/public/TeramedStorage/${folder}/${fileName}`;
+
+    const anonKey = '4440dcf4cef2b7ecf29154e706a1598b';
+
+    console.log("=> ", url);
+
+    const headers = {
+        'Content-Type': file.type,
+        Authorization: `Bearer ${anonKey}`,
+    };
+
+    try {
+        const response = await axios.post(url, file, { headers });
+        console.log('File uploaded successfully:', response.data);
+      } catch (error) {
+        console.error('Error uploading file:', error.message);
+        console.error('Error response:', error.response);
+      }
+
+    // try {
+    //     const { data, error } = await supabase.storage
+    //         .from("public/TeramedStorage/user_avatars") // Название папки в хранилище
+    //         .upload(fileName, file); // Загружаем файл
+
+    //     if (error) {
+    //         throw error;
+    //     }
+
+    //     console.log('File uploaded successfully:', data);
+    // } catch (error) {
+    //     console.error('Error uploading file:', error.message);
+    // }
+}
 
 export async function getUsers() {
     try {
@@ -18,6 +57,7 @@ export async function getUsers() {
             position: user.position_name,
             photo: user.photo,
         }));
+        console.log("=> ", usersData);
         return { data: usersData, status };
     } catch (error) {
         console.error('Ошибка получения данных пользователей:', error);
@@ -151,6 +191,43 @@ export async function addAnalysis(analysisData) {
         console.log('Analysis added successfully:', data);
     }
 };
+
+export async function addUserAndDoctor(userDetails, doctorDetails, photoURL) {
+    const { username, login, password } = userDetails;
+    const { id_position, is_archived, is_available, lastname, name, surname } = doctorDetails;
+
+    console.log(username, login, password);
+    console.log(id_position, is_archived, is_available, lastname, name, surname);
+
+    try {
+        const { data, error } = await fetchData('public.add_user_and_doctor', {
+            username: username,
+            login: login,
+            password: password,
+            photo: photoURL,
+            id_position: id_position,
+            is_archived: is_archived,
+            is_available: is_available,
+            lastname: lastname,
+            name: name,
+            surname: surname
+        });
+
+        if (error) {
+            console.error('RPC Error:', error);
+            throw new Error(error.message);
+        }
+
+        const { user_id: userId, doctor_id: doctorId } = data[0];
+        console.log('User ID:', userId);
+        console.log('Doctor ID:', doctorId);
+
+        return { userId, doctorId };
+    } catch (error) {
+        console.error('Error adding user and doctor:', error.message);
+        return null;
+    }
+}
 
 export async function addDiagnosis(diagnosisData) {
     const { data, error } = await fetchData('add_diagnosis', {

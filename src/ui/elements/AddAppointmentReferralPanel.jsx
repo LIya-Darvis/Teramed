@@ -95,14 +95,10 @@ function AddAppointmentReferralPanel({ id_patient, id_referral_maker, onSubmit }
         }
     };
 
-    // добавление нового направления к специалисту
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Вызов функции для добавления направления
         await addAppointmentReferral(doctorLocations[0].id, selectedEvent.id, idPatient, idReferralMaker);
 
-        // Очистка формы или выполнение других действий после успешного добавления
         setDoctorLocations('');
         setSelectedEvent('');
         setSelectedLdmType('');

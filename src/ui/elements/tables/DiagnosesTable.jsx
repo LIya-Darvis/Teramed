@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import DataDisplay from '../../../dataProviders/DataDisplay';
 import { updateSickHistory } from '../../../api/supabaseApi';
-import '../styles.css';
+import './styles.css';
 
 const DiagnosesTable = ({ diagnosesData, doctorData }) => {
 

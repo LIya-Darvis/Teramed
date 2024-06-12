@@ -20,12 +20,12 @@ function AuthorizationPage() {
         } else {
             try {
                 var users = (await getUsers()).data;
-
                 if (users) {
                     for (var user of users) {
                         if (user.login === login && user.password === password) {
                             var authUser = new User(user.id, user.role.id, user.username,
                                 user.login, user.password, user.photo)
+                            console.log(authUser)
                             setData({ isLogin: true, userData: authUser });
                             setErrorText("");
                         }
@@ -42,19 +42,8 @@ function AuthorizationPage() {
         }
     }
 
-
-
     return (
         <div >
-            {/* <motion.div
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 25, opacity: 1 }}
-                transition={{ duration: 1.7 }} // длительность анимации
-                style={{ position: "fixed", top: 0, left: 0, transform: "translateX(-50%)" }}
-            >
-                🌌👾✨ Добро пожаловать!
-            </motion.div> */}
-
             <motion.div
                 className='authorization_back_frame'
                 initial={{ background: "linear-gradient(45deg, #007BFF, #33D1B5)" }}
@@ -83,7 +72,6 @@ function AuthorizationPage() {
                 </div>
             </motion.div>
         </div>
-
     )
 }
 

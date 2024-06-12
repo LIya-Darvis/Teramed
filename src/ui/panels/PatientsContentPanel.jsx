@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// import { getPatients, getPatientSickHistoryById, getPatientAnalysesById, getDoctorByUserId } from "../../api/fire_api";
 import SearchPanel from '../elements/SearchPanel';
 import ContentLabel from '../elements/components/ContentLabel';
 import "./styles.css";
-import { generateSchedule } from '../../dataProviders/generations';
 import { useData } from '../../dataProviders/DataProvider';
 import AddGospitalizationForm from '../elements/forms/AddGospitalizationForm';
 import PatientsTable from '../elements/tables/PatientsTable';

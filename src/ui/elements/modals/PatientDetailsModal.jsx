@@ -6,6 +6,8 @@ import './styles.css';
 const PatientDetailsModal = ({ isOpen, onRequestClose, patient }) => {
     if (!patient) return null;
 
+    console.log(patient)
+
     return (
         <Modal
             isOpen={isOpen}
@@ -27,8 +29,8 @@ const PatientDetailsModal = ({ isOpen, onRequestClose, patient }) => {
                         <p><strong>Адрес:</strong> {patient.address}</p>
                     </div>
                     <div className="patient-photo">
-                        {patient.photo ? (
-                            <img src={patient.photo} alt="Фото пациента" />
+                        {patient.patient_photo ? (
+                            <img src={patient.patient_photo} alt="Фото пациента" />
                         ) : (
                             <div className="no-photo">Нет фотографии</div>
                         )}

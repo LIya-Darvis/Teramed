@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import '../styles.css';
+import './styles.css';
 import useRealtimeData from '../../../dataProviders/useRealtimeData';
 
 function PatientAppointmentsTable({ patientData }) {
@@ -8,9 +8,15 @@ function PatientAppointmentsTable({ patientData }) {
 
     if (!appointmentsData) return null;
 
-    console.log("=>> ", patientData.patient_id)
-    const filteredAppointmentsData = appointmentsData?.filter(appointment => appointment.id_patient === patientData.patient_id);
-    console.log(filteredAppointmentsData)
+    const today = new Date();
+
+    const filteredAppointmentsData = appointmentsData
+        ?.filter(appointment => {
+            const appointmentDate = new Date(appointment.ldm_datetime);
+            return appointment.id_patient === patientData.patient_id && appointmentDate >= today;
+        })
+        .sort((a, b) => new Date(a.ldm_datetime) - new Date(b.ldm_datetime));
+    // console.log(filteredAppointmentsData)
 
     return (
         <div>
@@ -19,7 +25,7 @@ function PatientAppointmentsTable({ patientData }) {
                     <table className='data_table'>
                         <thead>
                             <tr>
-                                <th>Пациент</th>
+                                {/* <th>Пациент</th> */}
                                 <th>Врач</th>
                                 <th>Мероприятие</th>
                                 <th>Кабинет</th>
@@ -31,7 +37,7 @@ function PatientAppointmentsTable({ patientData }) {
                         <tbody>
                             {filteredAppointmentsData.map(appointment => (
                                 <tr key={appointment.id}>
-                                    <td>{appointment.patient_lastname} {appointment.patient_name} {appointment.patient_surname}</td>
+                                    {/* <td>{appointment.patient_lastname} {appointment.patient_name} {appointment.patient_surname}</td> */}
                                     <td>{appointment.doctor_lastname} {appointment.doctor_name} {appointment.doctor_surname}</td>
                                     <td>{appointment.ldm_name}</td>
                                     <td>{appointment.cabinet_num}</td>

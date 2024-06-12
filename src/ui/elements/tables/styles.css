@@ -1,0 +1,38 @@
+.table_frame {
+    background-color: #FFF;
+    margin: 10px;
+    padding: 15px;
+    box-shadow: 1px 4px 8px #DAE1F9;
+    border-radius: 12px;
+}
+
+.data_table {
+    text-align: left;
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.data_table th {
+    text-align: center;
+    height: 30px;
+    padding: 0px 10px;
+}
+
+.data_table td {
+    text-align: left;
+    height: 30px;
+    padding: 6px 10px;
+}
+
+.data_table tbody tr {
+    border-bottom: 1.5px solid #e1e1ea; /* Граница между строками */
+  }
+  
+  .data_table tbody tr:last-child {
+    border-bottom: none; /* Убираем границу после последней строки */
+  }
+
+.table_buttons_frame {
+    display: flex;
+    flex-direction: row;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DeleteButton, EditButton } from '../components/Buttons';
 import DataDisplay from '../../../dataProviders/DataDisplay';
-import '../styles.css';
+import './styles.css';
 
 const DoctorsTable = ({ doctorsData, handleEditDoctor, handleDeleteDoctor }) => {
     return (

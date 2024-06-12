@@ -16,7 +16,7 @@ export async function getUsers() {
                 name: user.role_name,
             },
             position: user.position_name,
-            photo: "",
+            photo: user.photo,
         }));
         return { data: usersData, status };
     } catch (error) {

@@ -110,12 +110,12 @@ const PatientAppointmentForm = ({ doctorId, patientId, handleAddAppointment }) =
                         {timeSlots.map(day => (
                             <div key={day.date}>
                                 <h4>{day.date.toDateString()}</h4>
-                                {day.slots.map(slot => (
+                                {day.slots.map((slot, idx) => (
                                     <button
-                                        key={slot.start}
-                                        type="button"
-                                        className={`time-slot-button ${slot.isAvailable ? '' : 'unavailable'}`}
-                                        onClick={() => handleTimeSlotSelect(slot)}
+                                        key={idx}
+                                        // type="button"
+                                        style={slot.isAvailable ? availableSlotStyle : unavailableSlotStyle}
+                                        onClick={() => slot.isAvailable &&  handleTimeSlotSelect(slot)}
                                         disabled={!slot.isAvailable}
                                     >
                                         {slot.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -144,6 +144,25 @@ PatientAppointmentForm.propTypes = {
     doctorId: PropTypes.string.isRequired,
     patientId: PropTypes.string.isRequired,
     handleAddAppointment: PropTypes.func.isRequired,
+};
+
+const availableSlotStyle = {
+    backgroundColor: '#4CAF50',
+    cursor: 'pointer',
+    color: '#fff',
+    border: 'none',
+    padding: '10px',
+    margin: '5px',
+    borderRadius: '4px'
+};
+
+const unavailableSlotStyle = {
+    backgroundColor: '#D3D3D3',
+    color: '#666',
+    border: 'none',
+    padding: '10px',
+    margin: '5px',
+    borderRadius: '4px'
 };
 
 export default PatientAppointmentForm;

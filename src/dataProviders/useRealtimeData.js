@@ -24,10 +24,10 @@ const useRealtimeData = (endpoint, params) => {
       }
     };
 
-    fetchDataInterval(); // Fetch data immediately on mount
-    const intervalId = setInterval(fetchDataInterval, 3000); // Update every 3 seconds
+    fetchDataInterval();
+    const intervalId = setInterval(fetchDataInterval, 3000);
 
-    return () => clearInterval(intervalId); // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
   }, [dispatch, endpoint, params]);
   return { data, loading, error };
 };

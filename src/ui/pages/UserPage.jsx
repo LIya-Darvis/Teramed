@@ -9,7 +9,7 @@ import PatientMedCardPanel from '../panels/PatientMedCardPanel';
 import UsersContentPanel from '../panels/admin/UsersContentPanel';
 import PatientAppointmentViewPanel from '../panels/patient/PatientAppointmentViewPanel';
 import './styles.css';
-import { fetchAccessiblePanelsForRole } from '../../api/supabaseApi';
+import { fetchAccessiblePanelsForRole, getDoctors } from '../../api/supabaseApi';
 import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';
 import PatientAppointmentReferralsViewPanel from '../panels/PatientAppointmentReferralsViewPanel';
 
@@ -25,6 +25,8 @@ const components = [
 ];
 
 export default function UserPage() {
+  const doctorsData = getDoctors();
+  console.log(doctorsData)
 
   const { data, setData } = useData();
   var roleId = data.userData.role;

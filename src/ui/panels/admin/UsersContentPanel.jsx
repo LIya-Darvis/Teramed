@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { addDoctor, addPatient, addUser, getUsers } from '../../../api/fire_api';
 import { EditButton, DeleteButton, AddButton, CloseButton, TopPanelButton } from '../../elements/components/Buttons';
 import SearchPanel from '../../elements/SearchPanel';
 import ContentLabel from '../../elements/components/ContentLabel';
@@ -81,23 +80,23 @@ function UsersContentPanel() {
   const handleDoctorUserSubmit = async (user) => {
     try {
       console.log(user)
-      const userId = await addUser({
-        roleId: 2,
-        login: user.login,
-        password: user.password,
-        photo: 'users_avatar/doctor.png',
-        username: user.username,
-      });
+      // const userId = await addUser({
+      //   roleId: 2,
+      //   login: user.login,
+      //   password: user.password,
+      //   photo: 'users_avatar/doctor.png',
+      //   username: user.username,
+      // });
 
-      await addDoctor({
-        positionId: user.positionId,
-        userId: userId,
-        isArchived: false,
-        isAvailable: user.isAvailable,
-        lastname: user.lastname,
-        name: user.name,
-        surname: user.surname,
-      });
+      // await addDoctor({
+      //   positionId: user.positionId,
+      //   userId: userId,
+      //   isArchived: false,
+      //   isAvailable: user.isAvailable,
+      //   lastname: user.lastname,
+      //   name: user.name,
+      //   surname: user.surname,
+      // });
 
       setIsModalOpen(false);
       // обновить состояние пользователей
@@ -109,31 +108,31 @@ function UsersContentPanel() {
   const handlePatientUserSubmit = async (user) => {
     try {
       console.log(user)
-      const userId = await addUser({
-        roleId: 3,
-        login: user.login,
-        password: user.password,
-        photo: 'users_avatar/patient.png',
-        username: user.username,
-      });
+      // const userId = await addUser({
+      //   roleId: 3,
+      //   login: user.login,
+      //   password: user.password,
+      //   photo: 'users_avatar/patient.png',
+      //   username: user.username,
+      // });
 
-      await addPatient({
-        userId: userId,
-        address: user.address,
-        birthday: user.birthday,
-        email: user.email,
-        genderId: user.genderId,
-        medDate: user.medDate,
-        passportNum: user.passportNum,
-        passportSeries: user.passportSeries,
-        phone: user.phone,
-        photo: '',
-        polisFinalDate: user.polisFinalDate,
-        polisNum: user.polisNum,
-        lastname: user.lastname,
-        name: user.name,
-        surname: user.surname,
-      });
+      // await addPatient({
+      //   userId: userId,
+      //   address: user.address,
+      //   birthday: user.birthday,
+      //   email: user.email,
+      //   genderId: user.genderId,
+      //   medDate: user.medDate,
+      //   passportNum: user.passportNum,
+      //   passportSeries: user.passportSeries,
+      //   phone: user.phone,
+      //   photo: '',
+      //   polisFinalDate: user.polisFinalDate,
+      //   polisNum: user.polisNum,
+      //   lastname: user.lastname,
+      //   name: user.name,
+      //   surname: user.surname,
+      // });
 
       setIsModalOpen(false);
       // обновить состояние пользователей

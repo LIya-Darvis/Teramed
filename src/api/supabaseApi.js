@@ -373,3 +373,13 @@ export async function addAppointmentReferral(appointmentData) {
     }
 }
 
+export const confirmAppointmentReferral = async (appointmentId) => {
+    const { data, error } = await supabase
+        .rpc('confirm_appointment_referral', { appointment_id: appointmentId });
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+};

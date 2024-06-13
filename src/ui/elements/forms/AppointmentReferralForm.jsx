@@ -3,23 +3,9 @@ import PropTypes from 'prop-types';
 import useRealtimeData from '../../../dataProviders/useRealtimeData';
 import { addAppointment, addAppointmentReferral } from '../../../api/supabaseApi';
 import './styles.css';
-import { generateTimeSlots } from '../../../dataProviders/generations';
-
-const workHours = {
-    startHour: 8,
-    startMinute: 0,
-    endHour: 17,
-    endMinute: 0
-};
-
-const workDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 const AppointmentReferralForm = ({ doctorId, patientId, handleAddAppointment }) => {
     const [ldmId, setLdmId] = useState('');
-    const [selectedDoctorId, setSelectedDoctorId] = useState('');
-    const [timeSlots, setTimeSlots] = useState([]);
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
-    const [showTimeSlots, setShowTimeSlots] = useState(true);
 
     console.log(doctorId.doctor_id)
     console.log(patientId)
@@ -33,30 +19,11 @@ const AppointmentReferralForm = ({ doctorId, patientId, handleAddAppointment }) 
 
     const handleLdmChange = (e) => {
         setLdmId(e.target.value);
-        setSelectedDoctorId('');
-        setTimeSlots([]);
-        setSelectedTimeSlot(null);
-        setShowTimeSlots(true);
     };
 
-    const handleDoctorChange = (e) => {
-        const selectedDoctor = e.target.value;
-        setSelectedDoctorId(selectedDoctor);
-
-        const doctorAppointments = appointmentsData.filter(appt => appt.doctor_id === selectedDoctor);
-        const slots = generateTimeSlots(doctorAppointments, 30, workHours, workDays);
-        setTimeSlots(slots);
-        setShowTimeSlots(true);
-    };
-
-    const handleTimeSlotSelect = (slot) => {
-        setSelectedTimeSlot(slot);
-        setShowTimeSlots(false);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const doctorLocations = ldms.filter(ldm => ldm.doctor_id === selectedDoctorId)[0];
         const appointmentData = {
             _id_ldm: ldmId,
             _id_patient: patientId,
@@ -90,52 +57,11 @@ const AppointmentReferralForm = ({ doctorId, patientId, handleAddAppointment }) 
             </div>
 
             {ldmId && (
-                <div className="form-group">
-                    <label htmlFor="doctor">Выберите врача:</label>
-                    <select id="doctor" value={selectedDoctorId} onChange={handleDoctorChange} required>
-                        <option value="">Выберите врача</option>
-                        {ldms.filter(ldm => ldm.ldm_id === ldmId && ldm.doctor_is_available).map(ldm => (
-                            <option key={ldm.doctor_id} value={ldm.doctor_id}>
-                                {ldm.doctor_lastname} {ldm.doctor_name} {ldm.doctor_surname}
-                            </option>
-                        ))}
-                    </select>
+                <div className="form-buttons">
+                    <button type="submit">Создать направление на прием</button>
                 </div>
             )}
 
-            {showTimeSlots && timeSlots.length > 0 && (
-                <div className="form-group">
-                    <label>Выберите время:</label>
-                    <div className="time-slots">
-                        {timeSlots.map(day => (
-                            <div key={day.date}>
-                                <h4>{day.date.toDateString()}</h4>
-                                {day.slots.map((slot, idx) => (
-                                    <button
-                                        key={idx}
-                                        style={slot.isAvailable ? availableSlotStyle : unavailableSlotStyle}
-                                        onClick={() => slot.isAvailable && handleTimeSlotSelect(slot)}
-                                        disabled={!slot.isAvailable}
-                                    >
-                                        {slot.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </button>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {selectedTimeSlot && !showTimeSlots && (
-                <div className="form-group">
-                    <h4>Вы выбрали время: {selectedTimeSlot.start.toLocaleString()}</h4>
-                    
-                    <div className="form-buttons">
-                        <button type="button" onClick={() => setShowTimeSlots(true)}>Назад</button>
-                        <button type="submit">Записаться на прием</button>
-                    </div>
-                </div>
-            )}
         </form>
     );
 };

@@ -57,7 +57,7 @@ export const generateTimeSlots = (appointments, eventDuration, workHours, workDa
             if (slotEnd > endOfDay || (day.toDateString() === today.toDateString() && slotEnd <= today)) break;
 
             const isSlotAvailable = !appointments.some(appointment => {
-                const appointmentStart = new Date(appointment.datetime);
+                const appointmentStart = new Date(appointment.date);
                 const appointmentEnd = new Date(appointmentStart);
                 appointmentEnd.setMinutes(appointmentStart.getMinutes() + eventDuration);
                 return (slotStart < appointmentEnd && slotEnd > appointmentStart);
@@ -78,6 +78,7 @@ export const generateTimeSlots = (appointments, eventDuration, workHours, workDa
         }
     }
 
+    console.log(timeSlots)
     return timeSlots;
 };
 

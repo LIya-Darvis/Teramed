@@ -10,6 +10,7 @@ import PatientDetailsModal from '../elements/modals/PatientDetailsModal';
 import DiagnosisModal from '../elements/modals/DiagnosisModal';
 import AnalysisModal from '../elements/modals/AnalysisModal';
 import GospitalizationsModal from '../elements/modals/GospitalizationsModal';
+import AppointmentReferralModal from '../elements/modals/AppointmentReferralModal';
 
 
 export default function PatientsContentPanel() {
@@ -18,6 +19,7 @@ export default function PatientsContentPanel() {
     const [gospitalizationsModalIsOpen, setGospitalizationsModalIsOpen] = useState(false);
     const [analysisModalIsOpen, setAnalysisModalIsOpen] = useState(false);
     const [diagnosisModalIsOpen, setDiagnosisModalIsOpen] = useState(false);
+    const [appointmentReferralModalIsOpen, setAppointmentReferralModalIsOpen] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const patientsData = useRealtimeData('get_patients').data;
     const doctorsData = useRealtimeData('get_doctors').data;
@@ -49,6 +51,11 @@ export default function PatientsContentPanel() {
         setAnalysisModalIsOpen(true);
     };
 
+    const handleAppointmentReferralPatient = (patient) => {
+        setSelectedPatient(patient);
+        setAppointmentReferralModalIsOpen(true);
+    };
+
     const handleGospitalizationsPatient = (patient) => {
         setSelectedPatient(patient);
         setGospitalizationsModalIsOpen(true);
@@ -63,6 +70,7 @@ export default function PatientsContentPanel() {
         setDetailsModalIsOpen(false);
         setAnalysisModalIsOpen(false);
         setDiagnosisModalIsOpen(false);
+        setAppointmentReferralModalIsOpen(false);
         setGospitalizationsModalIsOpen(false);
         setSelectedPatient(null);
     };
@@ -79,6 +87,10 @@ export default function PatientsContentPanel() {
         // fetchData(); // Обновляем данные после добавления нового анализа
     };
 
+    const handleAddAppointmentReferral = async (patientId, newAnalysis) => {
+
+    };
+
     return (
         <div className='content_panel'>
             <ContentLabel title="Пациенты" />
@@ -90,6 +102,7 @@ export default function PatientsContentPanel() {
                 <PatientsTable patientsData={filteredPatients}
                     handleDiagnosPatient={handleDiagnosPatient}
                     handleAnalysPatient={handleAnalysPatient}
+                    handleAppointmentReferralPatient={handleAppointmentReferralPatient}
                     handleOpenModal={handleOpenDetailsModal}
                     handleGospitalizationsPatient={handleGospitalizationsPatient}
                     doctorData={filteredDoctorData} />
@@ -111,6 +124,13 @@ export default function PatientsContentPanel() {
                 onRequestClose={handleCloseModals}
                 patient={selectedPatient}
                 handleAddAnalysis={handleAddAnalysis}
+                doctorData={filteredDoctorData}
+            />
+            <AppointmentReferralModal
+                isOpen={appointmentReferralModalIsOpen}
+                onRequestClose={handleCloseModals}
+                patient={selectedPatient}
+                handleAddAppointmentReferral={handleAddAppointmentReferral}
                 doctorData={filteredDoctorData}
             />
             <DiagnosisModal

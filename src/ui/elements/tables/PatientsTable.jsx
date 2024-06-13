@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { DopInfoButton, EditButton } from "../components/Buttons";
 import './styles.css';
 
-const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient, handleGospitalizationsPatient, handleOpenModal, doctorPosition }) => {
+const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient, handleAppointmentReferralPatient, handleGospitalizationsPatient, handleOpenModal, doctorPosition }) => {
     return (
 
         <div className='table_frame'>
@@ -22,6 +22,7 @@ const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient
                                     <div className='table_buttons_frame'>
                                         <DopInfoButton onClick={() => handleAnalysPatient(patient.patient_id)} title={"Анализы"} />
                                         <DopInfoButton onClick={() => handleDiagnosPatient(patient.patient_id)} title={"Диагнозы"} />
+                                        <DopInfoButton onClick={() => handleAppointmentReferralPatient(patient.patient_id)} title={"Направление"} />
                                         <DopInfoButton onClick={() => handleGospitalizationsPatient(patient.patient_id)} title={"Госпитализация"} />
                                         <DopInfoButton onClick={() => handleOpenModal(patient)} title={"Подробнее"} />
                                     </div>
@@ -42,6 +43,7 @@ PatientsTable.propTypes = {
     patientsData: PropTypes.array.isRequired,
     handleDiagnosPatient: PropTypes.func.isRequired,
     handleAnalysPatient: PropTypes.func.isRequired,
+    handleAppointmentReferralPatient: PropTypes.func.isRequired,
     handleGospitalizationsPatient: PropTypes.func.isRequired,
     handleOpenModal: PropTypes.func.isRequired,
     doctorPosition: PropTypes.string,

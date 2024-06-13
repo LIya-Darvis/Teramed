@@ -35,7 +35,7 @@ function UsersContentPanel() {
         return (
           <div>
             <div style={containerStyle} className="custom_scrollbar">
-              <AddPatientUserForm onSubmit={handlePatientUserSubmit} />
+              <AddPatientUserForm onClose={handleCloseModal} />
             </div>
           </div>
         )
@@ -43,7 +43,7 @@ function UsersContentPanel() {
         return (
           <div>
             <div style={containerStyle} className="custom_scrollbar">
-              <AddDoctorUserForm onSubmit={handleDoctorUserSubmit} />
+              <AddDoctorUserForm onClose={handleCloseModal} />
             </div>
           </div>
         )
@@ -55,17 +55,7 @@ function UsersContentPanel() {
   // открытие окна для добавления пользователя 
   const handleAddUser = () => {
     setIsModalOpen(true);
-    // const newUserParams = {
-    //   roleId: '1',
-    //   login: 'newuser',
-    //   password: 'password123',
-    //   photo: 'users_avatar/newuser.png',
-    //   username: 'Новый пользователь'
-    // };
 
-    // // addUser(newUserParams);
-    // // setIsAddModalOpen(true);
-    // console.log("добавление пользователя");
   };
 
   const handleCloseModal = () => {
@@ -79,24 +69,7 @@ function UsersContentPanel() {
 
   const handleDoctorUserSubmit = async (user) => {
     try {
-      console.log(user)
-      // const userId = await addUser({
-      //   roleId: 2,
-      //   login: user.login,
-      //   password: user.password,
-      //   photo: 'users_avatar/doctor.png',
-      //   username: user.username,
-      // });
 
-      // await addDoctor({
-      //   positionId: user.positionId,
-      //   userId: userId,
-      //   isArchived: false,
-      //   isAvailable: user.isAvailable,
-      //   lastname: user.lastname,
-      //   name: user.name,
-      //   surname: user.surname,
-      // });
 
       setIsModalOpen(false);
       // обновить состояние пользователей
@@ -107,32 +80,6 @@ function UsersContentPanel() {
 
   const handlePatientUserSubmit = async (user) => {
     try {
-      console.log(user)
-      // const userId = await addUser({
-      //   roleId: 3,
-      //   login: user.login,
-      //   password: user.password,
-      //   photo: 'users_avatar/patient.png',
-      //   username: user.username,
-      // });
-
-      // await addPatient({
-      //   userId: userId,
-      //   address: user.address,
-      //   birthday: user.birthday,
-      //   email: user.email,
-      //   genderId: user.genderId,
-      //   medDate: user.medDate,
-      //   passportNum: user.passportNum,
-      //   passportSeries: user.passportSeries,
-      //   phone: user.phone,
-      //   photo: '',
-      //   polisFinalDate: user.polisFinalDate,
-      //   polisNum: user.polisNum,
-      //   lastname: user.lastname,
-      //   name: user.name,
-      //   surname: user.surname,
-      // });
 
       setIsModalOpen(false);
       // обновить состояние пользователей

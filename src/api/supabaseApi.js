@@ -10,20 +10,43 @@ export async function uploadPhoto(file) {
 
     const anonKey = '4440dcf4cef2b7ecf29154e706a1598b';
 
-    console.log("=> ", url);
+    console.log(url)
 
     const headers = {
         'Content-Type': file.type,
         Authorization: `Bearer ${anonKey}`,
     };
 
+    // const { data, error } = await supabase.storage.from('public/TeramedStorage').upload('user_avatars', file)
     try {
-        const response = await axios.post(url, file, { headers });
+        const response = await axios.put(url, file, { headers }); // Используйте put вместо post
         console.log('File uploaded successfully:', response.data);
-      } catch (error) {
+        return url; // Верните URL загруженного файла
+    } catch (error) {
         console.error('Error uploading file:', error.message);
         console.error('Error response:', error.response);
-      }
+    }
+
+    // const folder = 'user_avatars';
+    // const fileName = `${Date.now()}_${file.name}`;
+    // const url = `https://eqldiylnpfriitiycqga.supabase.co/storage/v1/object/public/TeramedStorage/${folder}/${fileName}`;
+
+    // const anonKey = '4440dcf4cef2b7ecf29154e706a1598b';
+
+    // console.log("=> ", url);
+
+    // const headers = {
+    //     'Content-Type': file.type,
+    //     Authorization: `${anonKey}`,
+    // };
+
+    // try {
+    //     const response = await axios.post(url, file, { headers });
+    //     console.log('File uploaded successfully:', response.data);
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error.message);
+    //     console.error('Error response:', error.response);
+    //   }
 
     // try {
     //     const { data, error } = await supabase.storage
@@ -79,6 +102,15 @@ export async function fetchAccessiblePanelsForRole(roleId) {
         console.error('Ошибка при вызове функции fetch_accessible_panels:', error);
         return { error: 'Ошибка сети', status: null };
     }
+}
+
+export async function fetchPositions() {
+    const { data, error } = await fetchData('get_positions');
+    if (error) {
+        console.error('Error fetching positions:', error);
+        throw error;
+    }
+    return data;
 }
 
 export async function getDoctors() {
@@ -196,21 +228,20 @@ export async function addUserAndDoctor(userDetails, doctorDetails, photoURL) {
     const { username, login, password } = userDetails;
     const { id_position, is_archived, is_available, lastname, name, surname } = doctorDetails;
 
-    console.log(username, login, password);
     console.log(id_position, is_archived, is_available, lastname, name, surname);
 
     try {
-        const { data, error } = await fetchData('public.add_user_and_doctor', {
-            username: username,
-            login: login,
-            password: password,
-            photo: photoURL,
-            id_position: id_position,
-            is_archived: is_archived,
-            is_available: is_available,
-            lastname: lastname,
-            name: name,
-            surname: surname
+        const { data, error } = await supabase.rpc('add_user_and_doctor', {
+            _username: username,
+            _login: login,
+            _password: password,
+            _photo: photoURL || '',
+            _id_position: id_position,
+            _is_archived: false,
+            _is_available: is_available,
+            _lastname: lastname,
+            _name: name,
+            _surname: surname
         });
 
         if (error) {
@@ -225,6 +256,52 @@ export async function addUserAndDoctor(userDetails, doctorDetails, photoURL) {
         return { userId, doctorId };
     } catch (error) {
         console.error('Error adding user and doctor:', error.message);
+        return null;
+    }
+
+
+}
+
+export async function addUserAndPatient(userDetails, patientDetails, photoURL) {
+    const { username, login, password } = userDetails;
+    const { id_gender, is_archived, lastname, name, surname, address, birthday, email, phone, med_date, passport_num, passport_series, polis_final_date, polis_num } = patientDetails;
+
+    const today = new Date();
+
+    try {
+        const { data, error } = await supabase.rpc('add_user_and_patient', {
+            _username: username,
+            _login: login,
+            _password: password,
+            _photo: photoURL || '',
+            _id_gender: id_gender,
+            _is_archived: is_archived,
+            _lastname: lastname,
+            _name: name,
+            _surname: surname,
+            _address: address,
+            _birthday: birthday,
+            _email: email,
+            _phone: phone,
+            _med_date: today,
+            _passport_num: passport_num,
+            _passport_series: passport_series,
+            _polis_final_date: polis_final_date,
+            _polis_num: polis_num
+        });
+
+        if (error) {
+            console.error('RPC Error:', error);
+            throw new Error(error.message);
+        }
+
+        const { user_id: userId, patient_id: patientId } = data[0];
+        console.log('User ID:', userId);
+        console.log('Patient ID:', patientId);
+
+        return { userId, patientId };
+    } catch (error) {
+        console.error('Error adding user and patient:', error.message);
         return null;
     }
 }
@@ -283,4 +360,16 @@ export const addAppointment = async (appointmentData) => {
 
     return data;
 };
+
+export async function addAppointmentReferral(appointmentData) {
+    try {
+        const { data, error } = await supabase.rpc('add_appointment_referral', appointmentData);
+        if (error) {
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
 

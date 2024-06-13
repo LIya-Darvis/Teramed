@@ -13,3 +13,44 @@
     font-size: 16px;
     cursor: pointer;
 }
+
+.form-container {
+    height: 70vh; /* Высота контейнера с формой */
+    overflow-y: auto; /* Включаем вертикальный скролл */
+    display: flex;
+    justify-content: center; /* Выравниваем по центру по горизонтали */
+    align-items: center; /* Выравниваем по центру по вертикали */
+    /* margin-bottom: 70px; */
+    /* padding-bottom: 50px; */
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column; /* Элементы формы в колонку */
+    align-items: center; /* Выравниваем элементы по центру по горизонтали */
+    margin: 30px;
+}
+
+.input-field, .select-field, .checkbox-label, .date-picker {
+    width: 100%; /* Ширина элементов формы по ширине родителя */
+    margin-bottom: 10px; /* Отступ между элементами */
+}
+
+.date-picker {
+    height: 30px;
+    padding: 20px 0px ;
+}
+
+.checkbox-label { 
+    font-size: 16px;
+}
+
+.submit-button {
+    padding: 10px;
+    background-color: #4B5672;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 70px;
+}

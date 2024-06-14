@@ -5,6 +5,7 @@ import DiagnosesTable from '../elements/tables/DiagnosesTable';
 import AnalysisTable from '../elements/tables/AnalysesTable';
 import useRealtimeData from '../../dataProviders/useRealtimeData';
 import AnalysisChart from '../elements/components/AnalysesChart';
+import './styles.css';
 
 
 function PatientMedCardPanel() {
@@ -33,16 +34,17 @@ function PatientMedCardPanel() {
   return (
     <div className='content_panel'>
       <ContentLabel title="Моя медицинская карта" />
-      <div className="button-row">
-        <button onClick={() => { setShowAnalyses(true); setShowDiagnoses(false); setShowStatistics(false);}}>Анализы</button>
-        <button onClick={() => { setShowDiagnoses(true); setShowAnalyses(false); setShowStatistics(false);}}>Диагнозы</button>
-        <button onClick={() => { setShowStatistics(true); setShowAnalyses(false); setShowDiagnoses(false);}}>Статистика анализов</button>
+      <div className="buttons_panel">
+        <button className='top_panel_button' onClick={() => { setShowAnalyses(true); setShowDiagnoses(false); setShowStatistics(false);}}>Анализы</button>
+        <button className='top_panel_button' onClick={() => { setShowDiagnoses(true); setShowAnalyses(false); setShowStatistics(false);}}>Диагнозы</button>
+        <button className='top_panel_button' onClick={() => { setShowStatistics(true); setShowAnalyses(false); setShowDiagnoses(false);}}>Статистика анализов</button>
       </div>
       {showAnalyses && <AnalysisTable analysesData={filteredAnalyses} />}
       {showDiagnoses && <DiagnosesTable diagnosesData={filteredDiagnoses} doctorData={doctor} />}
-      {showStatistics && <AnalysisChart analysTypeId={'d809b8ed-d1cb-43a2-a1c9-d29ce85509ae'} />}
+      {showStatistics && <AnalysisChart analysTypeId={'d809b8ed-d1cb-43a2-a1c9-d29ce85509ae'} /> }
     </div>
   )
 }
+
 
 export default PatientMedCardPanel

@@ -29,6 +29,7 @@
     flex-direction: column; /* Элементы формы в колонку */
     align-items: center; /* Выравниваем элементы по центру по горизонтали */
     margin: 30px;
+    padding-bottom: -150px;
 }
 
 .input-field, .select-field, .checkbox-label, .date-picker {
@@ -51,6 +52,6 @@
     color: white;
     border: none;
     cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 70px;
+    /* margin-top: 150px; */
+    /* margin-bottom: 150px; */
 }

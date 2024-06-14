@@ -41,7 +41,7 @@ function PatientAppointmentsTable({ patientData }) {
                                     <td>{appointment.doctor_lastname} {appointment.doctor_name} {appointment.doctor_surname}</td>
                                     <td>{appointment.ldm_name}</td>
                                     <td>{appointment.cabinet_num}</td>
-                                    <td>{new Date(appointment.ldm_datetime).toLocaleString()}</td>
+                                    <td>{new Date(new Date(appointment.ldm_datetime).setHours(new Date(appointment.ldm_datetime).getHours() + 3)).toLocaleString()}</td>
                                     {/* <td>{appointment.complaints}</td>
                                     <td>{appointment.is_confirmed ? 'Да' : 'Нет'}</td> */}
                                 </tr>

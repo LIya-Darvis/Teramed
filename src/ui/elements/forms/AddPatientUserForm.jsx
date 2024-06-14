@@ -38,6 +38,7 @@ const AddPatientUserForm = ({ onClose }) => {
                 <input {...register('polis_final_date')} type="date" placeholder="Дата окончания полиса" className="date-picker" />
                 <input {...register('polis_num')} placeholder="Номер полиса" className="input-field" />
                 <button type="submit" className="submit-button">Подтвердить</button>
+                <br /><br /><br /><br />
             </form>
         </div>
     );

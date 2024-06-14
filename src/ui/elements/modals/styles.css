@@ -18,11 +18,13 @@
     min-width: 500px;
     width: fit-content;
     max-width: 90%;
+    max-height: 90%;
     overflow: hidden; /* Добавляем overflow hidden */
     background-color: #fff;
     border-radius: 8px;
     padding: 20px;
     outline: none;
+    overflow-y: scroll;
 }
 /* 
 .modal {
@@ -44,6 +46,7 @@
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
+    
 }
 
 .top-frame {
@@ -62,6 +65,23 @@
     font-size: 24px;
     cursor: pointer;
 }
+
+button {
+    background-color: #4B5672;
+    color: #F2F5FF;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 20px;
+    padding: 5px 12px;
+    margin: 0px 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
 
 .add-button {
     align-self: flex-end;

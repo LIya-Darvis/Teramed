@@ -45,10 +45,26 @@ const AddDoctorUserForm = ({ onClose }) => {
                     <input {...register('name')} placeholder="Имя" className="input-field" />
                     <input {...register('surname')} placeholder="Отчество" className="input-field" />
                 <button type="submit" className="submit-button">Подтвердить</button>
+                <div style={otstup}></div>
             </form>
         </div>
     );
 };
+
+const dropdownStyle = {
+    margin: '5px 15px',
+    padding: '8px 10px 8px 10px',
+    width: '65%',
+    color: '#355065',
+    border: 'solid #C0C0C0 1.4px',
+    fontSize: '14px',
+    borderRadius: '6px',
+    userSelect: 'auto',
+  };
+
+const otstup = {
+    height: '250px'
+}
 
 export default AddDoctorUserForm;
 

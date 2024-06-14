@@ -4,6 +4,7 @@ import useRealtimeData from '../../../dataProviders/useRealtimeData';
 import { addAppointment } from '../../../api/supabaseApi';
 import './styles.css';
 import { generateTimeSlots } from '../../../dataProviders/generations';
+import moment from 'moment-timezone';
 
 const workHours = {
     startHour: 8,
@@ -54,7 +55,7 @@ const PatientAppointmentForm = ({ doctorId, patientId, handleAddAppointment }) =
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const doctorLocations = ldms.filter(ldm => ldm.doctor_id === selectedDoctorId)[0];
+        const doctorLocations = ldms.find(ldm => ldm.doctor_id === selectedDoctorId);
         const appointmentData = {
             id_doctor_location: doctorLocations.doctor_location_id,
             id_ldm: ldmId,
@@ -73,6 +74,10 @@ const PatientAppointmentForm = ({ doctorId, patientId, handleAddAppointment }) =
         } catch (error) {
             console.error('Error adding appointment:', error);
         }
+    };
+
+    const formatDate = (date) => {
+        return moment(date).tz("Europe/Moscow").format('LLLL');
     };
 
     return (
@@ -109,16 +114,16 @@ const PatientAppointmentForm = ({ doctorId, patientId, handleAddAppointment }) =
                     <div className="time-slots">
                         {timeSlots.map(day => (
                             <div key={day.date}>
-                                <h4>{day.date.toDateString()}</h4>
+                                <h4>{day.date ? formatDate(day.date) : 'Неизвестная дата'}</h4>
                                 {day.slots.map((slot, idx) => (
                                     <button
                                         key={idx}
-                                        // type="button"
+                                        type="button"
                                         style={slot.isAvailable ? availableSlotStyle : unavailableSlotStyle}
-                                        onClick={() => slot.isAvailable &&  handleTimeSlotSelect(slot)}
+                                        onClick={() => slot.isAvailable && handleTimeSlotSelect(slot)}
                                         disabled={!slot.isAvailable}
                                     >
-                                        {slot.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {slot.start ? moment(slot.start).tz("Europe/Moscow").format('HH:mm') : 'Неизвестное время'}
                                     </button>
                                 ))}
                             </div>
@@ -129,7 +134,7 @@ const PatientAppointmentForm = ({ doctorId, patientId, handleAddAppointment }) =
 
             {selectedTimeSlot && !showTimeSlots && (
                 <div>
-                    <h4>Вы выбрали время: {selectedTimeSlot.start.toLocaleString()}</h4>
+                    <h4>Вы выбрали время: {selectedTimeSlot.start ? formatDate(selectedTimeSlot.start) : 'Неизвестное время'}</h4>
                     <div className="form-buttons">
                         <button type="button" onClick={() => setShowTimeSlots(true)}>Назад</button>
                         <button type="submit">Записаться на прием</button>

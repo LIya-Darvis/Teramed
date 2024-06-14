@@ -59,6 +59,7 @@
     padding: 10px 128px;
     max-width: 340px;
     background-color: #007BFF;
+    height: 45px;
     transition: background-color 1s ease-out 100ms;
     font-size: 18px;
     text-align: center;

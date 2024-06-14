@@ -12,13 +12,17 @@ import './styles.css';
 import { fetchAccessiblePanelsForRole, getDoctors } from '../../api/supabaseApi';
 import DoctorsAppointmentsPanel from '../panels/DoctorsAppointmentsPanel';
 import PatientAppointmentReferralsViewPanel from '../panels/PatientAppointmentReferralsViewPanel';
+import GospitalizationReferralsPanel from '../panels/GospitalizationReferralsPanel';
+import PatientGospitalizationReferrals from '../panels/PatientGospitalizationReferrals';
 
 const components = [
   { 'DoctorsContentPanel': { component: <DoctorsContentPanel />, title: "Сотрудники" } },
   { 'GospitalizationsContentPanel': { component: <GospitalizationsContentPanel />, title: "Госпитализация" } },
+  { 'GospitalizationReferralsPanel': { component: <GospitalizationReferralsPanel />, title: "Направления на госпитализацию" } },
   { 'PatientsContentPanel': { component: <PatientsContentPanel />, title: "Пациенты" } },
   { 'PatientMedCardPanel': { component: <PatientMedCardPanel />, title: "Моя мед карта" } },
   { 'UsersContentPanel': { component: <UsersContentPanel />, title: "Пользователи" } },
+  { 'PatientGospitalizationReferrals': { component: <PatientGospitalizationReferrals />, title: "Мои направления на госпитализацию" } },
   { 'PatientAppointmentViewPanel': { component: <PatientAppointmentViewPanel />, title: "Мои назначенные приемы" } },
   { 'DoctorsAppointmentsPanel': { component: <DoctorsAppointmentsPanel />, title: "Назначенные приемы" } },
   { 'PatientAppointmentReferralsViewPanel': { component: <PatientAppointmentReferralsViewPanel />, title: "Мои направления на прием" } },

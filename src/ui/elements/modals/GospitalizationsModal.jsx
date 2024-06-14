@@ -3,13 +3,22 @@ import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import './styles.css';
 import useRealtimeData from '../../../dataProviders/useRealtimeData';
+import AddGospitalizationForm from '../forms/AddGospitalizationForm';
 
-const GospitalizationsModal = ({ isOpen, onRequestClose, patient, handleAddGospitalizations }) => {
-    // const analysesData = useRealtimeData('get_analyses').data;
-    // if (!analysesData) return null;
+const GospitalizationsModal = ({ isOpen, onRequestClose, patient, doctorData, handleAddGospitalizations }) => {
+    const gospitalizationsData = useRealtimeData('get_gospitalizations').data;
+    if (!gospitalizationsData) return null;
     if (!patient) return null;
 
-    // const filteredAnalyses = analysesData.filter(analysis => analysis.patient_id === patient);
+    console.log(doctorData.doctor_id)
+
+    const today = new Date();
+
+    const filteredGospitalizations = gospitalizationsData.filter(gospitalization => {    
+        return gospitalization.patient_id === patient;
+    });
+
+    console.log(filteredGospitalizations)
 
     return (
         <Modal
@@ -21,8 +30,12 @@ const GospitalizationsModal = ({ isOpen, onRequestClose, patient, handleAddGospi
         >
             <div className="modal-content">
                 <button className="close-button" onClick={onRequestClose}>×</button>
-                <h2>Госпитализации пациента</h2>
-                
+                <h2>Госпитализировать пациента</h2>
+                <AddGospitalizationForm
+                    onRequestClose={onRequestClose}
+                    patientId={patient}
+                    terapevtId={doctorData.doctor_id}
+                />
             </div>
         </Modal>
     );
@@ -33,6 +46,7 @@ GospitalizationsModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onRequestClose: PropTypes.func.isRequired,
     patient: PropTypes.object,
+    doctorData: PropTypes.object,
     handleAddGospitalizations: PropTypes.func.isRequired
 };
 

@@ -383,3 +383,49 @@ export const confirmAppointmentReferral = async (appointmentId) => {
 
     return data;
 };
+
+export const getDepartments = async () => {
+    try {
+        const { data, error } = await fetchData('get_departments');
+        if (error) {
+            console.error('Error fetching departments:', error.message);
+            return [];
+        }
+
+        console.log(data)
+        return data;
+    } catch (error) {
+        console.error('Error fetching departments:', error.message);
+        return [];
+    }
+};
+
+// Функция для получения списка свободных палат по выбранному отделению
+export const getWards = async (departmentId) => {
+    try {
+        const { data, error } = await fetchData('get_wards_by_department', {department_id: departmentId})
+        if (error) {
+            console.error('Error fetching free wards:', error.message);
+            return [];
+        }
+        return data;
+    } catch (error) {
+        console.error('Error fetching free wards:', error.message);
+        return [];
+    }
+};
+
+// Функция для получения списка свободных мест по выбранной палате
+export const getAvailableBedsByWard = async (wardId, plannedStartDate) => {
+    try {
+        const { data, error } = await fetchData('get_available_beds_by_ward', {ward_id: wardId, planned_start_date: plannedStartDate});
+        if (error) {
+            console.error('Error fetching free places:', error.message);
+            return [];
+        }
+        return data;
+    } catch (error) {
+        console.error('Error fetching free places:', error.message);
+        return [];
+    }
+};

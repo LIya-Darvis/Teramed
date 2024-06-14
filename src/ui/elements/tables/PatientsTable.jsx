@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import { DopInfoButton, EditButton } from "../components/Buttons";
 import './styles.css';
 
-const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient, handleAppointmentReferralPatient, handleGospitalizationsPatient, handleOpenModal, doctorPosition }) => {
+const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient, handleAppointmentReferralPatient, handleGospitalizationsPatient, handleOpenModal, doctorData }) => {
+    // console.log(doctorData.position_name)
     return (
 
         <div className='table_frame'>
@@ -23,7 +24,13 @@ const PatientsTable = ({ patientsData, handleDiagnosPatient, handleAnalysPatient
                                         <DopInfoButton onClick={() => handleAnalysPatient(patient.patient_id)} title={"Анализы"} />
                                         <DopInfoButton onClick={() => handleDiagnosPatient(patient.patient_id)} title={"Диагнозы"} />
                                         <DopInfoButton onClick={() => handleAppointmentReferralPatient(patient.patient_id)} title={"Направление"} />
-                                        <DopInfoButton onClick={() => handleGospitalizationsPatient(patient.patient_id)} title={"Госпитализация"} />
+                                        {doctorData.position_name === "Терапевт"
+                                            ?
+                                            <DopInfoButton onClick={() => handleGospitalizationsPatient(patient.patient_id)} title={"Госпитализировать"} />
+                                            :
+                                            <div></div>
+                                        }
+
                                         <DopInfoButton onClick={() => handleOpenModal(patient)} title={"Подробнее"} />
                                     </div>
                                 </td>
@@ -46,7 +53,7 @@ PatientsTable.propTypes = {
     handleAppointmentReferralPatient: PropTypes.func.isRequired,
     handleGospitalizationsPatient: PropTypes.func.isRequired,
     handleOpenModal: PropTypes.func.isRequired,
-    doctorPosition: PropTypes.string,
+    doctorData: PropTypes.object,
 };
 
 export default PatientsTable;

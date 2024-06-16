@@ -1,6 +1,9 @@
-# Getting Started with Create React App
+# Teramed
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Информационная система для автоматизации управленческой и медицинской деятельности медицинского учреждения.
+
+Включает следующие функции:
+
 
 ## Available Scripts
 
